@@ -1,13 +1,13 @@
-require "net/http"
+require "rest-client"
 require "json"
 
 BASE_URL = "https://api-staging.seatsio.net"
 
 def create_test_user
-  post = Net::HTTP.post_form(URI.parse(BASE_URL + "/system/public/users/actions/create-test-user"),{})
-  if post.code === "200"
-    JSON.parse(post.body)
-  else
+  begin
+    post = RestClient.post(BASE_URL + "/system/public/users/actions/create-test-user",{})
+    JSON.parse(post)
+  rescue
     raise Exception("Failed to create a test user")
   end
 end
@@ -16,10 +16,10 @@ def create_chart_from_file
   chart_file = File.read(Dir.pwd + "/test/sampleChart.json")
   chart_key = SecureRandom.uuid
 
-  url = BASE_URL + "/system/public/" + @user["designerKey"] + "/charts/" + chart_key
-  post = Net::HTTP.post(URI.parse(url), chart_file, {"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"})
+  url = "#{BASE_URL}/system/public/#{@user["designerKey"]}/charts/#{chart_key}"
+  post = RestClient.post(url, chart_file)
 
-  if post.is_a?(Net::HTTPCreated)
+  if post.is_a?(RestClient::Response)
     puts "Chart created"
     chart_key
   else

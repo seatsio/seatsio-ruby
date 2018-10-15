@@ -21,19 +21,11 @@ module Seatsio
       Domain::Chart.new(JSON.parse(response))
     end
 
-    def build_chart_request(name=None, venue_type=None, categories=None)
+    def build_chart_request(name=nil, venue_type=nil, categories=nil)
       result = {}
-      if name
-        result["name"] = name
-      end
-
-      if venue_type
-        result["venueType"] = venue_type
-      end
-
-      if categories
-        result["categories"] = categories
-      end
+      result["name"] = name if name
+      result["venueType"] = venue_type if venue_type
+      result["categories"] = categories if categories
       result
     end
 
@@ -41,6 +33,11 @@ module Seatsio
       payload = build_chart_request(name, venue_type, categories).to_json
       response = @http_client.post("charts", payload)
       Domain::Chart.new(JSON.parse(response))
+    end
+
+    def update(key, new_name=nil, categories=nil)
+      payload = build_chart_request(name=new_name, categories=categories).to_json
+      response = @http_client.post("charts/#{key}", payload)
     end
 
     def add_tag(key, tag)
@@ -54,6 +51,11 @@ module Seatsio
 
     def copy_to_subaccount(chart_key, subaccount_id)
       response = @http_client.post("charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}", {})
+      Domain::Chart.new(JSON.parse(response))
+    end
+
+    def copy_draft_version(key)
+      response = @http_client.post("charts/#{key}/version/draft/actions/copy", {})
       Domain::Chart.new(JSON.parse(response))
     end
 
