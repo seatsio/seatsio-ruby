@@ -1,10 +1,26 @@
 require "seatsio/util"
 
 module Seatsio::Domain
+
+  class ChartCategories
+    attr_accessor :list, :max_category_key
+
+    def initialize(data)
+      if data
+        @list = data["list"]
+        @max_category_key = data["maxCategoryKey"]
+      else
+        @list = []
+        @max_category_key = ""
+      end
+    end
+  end
+
   class Chart
 
     attr_reader :id, :key, :status, :name, :published_version_thumbnail_url,
-                :draft_version_thumbnail_url, :events, :tags, :archived, :venue_type
+                :draft_version_thumbnail_url, :events, :tags, :archived, :venue_type,
+                :categories
 
     def initialize(data)
       @id = data["id"]
@@ -17,6 +33,7 @@ module Seatsio::Domain
       @tags = data["tags"]
       @archived = data["archived"]
       @venue_type = data["venueType"]
+      @categories = ChartCategories.new(data["categories"])
 
     end
   end
