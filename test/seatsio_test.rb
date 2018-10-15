@@ -4,8 +4,6 @@ require 'securerandom'
 require "seatsio/domain"
 require "util"
 
-BASE_URL = "https://api-staging.seatsio.net"
-
 class SeatsioTest < Minitest::Test
 
   def setup

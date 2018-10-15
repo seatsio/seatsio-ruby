@@ -1,6 +1,8 @@
 require "net/http"
 require "json"
 
+BASE_URL = "https://api-staging.seatsio.net"
+
 def create_test_user
   post = Net::HTTP.post_form(URI.parse(BASE_URL + "/system/public/users/actions/create-test-user"),{})
   if post.code === "200"

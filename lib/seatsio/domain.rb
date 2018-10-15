@@ -3,7 +3,7 @@ require "seatsio/util"
 module Seatsio::Domain
   class Chart
 
-    attr_reader :id, :key, :status, :name, :events, :tags, :archived
+    attr_reader :id, :key, :status, :name, :events, :tags, :archived, :venue_type
 
     def initialize(data)
       @id = data["id"]
@@ -15,6 +15,7 @@ module Seatsio::Domain
       @events = Event.create_list(data["events"])
       @tags = data["tags"]
       @archived = data["archived"]
+      @venue_type = data["venueType"]
 
     end
   end
