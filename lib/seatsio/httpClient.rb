@@ -1,6 +1,7 @@
 require "rest-client"
 require "seatsio/exception"
 require "base64"
+require "cgi"
 
 module Seatsio
   class HttpClient
@@ -11,7 +12,7 @@ module Seatsio
 
     def get(*args)
       begin
-        RestClient.get @base_url + args[0], {:Authorization => 'Basic ' + @secret_key}
+        RestClient.get @base_url + "/" + args[0], {:Authorization => 'Basic ' + @secret_key}
       rescue RestClient::Exceptions::Timeout
         raise SeatsioException.new("Timeout ERROR")
       rescue RestClient::NotFound
@@ -21,8 +22,18 @@ module Seatsio
       end
     end
 
-    def post(*args)
-      RestClient.post @base_url + args[0], {:Authorization => 'Basic ' + @secret_key}
+    def post(endpoint, payload)
+      begin
+        url = @base_url + "/" + endpoint
+        puts url
+        RestClient.post url, payload, {:Authorization => 'Basic ' + @secret_key}
+      rescue RestClient::Exceptions::Timeout
+        raise SeatsioException.new("Timeout ERROR")
+      rescue RestClient::NotFound
+        raise SeatsioException.new("Error Not Found")
+      rescue SocketError
+        raise SeatsioException.new("Failed to connect to backend")
+      end
     end
   end
 end
