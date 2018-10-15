@@ -25,8 +25,6 @@ module Seatsio
     def post(endpoint, payload)
       begin
         url = @base_url + "/" + endpoint
-        puts url
-        puts payload
         RestClient.post url, payload, {:Authorization => 'Basic ' + @secret_key}
       rescue RestClient::Exceptions::Timeout
         raise SeatsioException.new("Timeout ERROR")

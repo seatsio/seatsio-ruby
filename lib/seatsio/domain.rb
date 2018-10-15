@@ -3,7 +3,8 @@ require "seatsio/util"
 module Seatsio::Domain
   class Chart
 
-    attr_reader :id, :key, :status, :name, :events, :tags, :archived, :venue_type
+    attr_reader :id, :key, :status, :name, :published_version_thumbnail_url,
+                :draft_version_thumbnail_url, :events, :tags, :archived, :venue_type
 
     def initialize(data)
       @id = data["id"]
@@ -38,6 +39,21 @@ module Seatsio::Domain
         result.append(Event.new(item))
       end
       return result
+    end
+  end
+
+  class Subaccount
+
+    attr_reader :id, :secret_key, :designer_key, :public_key, :name, :email, :active
+
+    def initialize(data)
+      @id = data["id"]
+      @secret_key = data["secretKey"]
+      @designer_key = data["designerKey"]
+      @public_key = data["publicKey"]
+      @name = data["name"]
+      @email = data["email"]
+      @active = data["active"]
     end
   end
 end

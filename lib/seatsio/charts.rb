@@ -44,7 +44,7 @@ module Seatsio
     end
 
     def add_tag(key, tag)
-      response = @http_client.post("charts/#{key}/tags/#{CGI::escape(tag)}", {})
+      @http_client.post("charts/#{key}/tags/#{CGI::escape(tag)}", {})
     end
 
     def copy(key)
@@ -52,13 +52,18 @@ module Seatsio
       Domain::Chart.new(JSON.parse(response))
     end
 
+    def copy_to_subaccount(chart_key, subaccount_id)
+      response = @http_client.post("charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}", {})
+      Domain::Chart.new(JSON.parse(response))
+    end
+
     def retrieve_published_version(key, as_chart=true)
-        response = @http_client.get("charts/#{key}/version/published")
-        if as_chart
-          Domain::Chart.new(JSON.parse(response))
-        else
-          response
-        end
+      response = @http_client.get("charts/#{key}/version/published")
+      if as_chart
+        Domain::Chart.new(JSON.parse(response))
+      else
+        response
+      end
     end
   end
 end
