@@ -58,4 +58,10 @@ class SeatsioTest < Minitest::Test
     assert_kind_of(RestClient::Response, query)
   end
 
+  def test_get_chart_with_events
+    chart_key = create_chart_from_file
+    query = @seatsio.client.charts.retrieve_with_events(chart_key)
+    assert_kind_of(RestClient::Response, query)
+  end
+
 end

@@ -11,5 +11,9 @@ module Seatsio
     def retrieve(chart_key)
       @http_client.get("/charts/" + chart_key)
     end
+
+    def retrieve_with_events(chart_key)
+      @http_client.get("/charts/" + chart_key + "?expand=events")
+    end
   end
 end
