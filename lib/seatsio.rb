@@ -1,14 +1,13 @@
-require "seatsio/version"
-require "seatsio/client"
+require 'seatsio/version'
+require 'seatsio/client'
 
 module Seatsio
+  # Main Seatsio Class
   class Seatsio
-    def initialize(secret_key, base_url="https://api.seatsio.net")
-      @client = Client.new(secret_key, base_url)
-    end
+    attr_reader :client
 
-    def client
-      @client
+    def initialize(secret_key, base_url = 'https://api.seatsio.net')
+      @client = Client.new(secret_key, base_url)
     end
   end
 end

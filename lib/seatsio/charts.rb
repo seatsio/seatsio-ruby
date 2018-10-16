@@ -1,9 +1,9 @@
-require "seatsio/exception"
-require "base64"
-require "seatsio/httpClient"
-require "seatsio/domain"
-require "json"
-require "cgi"
+require 'seatsio/exception'
+require 'base64'
+require 'seatsio/httpClient'
+require 'seatsio/domain'
+require 'json'
+require 'cgi'
 
 module Seatsio
   class ChartsClient
@@ -23,15 +23,15 @@ module Seatsio
 
     def build_chart_request(name=nil, venue_type=nil, categories=nil)
       result = {}
-      result["name"] = name if name
-      result["venueType"] = venue_type if venue_type
-      result["categories"] = categories if categories
+      result['name'] = name if name
+      result['venueType'] = venue_type if venue_type
+      result['categories'] = categories if categories
       result
     end
 
     def create(name=nil, venue_type=nil, categories=nil)
       payload = build_chart_request(name, venue_type, categories).to_json
-      response = @http_client.post("charts", payload)
+      response = @http_client.post('charts', payload)
       Domain::Chart.new(JSON.parse(response))
     end
 
@@ -59,7 +59,7 @@ module Seatsio
       Domain::Chart.new(JSON.parse(response))
     end
 
-    def retrieve_published_version(key, as_chart=true)
+    def retrieve_published_version(key, as_chart = true)
       response = @http_client.get("charts/#{key}/version/published")
       if as_chart
         Domain::Chart.new(JSON.parse(response))
