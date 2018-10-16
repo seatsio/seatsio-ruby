@@ -3,3 +3,5 @@ language: ruby
 rvm:
   - 2.5.1
 before_install: gem install bundler -v 1.16.1
+notifications:
+  slack: seatsio:AGaZISx4HlvoEx6WTbVaX50V

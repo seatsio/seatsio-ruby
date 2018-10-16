@@ -43,4 +43,19 @@ class CreateChartTest < Minitest::Test
     assert_equal('BOOTHS', drawing.venue_type)
     assert_empty(drawing.categories.list)
   end
+
+  def test_categories
+    categories = [
+        {:key => 1, :label => 'Category 1', :color => '#aaaaaa'},
+        {:key => 2, :label => 'Category 2', :color => '#bbbbbb'}
+    ]
+
+    chart = @seatsio.client.charts.create(nil, nil, categories)
+    assert_equal('Untitled chart', chart.name)
+
+    drawing = @seatsio.client.charts.retrieve_published_version(chart.key)
+    assert_equal('MIXED', drawing.venue_type)
+    #assert_includes(drawing.categories.list, {:key => 1, :label => 'Category 1', :color => '#aaaaaa'})
+    #assert_includes(drawing.categories.list, {"key": 2, "label": "Category 2", "color": "#bbbbbb"})
+  end
 end
