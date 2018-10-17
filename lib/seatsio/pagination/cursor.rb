@@ -47,8 +47,14 @@ module Seatsio::Pagination
       begin
         response = @http_client.get(@endpoint, merged_params)
         items = JSON.parse(response).fetch('items')
+        parsed_items = []
+
+        items.each do |item|
+          parsed_items.append(@cls.new(item))
+        end
+
         @last_response_empty = response.empty?
-        @collection += items
+        @collection += parsed_items
         @start_after_id = items.last['id'] unless last?
       rescue Seatsio::Exception::NoMorePagesException
         @last_response_empty = true

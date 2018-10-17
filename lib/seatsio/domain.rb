@@ -29,7 +29,7 @@ module Seatsio::Domain
       @name = data["name"]
       @published_version_thumbnail_url = data["publishedVersionThumbnailUrl"]
       @draft_version_thumbnail_url = data["draftVersionThumbnailUrl"]
-      @events = Event.create_list(data["events"])
+      @events = Event.create_list(data["events"]) if data["events"]
       @tags = data["tags"]
       @archived = data["archived"]
       @venue_type = data["venueType"]
@@ -39,6 +39,10 @@ module Seatsio::Domain
   end
 
   class Event
+
+    attr_accessor :id, :key, :chart_key, :book_whole_tables, :supports_best_available,
+                  :created_on, :updated_on
+
     def initialize(data)
       @id = data["id"]
       @key = data["key"]
@@ -50,11 +54,13 @@ module Seatsio::Domain
       @updated_on = parse_date(data["updatedOn"])
     end
 
-    def self.create_list(list)
+    def self.create_list(list = [])
       result = []
-      for item in result
+
+      list.each do |item|
         result.append(Event.new(item))
       end
+
       return result
     end
   end

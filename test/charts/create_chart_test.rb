@@ -17,7 +17,7 @@ class CreateChartTest < Minitest::Test
     assert_equal('Untitled chart', chart.name)
     assert chart.published_version_thumbnail_url != ''
     assert_nil(chart.draft_version_thumbnail_url)
-    assert_empty(chart.events)
+    assert_nil(chart.events)
     assert_empty(chart.tags)
     assert_equal(false, chart.archived)
 
