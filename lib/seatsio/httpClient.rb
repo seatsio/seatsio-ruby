@@ -2,6 +2,7 @@ require "rest-client"
 require "seatsio/exception"
 require "base64"
 require "cgi"
+require "uri"
 
 module Seatsio
   class HttpClient
@@ -10,28 +11,36 @@ module Seatsio
       @base_url = base_url
     end
 
-    def get(*args)
+    def get(endpoint, params = {})
       begin
-        RestClient.get @base_url + "/" + args[0], {:Authorization => 'Basic ' + @secret_key}
+        headers = {:params => params, :Authorization => "Basic #{@secret_key}"}
+        url = "#{@base_url}/#{endpoint}"
+
+        RestClient.get(url, headers)
+      rescue RestClient::ExceptionWithResponse => e
+        if e.response.include? "there is no page after"
+          raise Exception::NoMorePagesException
+        end
       rescue RestClient::Exceptions::Timeout
-        raise SeatsioException.new("Timeout ERROR")
+        raise Exception::SeatsioException.new("Timeout ERROR")
       rescue RestClient::NotFound
-        raise SeatsioException.new("Error Not Found")
+        raise Exception::SeatsioException.new("Error Not Found")
       rescue SocketError
-        raise SeatsioException.new("Failed to connect to backend")
+        raise Exception::SeatsioException.new("Failed to connect to backend")
       end
     end
 
     def post(endpoint, payload)
       begin
         url = @base_url + "/" + endpoint
+
         RestClient.post url, payload, {:Authorization => 'Basic ' + @secret_key}
       rescue RestClient::Exceptions::Timeout
-        raise SeatsioException.new("Timeout ERROR")
+        raise Exception::SeatsioException.new("Timeout ERROR")
       rescue RestClient::NotFound
-        raise SeatsioException.new("Error Not Found")
+        raise Exception::SeatsioException.new("Error Not Found")
       rescue SocketError
-        raise SeatsioException.new("Failed to connect to backend")
+        raise Exception::SeatsioException.new("Failed to connect to backend")
       end
     end
   end

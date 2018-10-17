@@ -2,6 +2,7 @@ require 'seatsio/exception'
 require 'base64'
 require 'seatsio/httpClient'
 require 'seatsio/domain'
+require 'seatsio/pagination/cursor'
 require 'json'
 require 'cgi'
 
@@ -66,6 +67,21 @@ module Seatsio
       else
         response
       end
+    end
+
+    def discard_draft_version(key)
+      @http_client.post("/charts/#{key}/version/draft/actions/discard", {} )
+    end
+
+    def list(chart_filter = nil, tag = nil, expand_events = nil)
+      cursor = Pagination::Cursor.new(Domain::Chart, 'charts', @http_client)
+      cursor.set_query_param('filter', chart_filter)
+      cursor.set_query_param('tag', tag)
+
+      if expand_events
+        cursor.set_query_param('expand', 'events')
+      end
+      cursor
     end
   end
 end
