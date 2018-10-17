@@ -5,6 +5,8 @@ module Seatsio::Pagination
   class Cursor
     include Enumerable
 
+    attr_accessor :params
+
     MAX = 20
 
     def initialize(cls, endpoint, http_client, params = {})

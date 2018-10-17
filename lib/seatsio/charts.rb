@@ -81,6 +81,7 @@ module Seatsio
       if expand_events
         cursor.set_query_param('expand', 'events')
       end
+
       cursor
     end
   end
