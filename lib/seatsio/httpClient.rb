@@ -15,10 +15,10 @@ module Seatsio
       begin
         headers = {:params => params, :Authorization => "Basic #{@secret_key}"}
         url = "#{@base_url}/#{endpoint}"
-
-        RestClient.get(url, headers)
+        response = RestClient.get(url, headers)
+        JSON.parse(response)
       rescue RestClient::ExceptionWithResponse => e
-        if e.response.include? "there is no page after"
+        if e.response.include? "there is no page after" || e.response.empty?
           raise Exception::NoMorePagesException
         end
       rescue RestClient::Exceptions::Timeout
@@ -33,8 +33,8 @@ module Seatsio
     def post(endpoint, payload = {})
       begin
         url = @base_url + "/" + endpoint
-
-        RestClient.post url, payload, {:Authorization => 'Basic ' + @secret_key}
+        response = RestClient.post url, payload, {:Authorization => 'Basic ' + @secret_key, :accept => :json}
+        JSON.parse(response) unless response.empty?
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")
       rescue RestClient::NotFound

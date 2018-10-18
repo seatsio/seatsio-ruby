@@ -5,7 +5,7 @@ module Seatsio::Pagination
   class Cursor
     include Enumerable
 
-    attr_accessor :params
+    attr_accessor :params, :next_page_starts_after, :previous_page_ends_before
 
     MAX = 20
 
@@ -20,6 +20,11 @@ module Seatsio::Pagination
       @start_after_id = params.fetch(:start_after_id, nil)
       @start_before_id = params.fetch(:start_before_id, nil)
       @limit = params.fetch(:limit, MAX)
+
+      @next_page_starts_after = nil
+      @previous_page_ends_before = nil
+
+      @first_page = false
     end
 
     def each(start = 0)
@@ -28,6 +33,9 @@ module Seatsio::Pagination
       Array(@collection[start..-1]).each do |element|
         yield(element)
       end
+
+      return if @first_page and @collection.size > 0
+      return if params[:limit] != nil and @collection.size > 0
 
       unless last?
         start = [@collection.size, start].max
@@ -39,23 +47,20 @@ module Seatsio::Pagination
     end
 
     def fetch_next_page
-      merged_params = @params
-      merged_params[:start_after_id] = @start_after_id if @start_after_id
-      merged_params[:start_before_id] = @start_before_id if @start_before_id
-      merged_params[:limit] = @limit if @limit
-
       begin
-        response = @http_client.get(@endpoint, merged_params)
-        items = JSON.parse(response).fetch('items')
+        response = @http_client.get(@endpoint, @params)
+        @next_page_starts_after = response["next_page_starts_after"].to_i if response["next_page_starts_after"]
+        @previous_page_ends_before = response["previous_page_ends_before"].to_i if response["previous_page_ends_before"]
+        items = response["items"]
         parsed_items = []
 
         items.each do |item|
           parsed_items.append(@cls.new(item))
         end
 
-        @last_response_empty = response.empty?
+        #@last_response_empty = response.empty?
         @collection += parsed_items
-        @start_after_id = items.last['id'] unless last?
+        set_query_param(:start_after_id, items.last['id']) unless last?
       rescue Seatsio::Exception::NoMorePagesException
         @last_response_empty = true
       end
@@ -69,6 +74,18 @@ module Seatsio::Pagination
       if value
         @params[key] = value
       end
+    end
+
+    def first_page(limit = nil)
+      @first_page = true
+      set_query_param(:limit, limit) if limit != nil
+      self
+    end
+
+    def page_after(after_id = nil, limit = nil)
+      set_query_param(:start_after_id, after_id) if after_id != nil
+      set_query_param(:limit, limit) if limit != nil
+      self
     end
   end
 end

@@ -67,8 +67,6 @@ class ListAllChartsTest < Minitest::Test
 
     event_ids = retrieved_charts[0].events.collect {|event| event.id}
     assert_equal([event2.id, event1.id], event_ids)
-      #assert_that(retrieved_charts[0].events).extracting("id").contains_exactly(event2.id, event1.id)
-
   end
 
   private

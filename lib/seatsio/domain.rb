@@ -79,4 +79,15 @@ module Seatsio::Domain
       @active = data["active"]
     end
   end
+
+  class APIResponse
+
+    attr_reader :next_page_starts_after, :previous_page_ends_before, :items
+
+    def initialize(data)
+      @next_page_starts_after = data.fetch('next_page_starts_after', nil).to_i
+      @previous_page_ends_before = data.fetch('previous_page_ends_before', nil).to_i
+      @items = data.fetch('items', [])
+    end
+  end
 end

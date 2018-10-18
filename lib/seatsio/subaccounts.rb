@@ -18,7 +18,7 @@ module Seatsio
       body['email'] = email if email
 
       response = @http_client.post("subaccounts", body)
-      Domain::Subaccount.new(JSON.parse(response))
+      Domain::Subaccount.new(response)
     end
   end
 end
