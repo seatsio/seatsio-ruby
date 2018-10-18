@@ -30,7 +30,7 @@ module Seatsio
       end
     end
 
-    def post(endpoint, payload)
+    def post(endpoint, payload = {})
       begin
         url = @base_url + "/" + endpoint
 

@@ -8,8 +8,12 @@ require 'cgi'
 
 module Seatsio
   class ChartsClient
+
+    attr_reader :archive
+
     def initialize(secret_key, base_url)
       @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
+      @archive = Pagination::Cursor.new(Domain::Chart, 'charts/archive', @http_client)
     end
 
     def retrieve(chart_key)
@@ -83,6 +87,15 @@ module Seatsio
       end
 
       cursor
+    end
+
+    def list_all_tags
+      response = @http_client.get('charts/tags')
+      JSON.parse(response)["tags"]
+    end
+
+    def move_to_archive(chart_key)
+      @http_client.post("charts/#{chart_key}/actions/move-to-archive")
     end
   end
 end
