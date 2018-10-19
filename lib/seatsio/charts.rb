@@ -35,13 +35,13 @@ module Seatsio
     end
 
     def create(name=nil, venue_type=nil, categories=nil)
-      payload = build_chart_request(name, venue_type, categories).to_json
+      payload = build_chart_request(name, venue_type, categories)
       response = @http_client.post('charts', payload)
       Domain::Chart.new(response)
     end
 
     def update(key, new_name=nil, categories=nil)
-      payload = build_chart_request(name=new_name, categories=categories).to_json
+      payload = build_chart_request(name=new_name, categories=categories)
       response = @http_client.post("charts/#{key}", payload)
     end
 
@@ -49,18 +49,22 @@ module Seatsio
       @http_client.post("charts/#{key}/tags/#{CGI::escape(tag)}")
     end
 
+    def remove_tag(key, tag)
+      @http_client.delete("charts/#{key}/tags/#{tag}")
+    end
+
     def copy(key)
-      response = @http_client.post("charts/#{key}/version/published/actions/copy", {})
+      response = @http_client.post("charts/#{key}/version/published/actions/copy")
       Domain::Chart.new(response)
     end
 
     def copy_to_subaccount(chart_key, subaccount_id)
-      response = @http_client.post("charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}", {})
+      response = @http_client.post("charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}")
       Domain::Chart.new(response)
     end
 
     def copy_draft_version(key)
-      response = @http_client.post("charts/#{key}/version/draft/actions/copy", {})
+      response = @http_client.post("charts/#{key}/version/draft/actions/copy")
       Domain::Chart.new(response)
     end
 
@@ -74,7 +78,11 @@ module Seatsio
     end
 
     def discard_draft_version(key)
-      @http_client.post("/charts/#{key}/version/draft/actions/discard", {} )
+      @http_client.post("/charts/#{key}/version/draft/actions/discard")
+    end
+
+    def publish_draft_version(chart_key)
+      @http_client.post("charts/#{chart_key}/version/draft/actions/publish")
     end
 
     def list(chart_filter = nil, tag = nil, expand_events = nil)
@@ -102,6 +110,10 @@ module Seatsio
 
     def move_to_archive(chart_key)
       @http_client.post("charts/#{chart_key}/actions/move-to-archive")
+    end
+
+    def move_out_of_archive(chart_key)
+      @http_client.post("charts/#{chart_key}/actions/move-out-of-archive")
     end
   end
 end

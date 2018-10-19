@@ -11,16 +11,26 @@ module Seatsio
       @base_url = base_url
     end
 
-    def get(endpoint, params = {})
+    def execute(*args)
       begin
-        headers = {:params => params, :Authorization => "Basic #{@secret_key}"}
-        url = "#{@base_url}/#{endpoint}"
-        response = RestClient.get(url, headers)
-        JSON.parse(response)
+        headers = {:Authorization => "Basic #{@secret_key}"}
+
+        if !args[2].empty? || args[0] == :post
+          headers[:params] = args[2]
+        end
+
+        url = "#{@base_url}/#{args[1]}"
+
+        request_options = {method: args[0], url: url, headers: headers}
+        request_options[:payload] = args[2].to_json if args[0] == :post
+
+        response = RestClient::Request.execute(request_options)
+        JSON.parse(response) unless response.empty?
       rescue RestClient::ExceptionWithResponse => e
         if e.response.include? "there is no page after" || e.response.empty?
           raise Exception::NoMorePagesException
         end
+        raise Exception::SeatsioException.new(e.response)
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")
       rescue RestClient::NotFound
@@ -30,18 +40,16 @@ module Seatsio
       end
     end
 
+    def get(endpoint, params = {})
+      execute(:get, endpoint, params)
+    end
+
     def post(endpoint, payload = {})
-      begin
-        url = @base_url + "/" + endpoint
-        response = RestClient.post url, payload, {:Authorization => 'Basic ' + @secret_key, :accept => :json}
-        JSON.parse(response) unless response.empty?
-      rescue RestClient::Exceptions::Timeout
-        raise Exception::SeatsioException.new("Timeout ERROR")
-      rescue RestClient::NotFound
-        raise Exception::SeatsioException.new("Error Not Found")
-      rescue SocketError
-        raise Exception::SeatsioException.new("Failed to connect to backend")
-      end
+      execute(:post, endpoint, payload)
+    end
+
+    def delete(endpoint)
+      execute(:delete, endpoint, {})
     end
   end
 end

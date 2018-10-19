@@ -21,7 +21,7 @@ module Seatsio
     end
 
     def create(chart_key, event_key=nil, book_whole_tables=nil)
-      payload = build_event_request(chart_key, event_key, book_whole_tables).to_json
+      payload = build_event_request(chart_key, event_key, book_whole_tables)
       response = @http_client.post("events", payload)
       Domain::Event.new(response)
     end
