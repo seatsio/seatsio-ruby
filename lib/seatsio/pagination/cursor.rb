@@ -17,9 +17,9 @@ module Seatsio::Pagination
 
       @collection = []
 
-      @start_after_id = params.fetch(:start_after_id, nil)
-      @start_before_id = params.fetch(:start_before_id, nil)
-      @limit = params.fetch(:limit, MAX)
+      #@start_after_id = params.fetch(:start_after_id, nil)
+      #@start_before_id = params.fetch(:start_before_id, nil)
+      #@limit = params.fetch(:limit, MAX)
 
       @next_page_starts_after = nil
       @previous_page_ends_before = nil
@@ -36,6 +36,7 @@ module Seatsio::Pagination
 
       return if @first_page and @collection.size > 0
       return if params[:limit] != nil and @collection.size > 0
+      return if @params.include?(:end_before_id) and @collection.size > 0
 
       unless last?
         start = [@collection.size, start].max
@@ -84,6 +85,12 @@ module Seatsio::Pagination
 
     def page_after(after_id = nil, limit = nil)
       set_query_param(:start_after_id, after_id) if after_id != nil
+      set_query_param(:limit, limit) if limit != nil
+      self
+    end
+
+    def page_before(before_id = nil, limit = nil)
+      set_query_param(:end_before_id, before_id) if before_id != nil
       set_query_param(:limit, limit) if limit != nil
       self
     end
