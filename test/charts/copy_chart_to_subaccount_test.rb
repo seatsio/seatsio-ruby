@@ -9,7 +9,7 @@ class CopyChartToSubaccountTest < Minitest::Test
 
   def test_copy_to_subaccount
     chart = @seatsio.client.charts.create("my chart", "BOOTHS")
-    subaccount = @seatsio.client.subaccounts.create()
+    subaccount = @seatsio.client.subaccounts.create
 
     copied_chart = @seatsio.client.charts.copy_to_subaccount(chart.key, subaccount.id)
 

@@ -87,7 +87,7 @@ module Seatsio::Domain
   class ChartValidationSettings
     attr_reader :validate_duplicate_labels, :validate_objects_without_categories,
                 :validate_unlabeled_objects
-    
+
     def initialize(data)
       @validate_duplicate_labels = data['VALIDATE_DUPLICATE_LABELS']
       @validate_objects_without_categories = data['VALIDATE_OBJECTS_WITHOUT_CATEGORIES']
@@ -116,7 +116,7 @@ module Seatsio::Domain
       @name = data["name"]
       @email = data["email"]
       @active = data["active"]
-      @settings = AccountSettings.new(data['settings'])
+      @settings = AccountSettings.new(data['settings']) if data['settings'] != nil
     end
   end
 
