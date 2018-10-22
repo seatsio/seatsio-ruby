@@ -73,21 +73,6 @@ module Seatsio::Domain
     end
   end
 
-  class Subaccount
-
-    attr_reader :id, :secret_key, :designer_key, :public_key, :name, :email, :active
-
-    def initialize(data)
-      @id = data["id"]
-      @secret_key = data["secretKey"]
-      @designer_key = data["designerKey"]
-      @public_key = data["publicKey"]
-      @name = data["name"]
-      @email = data["email"]
-      @active = data["active"]
-    end
-  end
-
   class APIResponse
 
     attr_reader :next_page_starts_after, :previous_page_ends_before, :items
@@ -97,5 +82,44 @@ module Seatsio::Domain
       @previous_page_ends_before = data.fetch('previous_page_ends_before', nil).to_i
       @items = data.fetch('items', [])
     end
+  end
+
+  class ChartValidationSettings
+    attr_reader :validate_duplicate_labels, :validate_objects_without_categories,
+                :validate_unlabeled_objects
+    
+    def initialize(data)
+      @validate_duplicate_labels = data['VALIDATE_DUPLICATE_LABELS']
+      @validate_objects_without_categories = data['VALIDATE_OBJECTS_WITHOUT_CATEGORIES']
+      @validate_unlabeled_objects = data['VALIDATE_UNLABELED_OBJECTS']
+    end
+  end
+
+  class AccountSettings
+    attr_reader :draft_chart_drawings_enabled, :chart_validation
+
+    def initialize(data)
+      @draft_chart_drawings_enabled = data["draftChartDrawingsEnabled"]
+      @chart_validation = ChartValidationSettings.new(data["chartValidation"])
+    end
+  end
+
+  class Account
+    attr_reader :id, :secret_key, :designer_key, :public_key, :name,
+                :email, :active, :settings
+
+    def initialize(data)
+      @id = data["id"]
+      @secret_key = data["secretKey"]
+      @designer_key = data["designerKey"]
+      @public_key = data["publicKey"]
+      @name = data["name"]
+      @email = data["email"]
+      @active = data["active"]
+      @settings = AccountSettings.new(data['settings'])
+    end
+  end
+
+  class Subaccount < Account
   end
 end
