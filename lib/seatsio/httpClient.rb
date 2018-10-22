@@ -25,6 +25,9 @@ module Seatsio
         request_options[:payload] = args[2].to_json if args[0] == :post
 
         response = RestClient::Request.execute(request_options)
+        if args[3]
+          return response
+        end
         JSON.parse(response) unless response.empty?
       rescue RestClient::ExceptionWithResponse => e
         if e.response.include? "there is no page after" || e.response.empty?
@@ -38,6 +41,10 @@ module Seatsio
       rescue SocketError
         raise Exception::SeatsioException.new("Failed to connect to backend")
       end
+    end
+
+    def get_raw(endpoint, params = {})
+      execute(:get, endpoint, params, true)
     end
 
     def get(endpoint, params = {})

@@ -14,8 +14,8 @@ class RemoveTagTest < Minitest::Test
 
     @seatsio.client.charts.remove_tag(chart.key, "tag2")
 
-    retreived_chart = @seatsio.client.charts.retrieve(chart.key)
+    retrieved_chart = @seatsio.client.charts.retrieve(chart.key)
 
-    assert_equal(['tag1'], retreived_chart.tags)
+    assert_equal(['tag1'], retrieved_chart.tags)
   end
 end

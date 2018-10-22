@@ -16,6 +16,7 @@ module Seatsio
       @archive = Pagination::Cursor.new(Domain::Chart, 'charts/archive', @http_client)
     end
 
+    # @return [Seatsio::Domain::Chart]
     def retrieve(chart_key)
       response = @http_client.get("charts/#{chart_key}")
       Domain::Chart.new(response)
@@ -34,6 +35,7 @@ module Seatsio
       result
     end
 
+    # @return [Seatsio::Domain::Chart]
     def create(name=nil, venue_type=nil, categories=nil)
       payload = build_chart_request(name, venue_type, categories)
       response = @http_client.post('charts', payload)
@@ -77,8 +79,21 @@ module Seatsio
       end
     end
 
+    def retrieve_draft_version(key)
+      response = @http_client.get("charts/#{key}/version/draft")
+      Domain::ChartDraft.new(response)
+    end
+
+    def retrieve_draft_version_thumbnail(key)
+      @http_client.get_raw("charts/#{key}/version/draft/thumbnail")
+    end
+
+    def retrieve_published_version_thumbnail(key)
+      @http_client.get_raw("charts/#{key}/version/published/thumbnail")
+    end
+
     def discard_draft_version(key)
-      @http_client.post("/charts/#{key}/version/draft/actions/discard")
+      @http_client.post("charts/#{key}/version/draft/actions/discard")
     end
 
     def publish_draft_version(chart_key)

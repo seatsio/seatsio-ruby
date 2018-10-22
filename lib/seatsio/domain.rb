@@ -38,6 +38,14 @@ module Seatsio::Domain
     end
   end
 
+  class ChartDraft < Chart
+    attr_reader :version
+    def initialize(data)
+      super(data)
+      @version = data["version"]
+    end
+  end
+
   class Event
 
     attr_accessor :id, :key, :chart_key, :book_whole_tables, :supports_best_available,
