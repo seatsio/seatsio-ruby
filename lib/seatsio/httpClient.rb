@@ -14,17 +14,25 @@ module Seatsio
     def execute(*args)
       begin
         headers = {:Authorization => "Basic #{@secret_key}"}
-
-        if !args[2].empty? || args[0] == :post
-          headers[:params] = args[2]
+        if args[2].include? :params
+          headers[:params] = args[2][:params]
         end
+        #if args[2] != nil || args[0] == :post
+        #  headers[:params] = args[2]
+        #end
 
         url = "#{@base_url}/#{args[1]}"
 
         request_options = {method: args[0], url: url, headers: headers}
-        request_options[:payload] = args[2].to_json if args[0] == :post
+
+        if args[0] == :post
+          args[2].delete :params
+          request_options[:payload] = args[2].to_json
+        end
 
         response = RestClient::Request.execute(request_options)
+
+        # If RAW
         if args[3]
           return response
         end
@@ -48,7 +56,8 @@ module Seatsio
     end
 
     def get(endpoint, params = {})
-      execute(:get, endpoint, params)
+      payload = {:params => params}
+      execute(:get, endpoint, payload)
     end
 
     def post(endpoint, payload = {})

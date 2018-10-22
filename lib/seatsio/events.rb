@@ -5,8 +5,10 @@ require "seatsio/domain"
 require "json"
 require "cgi"
 require "seatsio/domain"
+require "seatsio/events/change_object_status_request"
 
 module Seatsio
+
   class EventsClient
     def initialize(secret_key, base_url)
       @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
@@ -25,5 +27,24 @@ module Seatsio
       response = @http_client.post("events", payload)
       Domain::Event.new(response)
     end
+
+    def retrieve_object_status(key, object_key)
+      response = @http_client.get("/events/#{key}/objects/#{object_key}")
+      Domain::ObjectStatus.new(response)
+    end
+
+    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil)
+      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id)
+    end
+
+    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil)
+      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys)
+      request[:params] = {
+        'expand' => 'labels'
+      }
+      response = @http_client.post("seasons/actions/change-object-status", request)
+      Domain::ChangeObjectStatusResult.new(response)
+    end
+
   end
 end

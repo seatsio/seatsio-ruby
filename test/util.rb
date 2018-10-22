@@ -1,5 +1,6 @@
 require "rest-client"
 require "json"
+require 'seatsio/exception'
 
 BASE_URL = "https://api-staging.seatsio.net"
 
@@ -8,7 +9,7 @@ def create_test_user
     post = RestClient.post(BASE_URL + "/system/public/users/actions/create-test-user",{})
     JSON.parse(post)
   rescue
-    raise Exception("Failed to create a test user")
+    raise Seatsio::Exception::SeatsioException.new("Failed to create a test user")
   end
 end
 
