@@ -8,11 +8,11 @@ class ListPageOfChartsBeforeTest < Minitest::Test
   end
 
   def test_with_previous_page
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list.page_before(chart1.id)
+    charts = @seatsio.charts.list.page_before(chart1.id)
     charts_ids = charts.collect {|chart| chart.id}
     
     assert_equal([chart3.id, chart2.id], charts_ids)
@@ -21,11 +21,11 @@ class ListPageOfChartsBeforeTest < Minitest::Test
   end
 
   def test_with_next_and_previous_page
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list.page_before(chart1.id, page_size=1)
+    charts = @seatsio.charts.list.page_before(chart1.id, page_size=1)
     charts_ids = charts.collect {|chart| chart.id}
 
     assert_equal([chart2.id], charts_ids)

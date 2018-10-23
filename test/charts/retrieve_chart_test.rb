@@ -8,11 +8,11 @@ class RetrieveChartTest < Minitest::Test
   end
 
   def test_retrieve_chart
-    chart = @seatsio.client.charts.create
-    @seatsio.client.charts.add_tag(chart.key, 'tag1')
-    @seatsio.client.charts.add_tag(chart.key, 'tag2')
+    chart = @seatsio.charts.create
+    @seatsio.charts.add_tag(chart.key, 'tag1')
+    @seatsio.charts.add_tag(chart.key, 'tag2')
 
-    retrieved_chart = @seatsio.client.charts.retrieve(chart.key)
+    retrieved_chart = @seatsio.charts.retrieve(chart.key)
 
     assert_instance_of(Seatsio::Domain::Chart, retrieved_chart)
     assert_operator(retrieved_chart.id, :!=, 0)
@@ -27,11 +27,11 @@ class RetrieveChartTest < Minitest::Test
   end
 
   def test_with_events
-    chart = @seatsio.client.charts.create
-    event1 = @seatsio.client.events.create(chart.key)
-    event2 = @seatsio.client.events.create(chart.key)
+    chart = @seatsio.charts.create
+    event1 = @seatsio.events.create(chart.key)
+    event2 = @seatsio.events.create(chart.key)
 
-    retrieved_chart = @seatsio.client.charts.retrieve_with_events(chart.key)
+    retrieved_chart = @seatsio.charts.retrieve_with_events(chart.key)
     
     retrieved_chart_ids = retrieved_chart.events.collect {|c| c.id}
     assert_equal([event2.id, event1.id], retrieved_chart_ids)

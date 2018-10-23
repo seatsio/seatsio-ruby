@@ -8,11 +8,11 @@ class RetrieveDraftVersionThumbnailTest < Minitest::Test
   end
 
   def test_retrieve_draft_version_thumbnail
-    chart = @seatsio.client.charts.create
-    @seatsio.client.events.create(chart.key)
-    @seatsio.client.charts.update(chart.key, 'newname')
+    chart = @seatsio.charts.create
+    @seatsio.events.create(chart.key)
+    @seatsio.charts.update(chart.key, 'newname')
 
-    thumbnail = @seatsio.client.charts.retrieve_draft_version_thumbnail(chart.key)
+    thumbnail = @seatsio.charts.retrieve_draft_version_thumbnail(chart.key)
     assert_match(/<!DOCTYPE svg/, thumbnail)
   end
 end

@@ -8,11 +8,11 @@ class ListAllChartsTest < Minitest::Test
   end
 
   def test_all
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list
+    charts = @seatsio.charts.list
 
     keys = charts.collect {|chart| chart.key}
 
@@ -22,11 +22,11 @@ class ListAllChartsTest < Minitest::Test
   end
 
   def test_filter
-    chart1 = @seatsio.client.charts.create('some stadium')
-    chart2 = @seatsio.client.charts.create('a theatre')
-    chart3 = @seatsio.client.charts.create('some other stadium')
+    chart1 = @seatsio.charts.create('some stadium')
+    chart2 = @seatsio.charts.create('a theatre')
+    chart3 = @seatsio.charts.create('some other stadium')
 
-    charts = @seatsio.client.charts.list('stadium')
+    charts = @seatsio.charts.list('stadium')
 
     keys = charts.collect {|chart| chart.key}
 
@@ -35,10 +35,10 @@ class ListAllChartsTest < Minitest::Test
 
   def test_tag
     chart1 = chart_with_tag(nil, 'tag1')
-    chart2 = @seatsio.client.charts.create
+    chart2 = @seatsio.charts.create
     chart3 = chart_with_tag(nil, 'tag1')
 
-    charts = @seatsio.client.charts.list(nil, 'tag1')
+    charts = @seatsio.charts.list(nil, 'tag1')
 
     keys = charts.collect {|chart| chart.key}
     assert_equal([chart3.key, chart1.key], keys)
@@ -48,20 +48,20 @@ class ListAllChartsTest < Minitest::Test
     chart1 = chart_with_tag('some stadium', 'tag1')
     chart2 = chart_with_tag(nil, 'tag1')
     chart3 = chart_with_tag('some other stadium')
-    chart4 = @seatsio.client.charts.create
+    chart4 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list('stadium', 'tag1')
+    charts = @seatsio.charts.list('stadium', 'tag1')
 
     keys = charts.collect {|chart| chart.key}
     assert_equal([chart1.key], keys)
   end
 
   def test_expand
-    chart = @seatsio.client.charts.create
-    event1 = @seatsio.client.events.create(chart.key)
-    event2 = @seatsio.client.events.create(chart.key)
+    chart = @seatsio.charts.create
+    event1 = @seatsio.events.create(chart.key)
+    event2 = @seatsio.events.create(chart.key)
 
-    retrieved_charts = @seatsio.client.charts.list(nil, nil, true).to_a
+    retrieved_charts = @seatsio.charts.list(nil, nil, true).to_a
 
     assert_instance_of(Seatsio::Domain::Event, retrieved_charts[0].events[0])
 
@@ -73,8 +73,8 @@ class ListAllChartsTest < Minitest::Test
 
   def chart_with_tag(name = nil, tag = nil)
     return unless tag
-    chart = @seatsio.client.charts.create(name)
-    @seatsio.client.charts.add_tag(chart.key, tag)
+    chart = @seatsio.charts.create(name)
+    @seatsio.charts.add_tag(chart.key, tag)
     chart
   end
 end

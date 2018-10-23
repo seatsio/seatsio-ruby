@@ -8,11 +8,11 @@ class ListPageOfChartsAfterTest < Minitest::Test
   end
 
   def test_with_previous_page
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list.page_after(chart3.id)
+    charts = @seatsio.charts.list.page_after(chart3.id)
 
     charts_ids = charts.collect {|chart| chart.id}
 
@@ -22,11 +22,11 @@ class ListPageOfChartsAfterTest < Minitest::Test
   end
 
   def test_with_next_and_previous_pages
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list.page_after(chart3.id, 1)
+    charts = @seatsio.charts.list.page_after(chart3.id, 1)
 
     charts_ids = charts.collect {|chart| chart.id}
 

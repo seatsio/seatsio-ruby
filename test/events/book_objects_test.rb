@@ -9,17 +9,17 @@ class BookObjectsTest < Minitest::Test
 
   def test_book_objects
     chart_key = create_chart_from_file
-    event = @seatsio.client.events.create(chart_key)
+    event = @seatsio.events.create(chart_key)
 
-    a1_status = @seatsio.client.events.retrieve_object_status(event.key, 'A-1').status
-    a2_status = @seatsio.client.events.retrieve_object_status(event.key, 'A-2').status
-    a3_status = @seatsio.client.events.retrieve_object_status(event.key, 'A-3').status
+    a1_status = @seatsio.events.retrieve_object_status(event.key, 'A-1').status
+    a2_status = @seatsio.events.retrieve_object_status(event.key, 'A-2').status
+    a3_status = @seatsio.events.retrieve_object_status(event.key, 'A-3').status
 
-    res = @seatsio.client.events.book(event.key, %w(A-1 A-2))
+    res = @seatsio.events.book(event.key, %w(A-1 A-2))
 
-    a1_status = @seatsio.client.events.retrieve_object_status(event.key, 'A-1').status
-    a2_status = @seatsio.client.events.retrieve_object_status(event.key, 'A-2').status
-    a3_status = @seatsio.client.events.retrieve_object_status(event.key, 'A-3').status
+    a1_status = @seatsio.events.retrieve_object_status(event.key, 'A-1').status
+    a2_status = @seatsio.events.retrieve_object_status(event.key, 'A-2').status
+    a3_status = @seatsio.events.retrieve_object_status(event.key, 'A-3').status
 
     assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, a1_status)
     assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, a2_status)

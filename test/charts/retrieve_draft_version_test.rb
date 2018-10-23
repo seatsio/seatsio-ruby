@@ -8,11 +8,11 @@ class RetrieveDraftVersionTest < Minitest::Test
   end
 
   def test_retrieve_draft_version
-    chart = @seatsio.client.charts.create
-    @seatsio.client.events.create(chart.key)
-    @seatsio.client.charts.update(chart.key, 'newname')
+    chart = @seatsio.charts.create
+    @seatsio.events.create(chart.key)
+    @seatsio.charts.update(chart.key, 'newname')
 
-    draft_drawing = @seatsio.client.charts.retrieve_draft_version(chart.key)
+    draft_drawing = @seatsio.charts.retrieve_draft_version(chart.key)
 
     assert_equal('newname', draft_drawing.name)
   end

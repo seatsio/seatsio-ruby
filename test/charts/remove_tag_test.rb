@@ -8,13 +8,13 @@ class RemoveTagTest < Minitest::Test
   end
 
   def test_remove_tag
-    chart = @seatsio.client.charts.create
-    @seatsio.client.charts.add_tag(chart.key, "tag1")
-    @seatsio.client.charts.add_tag(chart.key, "tag2")
+    chart = @seatsio.charts.create
+    @seatsio.charts.add_tag(chart.key, "tag1")
+    @seatsio.charts.add_tag(chart.key, "tag2")
 
-    @seatsio.client.charts.remove_tag(chart.key, "tag2")
+    @seatsio.charts.remove_tag(chart.key, "tag2")
 
-    retrieved_chart = @seatsio.client.charts.retrieve(chart.key)
+    retrieved_chart = @seatsio.charts.retrieve(chart.key)
 
     assert_equal(['tag1'], retrieved_chart.tags)
   end

@@ -8,11 +8,11 @@ class ListFirstPageOfChartsTest < Minitest::Test
   end
 
   def test_all_on_first_page
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list
+    charts = @seatsio.charts.list
     # charts.set_query_param('limit', 2)
 
     keys = charts.first_page.collect {|chart| chart.id}
@@ -24,11 +24,11 @@ class ListFirstPageOfChartsTest < Minitest::Test
   end
   
   def test_some_on_first_page
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    charts = @seatsio.client.charts.list.first_page(2)
+    charts = @seatsio.charts.list.first_page(2)
     charts_ids = charts.collect {|chart| chart.id}
     
     assert_equal([chart3.id, chart2.id], charts_ids)

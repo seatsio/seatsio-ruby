@@ -8,14 +8,14 @@ class ListChartsInArchiveTest < Minitest::Test
   end
 
   def test_charts_in_archive
-    chart1 = @seatsio.client.charts.create
-    chart2 = @seatsio.client.charts.create
-    chart3 = @seatsio.client.charts.create
+    chart1 = @seatsio.charts.create
+    chart2 = @seatsio.charts.create
+    chart3 = @seatsio.charts.create
 
-    @seatsio.client.charts.move_to_archive(chart1.key)
-    @seatsio.client.charts.move_to_archive(chart3.key)
+    @seatsio.charts.move_to_archive(chart1.key)
+    @seatsio.charts.move_to_archive(chart3.key)
 
-    charts_in_archive = @seatsio.client.charts.archive
+    charts_in_archive = @seatsio.charts.archive
     
     keys = charts_in_archive.collect {|chart| chart.key}
     

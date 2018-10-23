@@ -8,7 +8,7 @@ class CreateChartTest < Minitest::Test
   end
 
   def test_default_parameters
-    chart = @seatsio.client.charts.create
+    chart = @seatsio.charts.create
 
     assert_instance_of(Seatsio::Domain::Chart, chart)
     assert_operator(chart.id, :>, 0)
@@ -21,25 +21,25 @@ class CreateChartTest < Minitest::Test
     assert_empty(chart.tags)
     assert_equal(false, chart.archived)
 
-    drawing = @seatsio.client.charts.retrieve_published_version(chart.key)
+    drawing = @seatsio.charts.retrieve_published_version(chart.key)
     assert_equal('MIXED', drawing.venue_type)
     assert_empty(drawing.categories.list)
   end
 
   def test_name
-    chart = @seatsio.client.charts.create('aChart')
+    chart = @seatsio.charts.create('aChart')
     assert_equal('aChart', chart.name)
 
-    drawing = @seatsio.client.charts.retrieve_published_version(chart.key)
+    drawing = @seatsio.charts.retrieve_published_version(chart.key)
     assert_equal('MIXED', drawing.venue_type)
     assert_empty(drawing.categories.list)
   end
 
   def test_venue_type
-    chart = @seatsio.client.charts.create(nil, 'BOOTHS')
+    chart = @seatsio.charts.create(nil, 'BOOTHS')
     assert_equal('Untitled chart', chart.name)
 
-    drawing = @seatsio.client.charts.retrieve_published_version(chart.key)
+    drawing = @seatsio.charts.retrieve_published_version(chart.key)
     assert_equal('BOOTHS', drawing.venue_type)
     assert_empty(drawing.categories.list)
   end
@@ -50,10 +50,10 @@ class CreateChartTest < Minitest::Test
         {:key => 2, :label => 'Category 2', :color => '#bbbbbb'}
     ]
 
-    chart = @seatsio.client.charts.create(nil, nil, categories)
+    chart = @seatsio.charts.create(nil, nil, categories)
     assert_equal('Untitled chart', chart.name)
 
-    drawing = @seatsio.client.charts.retrieve_published_version(chart.key)
+    drawing = @seatsio.charts.retrieve_published_version(chart.key)
     assert_equal('MIXED', drawing.venue_type)
     assert_includes(drawing.categories.list, {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa'})
     assert_includes(drawing.categories.list, {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb'})

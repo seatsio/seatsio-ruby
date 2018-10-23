@@ -8,14 +8,14 @@ class ListAllTagsTest < Minitest::Test
   end
 
   def test_list_all_tags
-    chart1 = @seatsio.client.charts.create
-    @seatsio.client.charts.add_tag(chart1.key, 'tag1')
-    @seatsio.client.charts.add_tag(chart1.key, 'tag2')
+    chart1 = @seatsio.charts.create
+    @seatsio.charts.add_tag(chart1.key, 'tag1')
+    @seatsio.charts.add_tag(chart1.key, 'tag2')
 
-    chart2 = @seatsio.client.charts.create
-    @seatsio.client.charts.add_tag(chart2.key, 'tag3')
+    chart2 = @seatsio.charts.create
+    @seatsio.charts.add_tag(chart2.key, 'tag3')
 
-    tags = @seatsio.client.charts.list_all_tags
+    tags = @seatsio.charts.list_all_tags
 
     assert_includes(tags, 'tag1')
     assert_includes(tags, 'tag2')

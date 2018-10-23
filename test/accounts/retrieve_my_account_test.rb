@@ -8,7 +8,7 @@ class RetrieveMyAccountTest < Minitest::Test
   end
 
   def test_retrieve_my_account
-    account = @seatsio.client.accounts.retrieve_my_account
+    account = @seatsio.accounts.retrieve_my_account
     assert_operator(account.secret_key, :!=, nil)
     assert_operator(account.designer_key, :!=, nil)
     assert_operator(account.public_key, :!=, nil)

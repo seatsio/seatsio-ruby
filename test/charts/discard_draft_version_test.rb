@@ -8,13 +8,13 @@ class DiscardDraftVersionTest < Minitest::Test
   end
 
   def test_discard_draft
-    chart = @seatsio.client.charts.create("oldname")
-    @seatsio.client.events.create(chart.key)
-    @seatsio.client.charts.update(chart.key, "newname")
+    chart = @seatsio.charts.create("oldname")
+    @seatsio.events.create(chart.key)
+    @seatsio.charts.update(chart.key, "newname")
 
-    @seatsio.client.charts.discard_draft_version(chart.key)
+    @seatsio.charts.discard_draft_version(chart.key)
 
-    retrieved_chart = @seatsio.client.charts.retrieve(chart.key)
+    retrieved_chart = @seatsio.charts.retrieve(chart.key)
     assert_equal('oldname', retrieved_chart.name)
     assert_equal('PUBLISHED', retrieved_chart.status)
   end

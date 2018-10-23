@@ -8,8 +8,8 @@ class RetrievePublishedVersionTest < Minitest::Test
   end
 
   def test_retrieve_published_version
-    chart = @seatsio.client.charts.create('chartName')
-    published_drawing = @seatsio.client.charts.retrieve_published_version(chart.key)
+    chart = @seatsio.charts.create('chartName')
+    published_drawing = @seatsio.charts.retrieve_published_version(chart.key)
     assert_equal('chartName', published_drawing.name)
   end
 end

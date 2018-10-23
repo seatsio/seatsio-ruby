@@ -8,11 +8,11 @@ class CopyDraftVersionTest < Minitest::Test
   end
 
   def test_copy_draft_version
-    chart = @seatsio.client.charts.create("oldname")
-    @seatsio.client.events.create(chart.key)
-    @seatsio.client.charts.update(chart.key, "newname")
+    chart = @seatsio.charts.create("oldname")
+    @seatsio.events.create(chart.key)
+    @seatsio.charts.update(chart.key, "newname")
 
-    copied_chart = @seatsio.client.charts.copy_draft_version(chart.key)
+    copied_chart = @seatsio.charts.copy_draft_version(chart.key)
 
     assert_equal("newname (copy)", copied_chart.name)
   end

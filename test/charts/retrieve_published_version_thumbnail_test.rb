@@ -8,8 +8,8 @@ class RetrievePublishedVersionThumbnailTest < Minitest::Test
   end
 
   def test_retrieve_published_version_thumbnail
-    chart = @seatsio.client.charts.create
-    thumbnail = @seatsio.client.charts.retrieve_published_version_thumbnail(chart.key)
+    chart = @seatsio.charts.create
+    thumbnail = @seatsio.charts.retrieve_published_version_thumbnail(chart.key)
     assert_match(/<!DOCTYPE svg/, thumbnail)
   end
 end

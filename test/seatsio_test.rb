@@ -20,7 +20,7 @@ class SeatsioTest < Minitest::Test
   end
 
   def test_initialize_charts_client
-    assert_instance_of Seatsio::ChartsClient, @seatsio.client.charts
+    assert_instance_of Seatsio::ChartsClient, @seatsio.charts
   end
 
   def test_create_and_get_chart
@@ -28,14 +28,14 @@ class SeatsioTest < Minitest::Test
     assert_kind_of(String, chart_key)
 
     puts "Retrieving chart " + chart_key
-    query = @seatsio.client.charts.retrieve(chart_key)
+    query = @seatsio.charts.retrieve(chart_key)
 
     assert_kind_of(Seatsio::Domain::Chart, query)
   end
 
   def test_get_chart_with_events
     chart_key = create_chart_from_file
-    chart = @seatsio.client.charts.retrieve_with_events(chart_key)
+    chart = @seatsio.charts.retrieve_with_events(chart_key)
     assert_kind_of(Seatsio::Domain::Chart, chart)
   end
 
