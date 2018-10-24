@@ -21,7 +21,6 @@ def create_test_chart_from_file(file)
   post = RestClient.post(url, chart_file)
 
   if post.is_a?(RestClient::Response)
-    puts "Chart created"
     chart_key
   else
     raise "Failed to create a chart from file test/sampleChart.json"

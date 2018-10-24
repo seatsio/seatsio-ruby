@@ -6,6 +6,7 @@ require "json"
 require "cgi"
 require "seatsio/domain"
 require "seatsio/events/change_object_status_request"
+require "seatsio/events/change_best_available_object_status_request"
 
 module Seatsio
 
@@ -14,16 +15,17 @@ module Seatsio
       @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
     end
 
-    def build_event_request(chart_key, event_key=nil, book_whole_tables=nil)
+    def build_event_request(chart_key, event_key=nil, book_whole_tables=nil, table_booking_modes=nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
-      result["bookWholeTables"] = book_whole_tables if book_whole_tables
+      result["bookWholeTables"] = book_whole_tables if book_whole_tables != nil
+      result["tableBookingModes"] = table_booking_modes if table_booking_modes != nil
       result
     end
 
-    def create(chart_key, event_key=nil, book_whole_tables=nil)
-      payload = build_event_request(chart_key, event_key, book_whole_tables)
+    def create(chart_key, event_key=nil, book_whole_tables=nil, table_booking_modes = nil)
+      payload = build_event_request(chart_key, event_key, book_whole_tables, table_booking_modes)
       response = @http_client.post("events", payload)
       Domain::Event.new(response)
     end
@@ -37,7 +39,7 @@ module Seatsio
     # @param [Object] object_or_objects
     # @param [Object] hold_token
     # @param [Object] order_id
-    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil)
+    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil)
       self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id)
     end
 
@@ -52,6 +54,20 @@ module Seatsio
 
     def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil)
       change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id)
+    end
+
+    def change_best_available_object_status(event_key, number, status, categories = nil, hold_token = nil, extra_data = nil, order_id = nil)
+      request = create_change_best_available_object_status_request(number, status, categories, extra_data, hold_token, order_id)
+      response = @http_client.post("events/#{event_key}/actions/change-object-status", request)
+      Domain::BestAvailableObjects.new(response)
+    end
+
+    def book_best_available(event_key, number, categories = nil, hold_token = nil, order_id = nil)
+      change_best_available_object_status(event_key, number, Seatsio::Domain::ObjectStatus::BOOKED, categories, hold_token, order_id)
+    end
+
+    def hold_best_available(event_key, number, categories = nil, hold_token = nil, order_id = nil)
+      change_best_available_object_status(event_key, number, Seatsio::Domain::ObjectStatus::HELD, categories, hold_token, order_id)
     end
 
   end

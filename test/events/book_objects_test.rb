@@ -72,7 +72,7 @@ class BookObjectsTest < Minitest::Test
     chart_key = create_test_chart
     event = @seatsio.events.create(chart_key)
 
-    @seatsio.events.book(event.key, %w(A-1 A-2), order_id: 'order1')
+    @seatsio.events.book(event.key, %w(A-1 A-2), nil, 'order1')
 
     status1 = @seatsio.events.retrieve_object_status(event.key, 'A-1')
     assert_equal('order1', status1.order_id)

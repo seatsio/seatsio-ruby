@@ -162,4 +162,15 @@ module Seatsio::Domain
       @expires_in_seconds = data['expiresInSeconds']
     end
   end
+
+  class BestAvailableObjects
+
+    attr_reader :next_to_each_other, :objects, :labels
+
+    def initialize(data)
+      @next_to_each_other = data['nextToEachOther']
+      @objects = data['objects']
+      @labels = data['labels']
+    end
+  end
 end

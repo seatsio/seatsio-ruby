@@ -15,7 +15,5 @@ class CopyChartTest < Minitest::Test
 
     drawing = @seatsio.charts.retrieve_published_version(copied_chart.key)
     assert_equal("BOOTHS", drawing.venue_type)
-    puts "as"
-
   end
 end

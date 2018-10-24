@@ -27,7 +27,6 @@ class SeatsioTest < Minitest::Test
     chart_key = create_test_chart
     assert_kind_of(String, chart_key)
 
-    puts "Retrieving chart " + chart_key
     query = @seatsio.charts.retrieve(chart_key)
 
     assert_kind_of(Seatsio::Domain::Chart, query)
