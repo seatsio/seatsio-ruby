@@ -63,12 +63,16 @@ module Seatsio
     end
 
     def book_best_available(event_key, number, categories = nil, hold_token = nil, order_id = nil)
-      change_best_available_object_status(event_key, number, Seatsio::Domain::ObjectStatus::BOOKED, categories, hold_token, order_id)
+      change_best_available_object_status(event_key, number, Domain::ObjectStatus::BOOKED, categories, hold_token, order_id)
     end
 
     def hold_best_available(event_key, number, categories = nil, hold_token = nil, order_id = nil)
-      change_best_available_object_status(event_key, number, Seatsio::Domain::ObjectStatus::HELD, categories, hold_token, order_id)
+      change_best_available_object_status(event_key, number, Domain::ObjectStatus::HELD, categories, hold_token, order_id)
     end
 
-  end
+    def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id)
+    end
+
+    end
 end
