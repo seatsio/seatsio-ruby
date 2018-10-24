@@ -33,7 +33,11 @@ module Seatsio
       Domain::ObjectStatus.new(response)
     end
 
-    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil)
+    # @param [Object] event_key_or_keys
+    # @param [Object] object_or_objects
+    # @param [Object] hold_token
+    # @param [Object] order_id
+    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil)
       self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id)
     end
 

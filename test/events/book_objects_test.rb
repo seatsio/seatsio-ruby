@@ -67,4 +67,17 @@ class BookObjectsTest < Minitest::Test
     assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, status2.status)
     assert_nil(status2.hold_token)
   end
+
+  def test_with_order_id
+    chart_key = create_test_chart
+    event = @seatsio.events.create(chart_key)
+
+    @seatsio.events.book(event.key, %w(A-1 A-2), order_id: 'order1')
+
+    status1 = @seatsio.events.retrieve_object_status(event.key, 'A-1')
+    assert_equal('order1', status1.order_id)
+
+    status2 = @seatsio.events.retrieve_object_status(event.key, 'A-2')
+    assert_equal('order1', status2.order_id)
+  end
 end
