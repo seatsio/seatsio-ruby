@@ -46,5 +46,9 @@ module Seatsio
       Domain::ChangeObjectStatusResult.new(response)
     end
 
+    def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id)
+    end
+
   end
 end

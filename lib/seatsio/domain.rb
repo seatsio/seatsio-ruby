@@ -142,11 +142,24 @@ module Seatsio::Domain
   end
 
   class ChangeObjectStatusResult
+
     attr_reader :labels
+
     def initialize(data)
       if data
         @labels = data['labels'] if data.include? 'labels'
       end
+    end
+  end
+
+  class HoldToken
+
+    attr_reader :hold_token, :expires_at, :expires_in_seconds
+
+    def initialize(data)
+      @hold_token = data['holdToken']
+      @expires_at = data['expiresAt']
+      @expires_in_seconds = data['expiresInSeconds']
     end
   end
 end

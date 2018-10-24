@@ -50,4 +50,21 @@ class BookObjectsTest < Minitest::Test
                   'Section A-A-2' => {'own' => {'label' => '2', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}, 'section' => 'Section A', 'entrance' => {'label' => 'Entrance 1'}}
                 },res.labels)
   end
+
+  def test_with_hold_token
+    chart_key = create_test_chart
+    event = @seatsio.events.create(chart_key)
+    hold_token = @seatsio.hold_tokens.create
+    @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token)
+
+    @seatsio.events.book(event.key, %w(A-1 A-2), hold_token.hold_token)
+
+    status1 = @seatsio.events.retrieve_object_status(event.key, 'A-1')
+    assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, status1.status)
+    assert_nil(status1.hold_token)
+
+    status2 = @seatsio.events.retrieve_object_status(event.key, 'A-2')
+    assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, status2.status)
+    assert_nil(status2.hold_token)
+  end
 end
