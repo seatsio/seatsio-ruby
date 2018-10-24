@@ -57,7 +57,7 @@ module Seatsio::Domain
       @chart_key = data['chartKey']
       @book_whole_tables = data['bookWholeTables']
       @supports_best_available = data['supportsBestAvailable']
-      #@for_sale_config = ForSaleConfig.create(data.get("forSaleConfig"))
+      #@for_sale_config = ForSaleConfig.create(data['forSaleConfig'])
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
     end
@@ -171,6 +171,38 @@ module Seatsio::Domain
       @next_to_each_other = data['nextToEachOther']
       @objects = data['objects']
       @labels = data['labels']
+    end
+  end
+
+  class ChartReportItem
+
+    attr_reader :label, :labels, :category_key, :category_label, :section, :entrance, :capacity, :object_type
+
+    def initialize(data)
+      @label = data['label']
+      @labels = data['labels']
+      @category_label = data['categoryLabel']
+      @category_key = data['categoryKey']
+      @section = data['section']
+      @entrance = data['entrance']
+      @capacity = data['capacity']
+      @object_type = data['objectType']
+    end
+  end
+
+  class ChartReport
+
+    attr_reader :items
+
+    def initialize(data)
+      items = {}
+      data.each do |key, values|
+        items[key] = []
+        values.each do |value|
+          items[key].append(ChartReportItem.new(value))
+        end
+      end
+      @items = items
     end
   end
 end
