@@ -13,8 +13,8 @@ def create_test_user
   end
 end
 
-def create_chart_from_file
-  chart_file = File.read(Dir.pwd + "/test/sampleChart.json")
+def create_test_chart_from_file(file)
+  chart_file = File.read(Dir.pwd + "/test/#{file}")
   chart_key = SecureRandom.uuid
 
   url = "#{BASE_URL}/system/public/#{@user["designerKey"]}/charts/#{chart_key}"
@@ -26,4 +26,12 @@ def create_chart_from_file
   else
     raise "Failed to create a chart from file test/sampleChart.json"
   end
+end
+
+def create_test_chart
+  create_test_chart_from_file('sampleChart.json')
+end
+
+def create_test_chart_with_sections
+  create_test_chart_from_file('sampleChartWithSections.json')
 end

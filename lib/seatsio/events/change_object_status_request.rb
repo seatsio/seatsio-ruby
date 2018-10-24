@@ -18,7 +18,13 @@ def normalize(object_or_objects)
     if object_or_objects.length == 0
       []
     end
-    object_or_objects
+
+    result = []
+    object_or_objects.each do |object|
+      result.append(object)
+    end
+    return result
+
   end
   object_or_objects
 end

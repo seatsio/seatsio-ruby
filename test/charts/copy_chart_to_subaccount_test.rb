@@ -4,7 +4,7 @@ require "util"
 class CopyChartToSubaccountTest < Minitest::Test
   def setup
     @user = create_test_user
-    @seatsio = Seatsio::Seatsio.new(@user["secretKey"], "https://api-staging.seatsio.net")
+    @seatsio = Seatsio::Client.new(@user["secretKey"], "https://api-staging.seatsio.net")
   end
 
   def test_copy_to_subaccount
@@ -13,7 +13,7 @@ class CopyChartToSubaccountTest < Minitest::Test
 
     copied_chart = @seatsio.charts.copy_to_subaccount(chart.key, subaccount.id)
 
-    subaccount_client = Seatsio::Seatsio.new(subaccount.secret_key, "https://api-staging.seatsio.net")
+    subaccount_client = Seatsio::Client.new(subaccount.secret_key, "https://api-staging.seatsio.net")
     assert_equal("my chart", copied_chart.name)
 
     retrieved_chart = subaccount_client.charts.retrieve(copied_chart.key)

@@ -8,7 +8,7 @@ class SeatsioTest < Minitest::Test
 
   def setup
     @user = create_test_user
-    @seatsio = Seatsio::Seatsio.new(@user["secretKey"], "https://api-staging.seatsio.net")
+    @seatsio = Seatsio::Client.new(@user["secretKey"], "https://api-staging.seatsio.net")
   end
 
   def test_that_it_has_a_version_number
@@ -16,7 +16,7 @@ class SeatsioTest < Minitest::Test
   end
 
   def test_initialize
-    assert_instance_of Seatsio::Seatsio, @seatsio
+    assert_instance_of Seatsio::Client, @seatsio
   end
 
   def test_initialize_charts_client
@@ -24,7 +24,7 @@ class SeatsioTest < Minitest::Test
   end
 
   def test_create_and_get_chart
-    chart_key = create_chart_from_file
+    chart_key = create_test_chart
     assert_kind_of(String, chart_key)
 
     puts "Retrieving chart " + chart_key
@@ -34,7 +34,7 @@ class SeatsioTest < Minitest::Test
   end
 
   def test_get_chart_with_events
-    chart_key = create_chart_from_file
+    chart_key = create_test_chart
     chart = @seatsio.charts.retrieve_with_events(chart_key)
     assert_kind_of(Seatsio::Domain::Chart, chart)
   end

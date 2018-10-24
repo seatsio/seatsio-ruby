@@ -29,7 +29,7 @@ module Seatsio
     end
 
     def retrieve_object_status(key, object_key)
-      response = @http_client.get("/events/#{key}/objects/#{object_key}")
+      response = @http_client.get("events/#{key}/objects/#{CGI::escape(object_key).gsub('+','%20')}")
       Domain::ObjectStatus.new(response)
     end
 
