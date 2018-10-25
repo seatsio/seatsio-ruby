@@ -4,12 +4,13 @@ require "seatsio/accounts"
 require "seatsio/subaccounts"
 require "seatsio/events"
 require "seatsio/hold_tokens"
-require "seatsio/reports"
+require "seatsio/chart_reports"
+require "seatsio/event_reports"
 
 module Seatsio
   # Main Seatsio Class
   class Client
-    attr_reader :charts, :accounts, :subaccounts, :events, :hold_tokens, :reports
+    attr_reader :charts, :accounts, :subaccounts, :events, :hold_tokens, :chart_reports, :event_reports
 
     def initialize(secret_key, base_url = 'https://api.seatsio.net')
       @charts = ChartsClient.new(secret_key, base_url)
@@ -17,7 +18,8 @@ module Seatsio
       @subaccounts = SubaccountsClient.new(secret_key, base_url)
       @events = EventsClient.new(secret_key, base_url)
       @hold_tokens = HoldTokensClient.new(secret_key, base_url)
-      @reports = ReportsClient.new(secret_key, base_url)
+      @chart_reports = ChartReportsClient.new(secret_key, base_url)
+      @event_reports = EventReportsClient.new(secret_key, base_url)
     end
   end
 end

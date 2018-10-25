@@ -75,5 +75,14 @@ module Seatsio
       change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id)
     end
 
+    def delete(key)
+      @http_client.delete("/events/#{key}")
     end
+
+
+    def retrieve(key)
+      response = @http_client.get("events/#{key}", key=key)
+      Domain::Event.new(response)
+    end
+  end
 end

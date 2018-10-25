@@ -11,7 +11,7 @@ class ChartReportsTest < Minitest::Test
   def test_reportItemProperties
     chart_key = create_test_chart
   
-    report = @seatsio.reports.by_label(chart_key)
+    report = @seatsio.chart_reports.by_label(chart_key)
 
     assert_instance_of(Seatsio::Domain::ChartReport, report)
 
@@ -30,7 +30,7 @@ class ChartReportsTest < Minitest::Test
   def test_report_item_properties_for_GA
     chart_key = create_test_chart
 
-    report = @seatsio.reports.by_label(chart_key)
+    report = @seatsio.chart_reports.by_label(chart_key)
     assert_instance_of(Seatsio::Domain::ChartReport, report)
 
     report_item = report.items['GA1'][0]
@@ -47,7 +47,7 @@ class ChartReportsTest < Minitest::Test
   def test_by_label
     chart_key = create_test_chart
 
-    report = @seatsio.reports.by_label(chart_key)
+    report = @seatsio.chart_reports.by_label(chart_key)
 
     assert_instance_of(Seatsio::Domain::ChartReport, report)
     assert_equal(1, report.items['A-1'].length)

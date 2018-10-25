@@ -37,6 +37,8 @@ module Seatsio
           return response
         end
         JSON.parse(response) unless response.empty?
+      rescue RestClient::NotFound => e
+        raise Exception::NotFoundException.new(e.response)
       rescue RestClient::ExceptionWithResponse => e
         if e.response.include? "there is no page after" || e.response.empty?
           raise Exception::NoMorePagesException
@@ -44,8 +46,6 @@ module Seatsio
         raise Exception::SeatsioException.new(e.response)
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")
-      rescue RestClient::NotFound
-        raise Exception::SeatsioException.new("Error Not Found")
       rescue SocketError
         raise Exception::SeatsioException.new("Failed to connect to backend")
       end

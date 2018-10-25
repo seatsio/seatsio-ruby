@@ -5,7 +5,7 @@ require 'json'
 require 'cgi'
 
 module Seatsio
-  class ReportsClient
+  class ChartReportsClient
 
     attr_reader :archive
 

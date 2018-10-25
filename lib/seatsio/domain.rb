@@ -219,4 +219,44 @@ module Seatsio::Domain
       @items = items
     end
   end
+
+  class EventReport
+
+    attr_reader :items
+
+    def initialize(data)
+      items = {}
+      data.each do |key, values|
+        items[key] = []
+        values.each do |value|
+          items[key].append(EventReportItem.new(value))
+        end
+      end
+      @items = items
+    end
+  end
+
+  class EventReportItem
+    attr_reader :labels, :label, :order_id, :extra_data, :capacity, :status,
+                :category_key, :entrance, :object_type, :hold_token, :category_label,
+                :ticket_type, :num_booked, :for_sale, :section
+
+    def initialize(data)
+      @status = data['status']
+      @label = data['label']
+      @labels = data['labels']
+      @category_label = data['categoryLabel']
+      @category_key = data['categoryKey']
+      @ticket_type = data['ticketType']
+      @order_id = data['orderId']
+      @for_sale = data['forSale']
+      @hold_token = data['holdToken']
+      @section = data['section']
+      @entrance = data['entrance']
+      @num_booked = data['numBooked']
+      @capacity = data['capacity']
+      @object_type = data['objectType']
+      @extra_data = data['extraData']
+    end
+  end
 end

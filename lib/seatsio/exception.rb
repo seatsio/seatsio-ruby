@@ -4,4 +4,7 @@ module Seatsio::Exception
 
   class NoMorePagesException < StandardError
   end
+
+  class NotFoundException < SeatsioException
+  end
 end
