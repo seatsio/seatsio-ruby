@@ -29,6 +29,30 @@ module Seatsio
       fetch_summary_report('bySection', event_key)
     end
 
+    def by_label(event_key, label = nil)
+      fetch_report('byLabel', event_key, label)
+    end
+
+    def by_status(event_key, status = nil)
+      fetch_report('byStatus', event_key, status)
+    end
+
+    def by_category_label(event_key, category_label = nil)
+      fetch_report('byCategoryLabel', event_key, category_label)
+    end
+
+    def by_category_key(event_key, category_key = nil)
+      fetch_report('byCategoryKey', event_key, category_key)
+    end
+
+    def by_order_id(event_key, order_id = nil)
+      fetch_report('byOrderId', event_key, order_id)
+    end
+
+    def by_section(event_key, section = nil)
+      fetch_report('bySection', event_key, section)
+    end
+
     private
 
     def fetch_summary_report(report_type, event_key)
@@ -41,10 +65,11 @@ module Seatsio
         url = "reports/events/#{event_key}/#{report_type}/#{report_filter}"
         body = @http_client.get(url)
         result = []
-        body[report_filter].each do |report_item|
-          result.append(EventReportItem(report_item))
-          return result
-        end
+        #body[report_filter].each do |report_item|
+        #  result.append(report_item)
+        #end
+        #Domain::EventReport.new(result)
+        Domain::EventReport.new(body[report_filter])
       else
         url = "reports/events/#{event_key}/#{report_type}"
         body = @http_client.get(url)

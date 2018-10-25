@@ -26,5 +26,5 @@ def normalize(object_or_objects)
     return result
 
   end
-  object_or_objects
+  normalize([object_or_objects])
 end

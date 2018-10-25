@@ -224,15 +224,30 @@ module Seatsio::Domain
 
     attr_reader :items
 
+    #def initialize(data)
+    #  items = []
+    #  data.each do |item|
+    #    items.append(EventReportItem.new(item))
+    #  end
+    #  @items = items
+    #end
     def initialize(data)
-      items = {}
-      data.each do |key, values|
-        items[key] = []
-        values.each do |value|
-          items[key].append(EventReportItem.new(value))
+      if data.is_a? Array
+        items = []
+        data.each do |item|
+          items.append(EventReportItem.new(item))
         end
+        @items = items
+      else
+        items = {}
+        data.each do |key, values|
+          items[key] = []
+          values.each do |value|
+            items[key].append(EventReportItem.new(value))
+          end
+        end
+        @items = items
       end
-      @items = items
     end
   end
 
