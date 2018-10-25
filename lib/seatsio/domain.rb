@@ -46,10 +46,23 @@ module Seatsio::Domain
     end
   end
 
+  class ForSaleConfig
+
+    attr_reader :for_sale, :objects, :categories
+
+    def initialize(data)
+      if data
+        @for_sale = data['forSale']
+        @objects = data['objects']
+        @categories = data['categories']
+      end
+    end
+  end
+
   class Event
 
     attr_accessor :id, :key, :chart_key, :book_whole_tables, :supports_best_available,
-                  :created_on, :updated_on
+                  :table_booking_modes, :for_sale_config, :created_on, :updated_on
 
     def initialize(data)
       @id = data['id']
@@ -57,7 +70,8 @@ module Seatsio::Domain
       @chart_key = data['chartKey']
       @book_whole_tables = data['bookWholeTables']
       @supports_best_available = data['supportsBestAvailable']
-      #@for_sale_config = ForSaleConfig.create(data['forSaleConfig'])
+      @table_booking_modes = data['tableBookingModes']
+      @for_sale_config = ForSaleConfig.new(data['forSaleConfig'])
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
     end
