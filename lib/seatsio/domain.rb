@@ -71,7 +71,7 @@ module Seatsio::Domain
       @book_whole_tables = data['bookWholeTables']
       @supports_best_available = data['supportsBestAvailable']
       @table_booking_modes = data['tableBookingModes']
-      @for_sale_config = ForSaleConfig.new(data['forSaleConfig'])
+      @for_sale_config = ForSaleConfig.new(data['forSaleConfig']) if data['forSaleConfig']
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
     end

@@ -100,5 +100,28 @@ module Seatsio
     def status_changes_for_object(key, object_id)
       Pagination::Cursor.new(Domain::StatusChange, "/events/#{key}/objects/#{object_id}/status-changes", @http_client)
     end
+
+    def mark_as_not_for_sale(key, objects = nil, categories = nil)
+      request = build_parameters_for_mark_as_sale(objects, categories)
+      @http_client.post("events/#{key}/actions/mark-as-not-for-sale", request)
+    end
+
+    def mark_everything_as_for_sale(key)
+      @http_client.post("events/#{key}/actions/mark-everything-as-for-sale")
+    end
+
+    def mark_as_for_sale(event_key, objects = nil, categories = nil)
+      request = build_parameters_for_mark_as_sale(objects, categories)
+      @http_client.post("events/#{event_key}/actions/mark-as-for-sale", request)
+    end
+
+    private
+
+    def build_parameters_for_mark_as_sale(objects = nil, categories = nil)
+      request = {}
+      request[:objects] = objects if objects
+      request[:categories] = categories if categories
+      request
+    end
   end
 end
