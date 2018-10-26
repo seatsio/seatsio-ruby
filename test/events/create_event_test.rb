@@ -17,10 +17,10 @@ class ChartReportsTest < Minitest::Test
     assert_equal(chart_key, event.chart_key)
     assert_equal(false, event.book_whole_tables)
     assert_equal(true, event.supports_best_available)
-    assert_operator(event.for_sale_config, :!=, nil)
+    assert_nil(event.for_sale_config)
     assert_nil(event.updated_on)
 
-    # assert_that(event.created_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
+    # TODO: assert_that(event.created_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
 
   def test_event_key_is_optional
