@@ -112,11 +112,12 @@ module Seatsio
       cursor
     end
 
-    def list_first_page(page_size = nil)
-      cursor = list
-      cursor.set_query_param('limit', page_size)
-      cursor
-    end
+    # TODO: mark for deletion
+    #def list_first_page(page_size = nil)
+    #  cursor = list
+    #  cursor.set_query_param('limit', page_size)
+    #  cursor
+    #end
 
     def list_all_tags
       response = @http_client.get('charts/tags')

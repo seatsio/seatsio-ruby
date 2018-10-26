@@ -1,0 +1,23 @@
+require 'test_helper'
+require 'util'
+
+class ListAllEventsTest < Minitest::Test
+
+  def setup
+    @user = create_test_user
+    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
+  end
+  
+  def test_list_all_events
+    chart = @seatsio.charts.create
+    event1 = @seatsio.events.create(chart.key)
+    event2 = @seatsio.events.create(chart.key)
+    event3 = @seatsio.events.create(chart.key)
+
+    events = @seatsio.events.list
+    
+    events_keys = events.collect {|event| event.key}
+    assert_equal([event3.key, event2.key, event1.key], events_keys)
+  end
+
+end

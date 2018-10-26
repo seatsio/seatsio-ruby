@@ -274,4 +274,17 @@ module Seatsio::Domain
       @extra_data = data['extraData']
     end
   end
+
+  class StatusChange
+    attr_reader :extra_data, :object_label, :date, :id, :status, :event_id
+
+    def initialize(data)
+      @id = data['id']
+      @status = data['status']
+      @date = data['date']# TODO: parse_date(data.get("date"))
+      @object_label = data['objectLabel']
+      @event_id = data['eventId']
+      @extra_data = data['extraData']
+    end
+  end
 end

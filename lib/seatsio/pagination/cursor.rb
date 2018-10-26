@@ -5,7 +5,7 @@ module Seatsio::Pagination
   class Cursor
     include Enumerable
 
-    attr_accessor :params, :next_page_starts_after, :previous_page_ends_before
+    attr_reader :params, :next_page_starts_after, :previous_page_ends_before
 
     MAX = 20
 

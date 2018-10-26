@@ -84,5 +84,21 @@ module Seatsio
       response = @http_client.get("events/#{key}", key=key)
       Domain::Event.new(response)
     end
+
+    def list
+      Pagination::Cursor.new(Domain::Event, 'events', @http_client)
+    end
+
+    def list_status_changes(key, object_id = nil)
+      if object_id != nil
+        status_changes_for_object(key, object_id)
+      else
+        Pagination::Cursor.new(Domain::StatusChange, "/events/#{key}/status-changes", @http_client)
+      end
+    end
+
+    def status_changes_for_object(key, object_id)
+      Pagination::Cursor.new(Domain::StatusChange, "/events/#{key}/objects/#{object_id}/status-changes", @http_client)
+    end
   end
 end
