@@ -30,6 +30,11 @@ module Seatsio
       Domain::Event.new(response)
     end
 
+    def update(key, chart_key = nil, event_key = nil, book_whole_tables = nil, table_booking_modes = nil)
+      payload = build_event_request(chart_key, event_key, book_whole_tables, table_booking_modes)
+      @http_client.post("/events/#{key}", payload)
+    end
+
     def retrieve_object_status(key, object_key)
       url = "events/#{key}/objects/#{CGI::escape(object_key).gsub('+','%20')}"
       response = @http_client.get(url)
