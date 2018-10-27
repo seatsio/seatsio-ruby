@@ -35,6 +35,16 @@ module Seatsio
       @http_client.post("/events/#{key}", payload)
     end
 
+    def update_extra_data(key, o, extra_data)
+      payload = build_extra_data_request(extra_data)
+      @http_client.post("events/#{key}/objects/#{o}/actions/update-extra-data", payload)
+    end
+
+    def update_extra_datas(key, extra_data)
+      payload = build_extra_data_request(extra_data)
+      @http_client.post("events/#{key}/actions/update-extra-data", payload)
+    end
+
     def retrieve_object_status(key, object_key)
       url = "events/#{key}/objects/#{CGI::escape(object_key).gsub('+','%20')}"
       response = @http_client.get(url)
@@ -127,6 +137,12 @@ module Seatsio
       request[:objects] = objects if objects
       request[:categories] = categories if categories
       request
+    end
+
+    def build_extra_data_request(extra_data)
+      payload = {}
+      payload[:extraData] = extra_data if extra_data
+      payload
     end
   end
 end
