@@ -1,17 +1,10 @@
 require 'test_helper'
 require 'util'
 
-class MarkObjectsAsForSaleTest < Minitest::Test
-
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
-
+class MarkObjectsAsForSaleTest < SeatsioTestClient
   def test_objects_and_categories
     chart = @seatsio.charts.create
-    event = @seatsio.events.create(chart.key)
+    event = @seatsio.events.create key: chart.key
   
     @seatsio.events.mark_as_for_sale(event.key, %w(o1 o2), %w(cat1 cat2))
   
@@ -23,7 +16,7 @@ class MarkObjectsAsForSaleTest < Minitest::Test
   
   def test_objects
     chart = @seatsio.charts.create
-    event = @seatsio.events.create(chart.key)
+    event = @seatsio.events.create key: chart.key
   
     @seatsio.events.mark_as_for_sale(event.key, %w(o1 o2))
   
@@ -35,7 +28,7 @@ class MarkObjectsAsForSaleTest < Minitest::Test
   
   def test_categories
     chart = @seatsio.charts.create
-    event = @seatsio.events.create(chart.key)
+    event = @seatsio.events.create key: chart.key
   
     @seatsio.events.mark_as_for_sale(event.key, nil, %w(cat1 cat2))
   

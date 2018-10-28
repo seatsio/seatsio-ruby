@@ -1,12 +1,7 @@
 require "test_helper"
 require "util"
 
-class CopyChartTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user["secretKey"], "https://api-staging.seatsio.net")
-  end
-
+class CopyChartTest < SeatsioTestClient
   def test_copy_chart
     chart = @seatsio.charts.create("my chart", "BOOTHS")
     copied_chart = @seatsio.charts.copy(chart.key)

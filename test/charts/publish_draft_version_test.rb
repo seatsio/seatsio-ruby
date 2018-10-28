@@ -1,15 +1,10 @@
 require 'test_helper'
 require 'util'
 
-class PublishDraftVersionTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class PublishDraftVersionTest <SeatsioTestClient
   def test_publish_draft_version
     chart = @seatsio.charts.create('oldname')
-    @seatsio.events.create(chart.key)
+    @seatsio.events.create key: chart.key
     @seatsio.charts.update(chart.key, 'newname')
 
     @seatsio.charts.publish_draft_version(chart.key)

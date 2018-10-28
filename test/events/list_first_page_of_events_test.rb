@@ -1,18 +1,12 @@
 require 'test_helper'
 require 'util'
 
-class ListFirstPageOfEventsTest < Minitest::Test
-
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class ListFirstPageOfEventsTest < SeatsioTestClient
   def test_all_on_first_page
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create(chart.key)
-    event2 = @seatsio.events.create(chart.key)
-    event3 = @seatsio.events.create(chart.key)
+    event1 = @seatsio.events.create key: chart.key
+    event2 = @seatsio.events.create key: chart.key
+    event3 = @seatsio.events.create key: chart.key
 
     events = @seatsio.events.list.first_page
 
@@ -23,9 +17,9 @@ class ListFirstPageOfEventsTest < Minitest::Test
 
   def test_some_on_first_page
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create(chart.key)
-    event2 = @seatsio.events.create(chart.key)
-    event3 = @seatsio.events.create(chart.key)
+    event1 = @seatsio.events.create key: chart.key
+    event2 = @seatsio.events.create key: chart.key
+    event3 = @seatsio.events.create key: chart.key
 
     events = @seatsio.events.list.first_page(2)
 

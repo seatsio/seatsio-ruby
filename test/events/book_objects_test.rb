@@ -2,15 +2,10 @@ require 'test_helper'
 require 'util'
 require 'seatsio/domain'
 
-class BookObjectsTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class BookObjectsTest < SeatsioTestClient
   def test_book_objects
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     a1_status = @seatsio.events.retrieve_object_status(event.key, 'A-1').status
     a2_status = @seatsio.events.retrieve_object_status(event.key, 'A-2').status
@@ -34,7 +29,7 @@ class BookObjectsTest < Minitest::Test
 
   def test_sections
     chart_key = create_test_chart_with_sections
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     res = @seatsio.events.book(event.key, ['Section A-A-1', 'Section A-A-2'])
 
@@ -53,7 +48,7 @@ class BookObjectsTest < Minitest::Test
 
   def test_with_hold_token
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     hold_token = @seatsio.hold_tokens.create
     @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token)
 
@@ -70,7 +65,7 @@ class BookObjectsTest < Minitest::Test
 
   def test_with_order_id
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     @seatsio.events.book(event.key, %w(A-1 A-2), nil, 'order1')
 

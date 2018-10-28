@@ -1,16 +1,10 @@
 require 'test_helper'
 require 'util'
 
-class UpdateExtraDatasTest < Minitest::Test
-
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class UpdateExtraDatasTest < SeatsioTestClient
   def test_update_extra_datas
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     extra_data1 = {'foo1' => 'bar1'}
     extra_data2 = {'foo2' => 'bar2'}
 

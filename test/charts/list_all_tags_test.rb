@@ -1,12 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class ListAllTagsTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class ListAllTagsTest < SeatsioTestClient
   def test_list_all_tags
     chart1 = @seatsio.charts.create
     @seatsio.charts.add_tag(chart1.key, 'tag1')

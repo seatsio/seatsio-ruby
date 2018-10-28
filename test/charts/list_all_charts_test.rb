@@ -1,12 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class ListAllChartsTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class ListAllChartsTest < SeatsioTestClient
   def test_all
     chart1 = @seatsio.charts.create
     chart2 = @seatsio.charts.create
@@ -58,8 +53,8 @@ class ListAllChartsTest < Minitest::Test
 
   def test_expand
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create(chart.key)
-    event2 = @seatsio.events.create(chart.key)
+    event1 = @seatsio.events.create key: chart.key
+    event2 = @seatsio.events.create key: chart.key
 
     retrieved_charts = @seatsio.charts.list(nil, nil, true).to_a
 

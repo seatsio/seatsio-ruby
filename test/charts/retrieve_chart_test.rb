@@ -1,12 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class RetrieveChartTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class RetrieveChartTest < SeatsioTestClient
   def test_retrieve_chart
     chart = @seatsio.charts.create
     @seatsio.charts.add_tag(chart.key, 'tag1')
@@ -28,8 +23,8 @@ class RetrieveChartTest < Minitest::Test
 
   def test_with_events
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create(chart.key)
-    event2 = @seatsio.events.create(chart.key)
+    event1 = @seatsio.events.create key: chart.key
+    event2 = @seatsio.events.create key: chart.key
 
     retrieved_chart = @seatsio.charts.retrieve_with_events(chart.key)
     

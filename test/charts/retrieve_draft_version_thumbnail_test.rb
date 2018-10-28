@@ -1,15 +1,10 @@
 require 'test_helper'
 require 'util'
 
-class RetrieveDraftVersionThumbnailTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class RetrieveDraftVersionThumbnailTest < SeatsioTestClient
   def test_retrieve_draft_version_thumbnail
     chart = @seatsio.charts.create
-    @seatsio.events.create(chart.key)
+    @seatsio.events.create key: chart.key
     @seatsio.charts.update(chart.key, 'newname')
 
     thumbnail = @seatsio.charts.retrieve_draft_version_thumbnail(chart.key)

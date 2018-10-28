@@ -1,12 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class RetrieveMyAccountTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class RetrieveMyAccountTest < SeatsioTestClient
   def test_retrieve_my_account
     account = @seatsio.accounts.retrieve_my_account
     assert_operator(account.secret_key, :!=, nil)

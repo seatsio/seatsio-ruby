@@ -172,7 +172,7 @@ module Seatsio::Domain
 
     def initialize(data)
       @hold_token = data['holdToken']
-      @expires_at = data['expiresAt']
+      @expires_at = Time.parse(data['expiresAt'])
       @expires_in_seconds = data['expiresInSeconds']
     end
   end

@@ -3,15 +3,10 @@ require 'util'
 require 'seatsio/domain'
 require 'seatsio/exception'
 
-class EventReportsTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class EventReportsTest < SeatsioTestClient
   def test_report_instances
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     extra_data = {'foo' => 'bar'}
 
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], nil, 'order1')
@@ -25,7 +20,7 @@ class EventReportsTest < Minitest::Test
 
   def test_report_item_properties
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     extra_data = {'foo' => 'bar'}
   
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], nil, 'order1')
@@ -53,7 +48,7 @@ class EventReportsTest < Minitest::Test
   def test_hold_token
     chart_key = create_test_chart
     hold_token = @seatsio.hold_tokens.create
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token)
 
@@ -65,7 +60,7 @@ class EventReportsTest < Minitest::Test
 
   def test_report_item_properties_for_GA
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     @seatsio.events.book(event.key, [{:objectId => 'GA1', :quantity => 5}])
 
     report = @seatsio.event_reports.by_label(event.key)
@@ -87,7 +82,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_status
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'mystatus')
     @seatsio.events.change_object_status(event.key, ['A-3'], 'booked')
 
@@ -100,7 +95,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_specific_status
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'mystatus')
     @seatsio.events.change_object_status(event.key, ['A-3'], 'booked')
 
@@ -110,7 +105,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_category_label
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_category_label(event.key)
     assert_equal(17, report.items['Cat1'].length)
@@ -119,7 +114,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_specific_category_label
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_category_label(event.key, 'Cat1')
     assert_equal(17, report.items.length)
@@ -127,7 +122,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_category_key
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_category_key(event.key)
     assert_equal(17, report.items['9'].length)
@@ -136,7 +131,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_specific_category_key
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_category_key(event.key, '9')
     assert_equal(17, report.items.length)
@@ -144,7 +139,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_label
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_label(event.key)
     assert_equal(1, report.items['A-1'].length)
@@ -153,7 +148,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_specific_label
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_label(event.key, 'A-1')
     assert_equal(1, report.items.length)
@@ -161,7 +156,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_order_id
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     @seatsio.events.book(event.key, %w(A-1 A-2), nil, 'order1')
     @seatsio.events.book(event.key, ['A-3'], nil, 'order2')
 
@@ -173,7 +168,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_specific_order_id
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     @seatsio.events.book(event.key, %w(A-1 A-2), nil, 'order1')
     @seatsio.events.book(event.key, ['A-3'], nil, 'order2')
 
@@ -183,7 +178,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_section
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_section(event.key)
     assert_equal(34, report.items['NO_SECTION'].length)
@@ -191,7 +186,7 @@ class EventReportsTest < Minitest::Test
 
   def test_by_specific_section
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     report = @seatsio.event_reports.by_section(event.key, 'NO_SECTION')
     assert_equal(34, report.items.length)

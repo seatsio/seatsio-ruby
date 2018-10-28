@@ -24,20 +24,20 @@ module Seatsio
       result
     end
 
-    def create(chart_key, event_key=nil, book_whole_tables=nil, table_booking_modes = nil)
-      payload = build_event_request(chart_key, event_key, book_whole_tables, table_booking_modes)
+    def create(key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
+      payload = build_event_request(key, event_key, book_whole_tables, table_booking_modes)
       response = @http_client.post("events", payload)
       Domain::Event.new(response)
     end
 
-    def update(key, chart_key = nil, event_key = nil, book_whole_tables = nil, table_booking_modes = nil)
+    def update(key: nil, chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
       payload = build_event_request(chart_key, event_key, book_whole_tables, table_booking_modes)
       @http_client.post("/events/#{key}", payload)
     end
 
-    def update_extra_data(key, o, extra_data)
+    def update_extra_data(key: nil, object: nil, extra_data: nil)
       payload = build_extra_data_request(extra_data)
-      @http_client.post("events/#{key}/objects/#{o}/actions/update-extra-data", payload)
+      @http_client.post("events/#{key}/objects/#{object}/actions/update-extra-data", payload)
     end
 
     def update_extra_datas(key, extra_data)
@@ -90,7 +90,7 @@ module Seatsio
       change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id)
     end
 
-    def delete(key)
+    def delete(key: nil)
       @http_client.delete("/events/#{key}")
     end
 

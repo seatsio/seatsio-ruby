@@ -1,12 +1,7 @@
 require  "test_helper"
 require "util"
 
-class CopyChartToSubaccountTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user["secretKey"], "https://api-staging.seatsio.net")
-  end
-
+class CopyChartToSubaccountTest < SeatsioTestClient
   def test_copy_to_subaccount
     chart = @seatsio.charts.create("my chart", "BOOTHS")
     subaccount = @seatsio.subaccounts.create

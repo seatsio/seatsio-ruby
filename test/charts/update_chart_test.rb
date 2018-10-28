@@ -1,12 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class UpdateChartTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class UpdateChartTest < SeatsioTestClient
   def test_update_name
     categories = [{'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa'}]
     chart = @seatsio.charts.create(nil, 'BOOTHS', categories)

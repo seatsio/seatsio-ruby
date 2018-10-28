@@ -1,18 +1,12 @@
 require 'test_helper'
 require 'util'
 
-class MarkObjectsAsNotForSaleTest < Minitest::Test
-
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class MarkObjectsAsNotForSaleTest < SeatsioTestClient
   def test_objects_and_categories
     chart = @seatsio.charts.create
-    event = @seatsio.events.create(chart.key)
+    event = @seatsio.events.create key: chart.key
 
-    @seatsio.events.mark_as_not_for_sale(event.key, ["o1", "o2"], ["cat1", "cat2"])
+    @seatsio.events.mark_as_not_for_sale(event.key, %w(o1 o2), %w(cat1 cat2))
 
     retrieved_event = @seatsio.events.retrieve(event.key)
     assert_equal(false, retrieved_event.for_sale_config.for_sale)
@@ -22,7 +16,7 @@ class MarkObjectsAsNotForSaleTest < Minitest::Test
   
   def test_objects
     chart = @seatsio.charts.create
-    event = @seatsio.events.create(chart.key)
+    event = @seatsio.events.create key: chart.key
   
     @seatsio.events.mark_as_not_for_sale(event.key, ["o1", "o2"])
   
@@ -34,7 +28,7 @@ class MarkObjectsAsNotForSaleTest < Minitest::Test
   
   def test_categories
     chart = @seatsio.charts.create
-    event = @seatsio.events.create(chart.key)
+    event = @seatsio.events.create key: chart.key
   
     @seatsio.events.mark_as_not_for_sale(event.key, nil, ["cat1", "cat2"])
   

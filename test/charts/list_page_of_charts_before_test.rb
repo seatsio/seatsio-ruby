@@ -1,12 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class ListPageOfChartsBeforeTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class ListPageOfChartsBeforeTest < SeatsioTestClient
   def test_with_previous_page
     chart1 = @seatsio.charts.create
     chart2 = @seatsio.charts.create

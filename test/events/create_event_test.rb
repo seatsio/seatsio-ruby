@@ -2,15 +2,10 @@ require 'test_helper'
 require 'util'
 require 'seatsio/domain'
 
-class ChartReportsTest < Minitest::Test
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class ChartReportsTest < SeatsioTestClient
   def test_chart_key_is_required
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     assert_operator(event.id, :!=, 0)
     assert_operator(event.key, :!=, nil)
@@ -26,7 +21,7 @@ class ChartReportsTest < Minitest::Test
   def test_event_key_is_optional
     chart = @seatsio.charts.create
 
-    event = @seatsio.events.create(chart.key, 'eventje')
+    event = @seatsio.events.create key: chart.key, event_key: 'eventje'
     assert_equal('eventje', event.key)
     assert_equal(false, event.book_whole_tables)
   end
@@ -34,7 +29,7 @@ class ChartReportsTest < Minitest::Test
   def test_book_whole_tables_is_optional
     chart = @seatsio.charts.create
 
-    event = @seatsio.events.create(chart.key, nil, true)
+    event = @seatsio.events.create key: chart.key, book_whole_tables: true
     assert_operator(event.key, :!=, '')
     assert_equal(true, event.book_whole_tables)
   end
@@ -43,7 +38,7 @@ class ChartReportsTest < Minitest::Test
     chart_key = create_test_chart_with_tables
     table_booking_modes = {'T1' => 'BY_TABLE', 'T2' => 'BY_SEAT'}
   
-    event = @seatsio.events.create(chart_key, nil, nil, table_booking_modes)
+    event = @seatsio.events.create key: chart_key, table_booking_modes: table_booking_modes
     assert_operator(event.key, :!=, '')
     assert_equal(false, event.book_whole_tables)
     assert_equal(table_booking_modes, event.table_booking_modes)

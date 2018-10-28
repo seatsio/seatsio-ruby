@@ -1,16 +1,10 @@
 require 'test_helper'
 require 'util'
 
-class HoldObjectsTest < Minitest::Test
-
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class HoldObjectsTest < SeatsioTestClient
   def test_with_hold_token
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     hold_token = @seatsio.hold_tokens.create
 
     res = @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token)
@@ -31,7 +25,7 @@ class HoldObjectsTest < Minitest::Test
 
   def test_with_order_id
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
     hold_token = @seatsio.hold_tokens.create
   
     @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token, 'order1')

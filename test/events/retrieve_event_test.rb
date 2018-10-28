@@ -1,16 +1,10 @@
 require 'test_helper'
 require 'util'
 
-class RetrieveEventTest < Minitest::Test
-
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
+class RetrieveEventTest < SeatsioTestClient
   def test_retrieve_event
     chart_key = create_test_chart
-    event = @seatsio.events.create(chart_key)
+    event = @seatsio.events.create key: chart_key
 
     retrieved_event = @seatsio.events.retrieve(event.key)
     assert_operator(retrieved_event.id, :!=, 0)
