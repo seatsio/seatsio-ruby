@@ -21,6 +21,18 @@ module Seatsio
       Domain::Subaccount.new(response)
     end
 
+    def list
+      cursor
+    end
+
+    def active
+      cursor status: 'active'
+    end
+
+    def inactive
+      cursor status: 'inactive'
+    end
+
     def activate(id: nil)
       @http_client.post("/subaccounts/#{id}/actions/activate")
     end
@@ -56,6 +68,11 @@ module Seatsio
       body['email'] = email if email
       response = @http_client.post('subaccounts', body)
       Domain::Subaccount.new(response)
+    end
+
+    def cursor(status: nil)
+      endpoint = status ? "subaccounts/#{status}" : 'subaccounts'
+      Pagination::Cursor.new(Domain::Subaccount, endpoint, @http_client)
     end
   end
 end
