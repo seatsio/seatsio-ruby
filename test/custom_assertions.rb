@@ -22,4 +22,8 @@ module Minitest::Assertions
   def assert_false(actual)
     assert_equal(false, actual)
   end
+
+  def assert_not_equal(expected, actual)
+    assert_operator(expected, :!=, actual)
+  end
 end

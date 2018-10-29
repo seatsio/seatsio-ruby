@@ -21,6 +21,13 @@ module Seatsio
       Domain::Subaccount.new(response)
     end
 
+    def update(id:, name: nil, email: nil)
+      body = {}
+      body['name'] = name if name
+      body['email'] = email if email
+      @http_client.post("subaccounts/#{id}", body)
+    end
+
     def list
       cursor
     end
@@ -33,15 +40,15 @@ module Seatsio
       cursor status: 'inactive'
     end
 
-    def activate(id: nil)
+    def activate(id:)
       @http_client.post("/subaccounts/#{id}/actions/activate")
     end
 
-    def deactivate(id: nil)
+    def deactivate(id:)
       @http_client.post("/subaccounts/#{id}/actions/deactivate")
     end
 
-    def retrieve(id: nil)
+    def retrieve(id:)
       response = @http_client.get("/subaccounts/#{id}")
       Domain::Subaccount.new(response)
     end
@@ -58,6 +65,10 @@ module Seatsio
 
     def create_with_email(email: nil, name: nil)
       do_create name: name, email: email
+    end
+
+    def regenerate_designer_key(id:)
+      @http_client.post("/subaccounts/#{id}/designer-key/actions/regenerate")
     end
 
     private
