@@ -70,13 +70,9 @@ module Seatsio
       Domain::Chart.new(response)
     end
 
-    def retrieve_published_version(key, as_chart = true)
+    def retrieve_published_version(key)
       response = @http_client.get("charts/#{key}/version/published")
-      if as_chart
-        Domain::Chart.new(response)
-      else
-        response
-      end
+      Domain::Chart.new(response)
     end
 
     def retrieve_draft_version(key)
