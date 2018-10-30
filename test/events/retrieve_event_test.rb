@@ -6,7 +6,7 @@ class RetrieveEventTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create key: chart_key
 
-    retrieved_event = @seatsio.events.retrieve(event.key)
+    retrieved_event = @seatsio.events.retrieve key: event.key
     assert_operator(retrieved_event.id, :!=, 0)
     assert_operator(retrieved_event.key, :!=, nil)
     assert_equal(chart_key, retrieved_event.chart_key)

@@ -62,6 +62,6 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
   end
   
   def fetch_status(event, o)
-    @seatsio.events.retrieve_object_status(event, o).status
+    @seatsio.events.retrieve_object_status(key: event, object_key: o).status
   end
 end

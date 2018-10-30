@@ -6,9 +6,9 @@ class MarkObjectsAsNotForSaleTest < SeatsioTestClient
     chart = @seatsio.charts.create
     event = @seatsio.events.create key: chart.key
 
-    @seatsio.events.mark_as_not_for_sale(event.key, %w(o1 o2), %w(cat1 cat2))
+    @seatsio.events.mark_as_not_for_sale key: event.key, objects: %w(o1 o2), categories: %w(cat1 cat2)
 
-    retrieved_event = @seatsio.events.retrieve(event.key)
+    retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal(false, retrieved_event.for_sale_config.for_sale)
     assert_equal(["o1", "o2"], retrieved_event.for_sale_config.objects)
     assert_equal(["cat1", "cat2"], retrieved_event.for_sale_config.categories)
@@ -18,9 +18,9 @@ class MarkObjectsAsNotForSaleTest < SeatsioTestClient
     chart = @seatsio.charts.create
     event = @seatsio.events.create key: chart.key
   
-    @seatsio.events.mark_as_not_for_sale(event.key, ["o1", "o2"])
+    @seatsio.events.mark_as_not_for_sale key: event.key, objects: ["o1", "o2"]
   
-    retrieved_event = @seatsio.events.retrieve(event.key)
+    retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal(false, retrieved_event.for_sale_config.for_sale)
     assert_equal(["o1", "o2"], retrieved_event.for_sale_config.objects)
     assert_equal([], retrieved_event.for_sale_config.categories)
@@ -30,9 +30,9 @@ class MarkObjectsAsNotForSaleTest < SeatsioTestClient
     chart = @seatsio.charts.create
     event = @seatsio.events.create key: chart.key
   
-    @seatsio.events.mark_as_not_for_sale(event.key, nil, ["cat1", "cat2"])
+    @seatsio.events.mark_as_not_for_sale key: event.key, categories: ["cat1", "cat2"]
   
-    retrieved_event = @seatsio.events.retrieve(event.key)
+    retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal(false, retrieved_event.for_sale_config.for_sale)
     assert_equal([], retrieved_event.for_sale_config.objects)
     assert_equal(["cat1", "cat2"], retrieved_event.for_sale_config.categories)

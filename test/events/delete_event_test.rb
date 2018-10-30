@@ -11,7 +11,7 @@ class DeleteEventTest < SeatsioTestClient
     @seatsio.events.delete key: event.key
 
     assert_raises(Seatsio::Exception::NotFoundException) do
-      @seatsio.events.retrieve(event.key)
+      @seatsio.events.retrieve key: event.key
     end
   end
 end

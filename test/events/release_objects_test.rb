@@ -9,9 +9,9 @@ class ReleaseObjectsTest < SeatsioTestClient
   
     res = @seatsio.events.release(event.key, %w(A-1 A-2))
   
-    a1_status = @seatsio.events.retrieve_object_status(event.key, 'A-1').status
-    a2_status = @seatsio.events.retrieve_object_status(event.key, 'A-2').status
-    a3_status = @seatsio.events.retrieve_object_status(event.key, 'A-3').status
+    a1_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-1').status
+    a2_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-2').status
+    a3_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-3').status
 
     assert_equal(Seatsio::Domain::ObjectStatus::FREE, a1_status)
     assert_equal(Seatsio::Domain::ObjectStatus::FREE, a2_status)
@@ -31,7 +31,7 @@ class ReleaseObjectsTest < SeatsioTestClient
   
     @seatsio.events.release(event.key, ['A-1'], hold_token.hold_token)
   
-    status = @seatsio.events.retrieve_object_status(event.key, 'A-1')
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)
     assert_nil(status.hold_token)
   end
@@ -43,7 +43,7 @@ class ReleaseObjectsTest < SeatsioTestClient
   
     @seatsio.events.release(event.key, ['A-1'], nil, 'order1')
   
-    status = @seatsio.events.retrieve_object_status(event.key, 'A-1')
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal('order1', status.order_id)
   end
 end
