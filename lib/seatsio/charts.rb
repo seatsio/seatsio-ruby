@@ -7,12 +7,12 @@ require 'json'
 require 'cgi'
 
 module Seatsio
+  # Seatsio Charts client
   class ChartsClient
-
     attr_reader :archive
 
     def initialize(secret_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
+      @http_client = Seatsio::HttpClient.new(secret_key, base_url)
       @archive = Pagination::Cursor.new(Domain::Chart, 'charts/archive', @http_client)
     end
 
@@ -27,24 +27,15 @@ module Seatsio
       Domain::Chart.new(response)
     end
 
-    def build_chart_request(name=nil, venue_type=nil, categories=nil)
-      result = {}
-      result['name'] = name if name
-      result['venueType'] = venue_type if venue_type
-      result['categories'] = categories if categories
-      result
-    end
-
-    # @return [Seatsio::Domain::Chart]
-    def create(name=nil, venue_type=nil, categories=nil)
-      payload = build_chart_request(name, venue_type, categories)
+    def create(name = nil, venue_type = nil, categories = nil)
+      payload = build_chart_request name: name, venue_type: venue_type, categories: categories
       response = @http_client.post('charts', payload)
       Domain::Chart.new(response)
     end
 
-    def update(key, new_name=nil, categories=nil)
-      payload = build_chart_request(name=new_name, categories=categories)
-      response = @http_client.post("charts/#{key}", payload)
+    def update(key, new_name = nil, categories = nil)
+      payload = build_chart_request name: new_name, categories: categories
+      @http_client.post("charts/#{key}", payload)
     end
 
     def add_tag(key, tag)
@@ -61,7 +52,8 @@ module Seatsio
     end
 
     def copy_to_subaccount(chart_key, subaccount_id)
-      response = @http_client.post("charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}")
+      url = "charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}"
+      response = @http_client.post url
       Domain::Chart.new(response)
     end
 
@@ -101,23 +93,14 @@ module Seatsio
       cursor.set_query_param('filter', chart_filter)
       cursor.set_query_param('tag', tag)
 
-      if expand_events
-        cursor.set_query_param('expand', 'events')
-      end
+      cursor.set_query_param('expand', 'events') if expand_events
 
       cursor
     end
 
-    # TODO: mark for deletion
-    #def list_first_page(page_size = nil)
-    #  cursor = list
-    #  cursor.set_query_param('limit', page_size)
-    #  cursor
-    #end
-
     def list_all_tags
       response = @http_client.get('charts/tags')
-      response["tags"]
+      response['tags']
     end
 
     def move_to_archive(chart_key)
@@ -126,6 +109,16 @@ module Seatsio
 
     def move_out_of_archive(chart_key)
       @http_client.post("charts/#{chart_key}/actions/move-out-of-archive")
+    end
+
+    private
+
+    def build_chart_request(name: nil, venue_type: nil, categories: nil)
+      result = {}
+      result['name'] = name if name
+      result['venueType'] = venue_type if venue_type
+      result['categories'] = categories if categories
+      result
     end
   end
 end

@@ -6,9 +6,6 @@ require 'cgi'
 
 module Seatsio
   class ChartReportsClient
-
-    attr_reader :archive
-
     def initialize(secret_key, base_url)
       @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
     end

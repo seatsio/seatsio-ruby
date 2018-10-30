@@ -5,10 +5,8 @@ require 'json'
 require 'cgi'
 
 module Seatsio
+  # Client for fetching event reports
   class EventReportsClient
-
-    attr_reader :archive
-
     def initialize(secret_key, base_url)
       @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
     end
@@ -64,11 +62,6 @@ module Seatsio
       if report_filter
         url = "reports/events/#{event_key}/#{report_type}/#{report_filter}"
         body = @http_client.get(url)
-        result = []
-        #body[report_filter].each do |report_item|
-        #  result.append(report_item)
-        #end
-        #Domain::EventReport.new(result)
         Domain::EventReport.new(body[report_filter])
       else
         url = "reports/events/#{event_key}/#{report_type}"
