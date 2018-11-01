@@ -27,7 +27,6 @@ module Seatsio
         Array(@collection[start..-1]).each do |element|
           yield(element)
         end
-
         return unless keep_running?
         return if last?
 
@@ -64,6 +63,7 @@ module Seatsio
         @last_response_empty || @collection.size >= MAX
       end
 
+      # @return [Bool]
       def keep_running?
         return false if @first_page && !@collection.empty?
         return false if !params[:limit].nil? && !@collection.empty?
@@ -79,7 +79,7 @@ module Seatsio
         items = response['items']
         parsed_items = []
 
-        items.each {|item| parsed_items.append(@cls.new(item))}
+        items.each {|item| parsed_items << @cls.new(item)}
 
         @collection += parsed_items
         set_query_param(:start_after_id, items.last['id']) unless last?

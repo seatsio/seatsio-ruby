@@ -21,7 +21,7 @@ def normalize(object_or_objects)
 
     result = []
     object_or_objects.each do |object|
-      result.append(object)
+      result << object
     end
     return result
 

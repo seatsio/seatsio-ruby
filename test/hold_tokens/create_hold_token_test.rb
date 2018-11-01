@@ -5,7 +5,7 @@ class CreateHoldTokenTest < SeatsioTestClient
   def test_create_hold_token
     now = Time.now
     hold_token = @seatsio.hold_tokens.create
-    assert_operator(hold_token.hold_token, :!=, nil)
+    assert_not_nil(hold_token.hold_token)
     assert_instance_of(Time, hold_token.expires_at)
     assert_between(hold_token.expires_at, now + 14 * 60, now + 16 * 60)
     assert_between(hold_token.expires_in_seconds, 14 * 60, 15 * 60)

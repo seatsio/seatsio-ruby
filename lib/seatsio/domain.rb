@@ -80,7 +80,7 @@ module Seatsio::Domain
       result = []
 
       list.each do |item|
-        result.append(Event.new(item))
+        result << Event.new(item)
       end
 
       return result
@@ -213,7 +213,7 @@ module Seatsio::Domain
       data.each do |key, values|
         items[key] = []
         values.each do |value|
-          items[key].append(ChartReportItem.new(value))
+          items[key] << ChartReportItem.new(value)
         end
       end
       @items = items
@@ -224,18 +224,11 @@ module Seatsio::Domain
 
     attr_reader :items
 
-    #def initialize(data)
-    #  items = []
-    #  data.each do |item|
-    #    items.append(EventReportItem.new(item))
-    #  end
-    #  @items = items
-    #end
     def initialize(data)
       if data.is_a? Array
         items = []
         data.each do |item|
-          items.append(EventReportItem.new(item))
+          items << EventReportItem.new(item)
         end
         @items = items
       else
@@ -243,7 +236,7 @@ module Seatsio::Domain
         data.each do |key, values|
           items[key] = []
           values.each do |value|
-            items[key].append(EventReportItem.new(value))
+            items[key] << EventReportItem.new(value)
           end
         end
         @items = items

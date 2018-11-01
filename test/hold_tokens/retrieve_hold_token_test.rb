@@ -2,11 +2,6 @@ require 'test_helper'
 require 'util'
 
 class RetrieveHoldTokenTest < SeatsioTestClient
-  def setup
-    @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
-  end
-
   def test_retrieve_hold_token
     hold_token = @seatsio.hold_tokens.create
 
