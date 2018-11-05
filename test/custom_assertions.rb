@@ -26,4 +26,8 @@ module Minitest::Assertions
   def assert_not_equal(expected, actual)
     assert_operator(expected, :!=, actual)
   end
+
+  def assert_empty(actual)
+    assert_equal([], actual)
+  end
 end

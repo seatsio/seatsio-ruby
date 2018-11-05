@@ -74,6 +74,12 @@ module Seatsio
 
       def fetch_next_page
         response = @http_client.get(@endpoint, @params)
+
+        if response.nil?
+          @last_response_empty = true
+          return
+        end
+
         @next_page_starts_after = response['next_page_starts_after'].to_i if response['next_page_starts_after']
         @previous_page_ends_before = response['previous_page_ends_before'].to_i if response['previous_page_ends_before']
         items = response['items']
