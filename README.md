@@ -71,7 +71,7 @@ client = Seatsio::Client.new("my-secret-key")
 charts = client.charts.list.first_page # returns a Enumerable
 ```
 
-#Error handling
+# Error handling
 
 When an API call results in a 4xx or 5xx error (e.g. when a chart could not be found), a SeatsioException is thrown.
 
