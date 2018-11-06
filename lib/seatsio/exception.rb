@@ -3,7 +3,7 @@ module Seatsio
     class SeatsioException < StandardError
     end
 
-    class NoMorePagesException < StandardError
+    class NoMorePagesException < SeatsioException
     end
 
     class NotFoundException < SeatsioException
