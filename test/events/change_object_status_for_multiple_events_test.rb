@@ -8,11 +8,7 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
     event1 = @seatsio.events.create key: chart_key
     event2 = @seatsio.events.create key: chart_key
   
-    @seatsio.events.change_object_status(
-      event_key_or_keys=[event1.key, event2.key],
-      object_or_objects= %w(A-1 A-2),
-      status= 'stat'
-    )
+    @seatsio.events.change_object_status([event1.key, event2.key], %w(A-1 A-2), 'stat')
 
     assert_equal('stat', fetch_status(event1.key, 'A-1'))
     assert_equal('stat', fetch_status(event2.key, 'A-1'))

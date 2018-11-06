@@ -75,4 +75,21 @@ class BookObjectsTest < SeatsioTestClient
     status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
     assert_equal('order1', status2.order_id)
   end
+
+  def test_book_with_properties
+    chart_key = create_test_chart
+    event = @seatsio.events.create key: chart_key
+
+    objects = [
+      {:objectId => 'A-5', :extraData => { 'name': 'John Doe' }},
+      {:objectId => 'A-6', :extraData => { 'name': 'John Doe' }}
+    ]
+
+    @seatsio.events.book(event.key, objects)
+
+    status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-5'
+    status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-6'
+    assert_equal('booked', status1.status)
+    assert_equal('booked', status2.status)
+  end
 end
