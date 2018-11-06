@@ -13,15 +13,6 @@ Gem::Specification.new do |spec|
   spec.description   = "This is the official Ruby client library for the Seats.io V2 REST API"
   spec.homepage      = "http://seats.io"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
-
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
@@ -32,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "rest-client", "~> 2.0.2"
-  spec.add_development_dependency "coveralls"
-  spec.add_development_dependency "webmock"
+  spec.add_development_dependency "rest-client", '~> 2.0', '>= 2.0.2'
+  spec.add_development_dependency "coveralls", "~> 0.8.22"
+  spec.add_development_dependency 'webmock', '~> 3.4', '>= 3.4.2'
 end
