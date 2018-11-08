@@ -67,6 +67,10 @@ module Seatsio
       do_create name: name, email: email
     end
 
+    def regenerate_secret_key(id:)
+      @http_client.post("/subaccounts/#{id}/secret-key/actions/regenerate")
+    end
+
     def regenerate_designer_key(id:)
       @http_client.post("/subaccounts/#{id}/designer-key/actions/regenerate")
     end

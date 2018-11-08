@@ -6,7 +6,7 @@ class UpdateHoldTokenExpirationDateTest < SeatsioTestClient
     hold_token = @seatsio.hold_tokens.create
     now = Time.now
 
-    updated_hold_token = @seatsio.hold_tokens.expire_in_minutes hold_token: hold_token.hold_token, expires_in_minutes: 30
+    updated_hold_token = @seatsio.hold_tokens.expire_in_minutes(hold_token.hold_token, 30)
     assert_equal(hold_token.hold_token, updated_hold_token.hold_token)
 
     now_plus_29 = now + 29 * 60

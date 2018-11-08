@@ -24,12 +24,12 @@ module Seatsio
       Domain::HoldToken.new(response)
     end
 
-    def retrieve(hold_token: nil)
+    def retrieve(hold_token)
       response = @http_client.get("/hold-tokens/#{hold_token}")
       Domain::HoldToken.new(response)
     end
 
-    def expire_in_minutes(hold_token: nil, expires_in_minutes: nil)
+    def expire_in_minutes(hold_token, expires_in_minutes = nil)
       body = {"expiresInMinutes": expires_in_minutes}
       response = @http_client.post("/hold-tokens/#{hold_token}", body)
       Domain::HoldToken.new(response)
