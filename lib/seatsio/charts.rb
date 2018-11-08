@@ -27,13 +27,13 @@ module Seatsio
       Domain::Chart.new(response)
     end
 
-    def create(name = nil, venue_type = nil, categories = nil)
+    def create(name: nil, venue_type: nil, categories: nil)
       payload = build_chart_request name: name, venue_type: venue_type, categories: categories
       response = @http_client.post('charts', payload)
       Domain::Chart.new(response)
     end
 
-    def update(key, new_name = nil, categories = nil)
+    def update(key:, new_name: nil, categories: nil)
       payload = build_chart_request name: new_name, categories: categories
       @http_client.post("charts/#{key}", payload)
     end
@@ -88,7 +88,7 @@ module Seatsio
       @http_client.post("charts/#{chart_key}/version/draft/actions/publish")
     end
 
-    def list(chart_filter = nil, tag = nil, expand_events = nil)
+    def list(chart_filter: nil, tag: nil, expand_events: nil)
       cursor = Pagination::Cursor.new(Domain::Chart, 'charts', @http_client)
       cursor.set_query_param('filter', chart_filter)
       cursor.set_query_param('tag', tag)

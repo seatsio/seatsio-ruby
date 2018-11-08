@@ -17,11 +17,11 @@ class ListAllChartsTest < SeatsioTestClient
   end
 
   def test_filter
-    chart1 = @seatsio.charts.create('some stadium')
-    chart2 = @seatsio.charts.create('a theatre')
-    chart3 = @seatsio.charts.create('some other stadium')
+    chart1 = @seatsio.charts.create name: 'some stadium'
+    chart2 = @seatsio.charts.create name: 'a theatre'
+    chart3 = @seatsio.charts.create name: 'some other stadium'
 
-    charts = @seatsio.charts.list('stadium')
+    charts = @seatsio.charts.list chart_filter: 'stadium'
 
     keys = charts.collect {|chart| chart.key}
 
@@ -33,7 +33,7 @@ class ListAllChartsTest < SeatsioTestClient
     chart2 = @seatsio.charts.create
     chart3 = chart_with_tag(nil, 'tag1')
 
-    charts = @seatsio.charts.list(nil, 'tag1')
+    charts = @seatsio.charts.list tag: 'tag1'
 
     keys = charts.collect {|chart| chart.key}
     assert_equal([chart3.key, chart1.key], keys)
@@ -45,7 +45,7 @@ class ListAllChartsTest < SeatsioTestClient
     chart3 = chart_with_tag('some other stadium')
     chart4 = @seatsio.charts.create
 
-    charts = @seatsio.charts.list('stadium', 'tag1')
+    charts = @seatsio.charts.list chart_filter: 'stadium', tag: 'tag1'
 
     keys = charts.collect {|chart| chart.key}
     assert_equal([chart1.key], keys)
@@ -56,7 +56,7 @@ class ListAllChartsTest < SeatsioTestClient
     event1 = @seatsio.events.create key: chart.key
     event2 = @seatsio.events.create key: chart.key
 
-    retrieved_charts = @seatsio.charts.list(nil, nil, true).to_a
+    retrieved_charts = @seatsio.charts.list(expand_events: true).to_a
 
     assert_instance_of(Seatsio::Domain::Event, retrieved_charts[0].events[0])
 
@@ -68,7 +68,7 @@ class ListAllChartsTest < SeatsioTestClient
 
   def chart_with_tag(name = nil, tag = nil)
     return unless tag
-    chart = @seatsio.charts.create(name)
+    chart = @seatsio.charts.create name: name
     @seatsio.charts.add_tag(chart.key, tag)
     chart
   end

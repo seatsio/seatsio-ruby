@@ -5,7 +5,7 @@ class RetrieveDraftVersionTest < SeatsioTestClient
   def test_retrieve_draft_version
     chart = @seatsio.charts.create
     @seatsio.events.create key: chart.key
-    @seatsio.charts.update(chart.key, 'newname')
+    @seatsio.charts.update key: chart.key, new_name: 'newname'
 
     draft_drawing = @seatsio.charts.retrieve_draft_version(chart.key)
 

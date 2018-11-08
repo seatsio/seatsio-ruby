@@ -3,7 +3,7 @@ require "util"
 
 class CopyChartToSubaccountTest < SeatsioTestClient
   def test_copy_to_subaccount
-    chart = @seatsio.charts.create("my chart", "BOOTHS")
+    chart = @seatsio.charts.create name: 'my chart', venue_type: 'BOOTHS'
     subaccount = @seatsio.subaccounts.create
 
     copied_chart = @seatsio.charts.copy_to_subaccount(chart.key, subaccount.id)

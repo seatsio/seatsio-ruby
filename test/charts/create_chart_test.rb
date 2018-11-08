@@ -22,7 +22,7 @@ class CreateChartTest < SeatsioTestClient
   end
 
   def test_name
-    chart = @seatsio.charts.create('aChart')
+    chart = @seatsio.charts.create name: 'aChart'
     assert_equal('aChart', chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
@@ -31,7 +31,7 @@ class CreateChartTest < SeatsioTestClient
   end
 
   def test_venue_type
-    chart = @seatsio.charts.create(nil, 'BOOTHS')
+    chart = @seatsio.charts.create venue_type: 'BOOTHS'
     assert_equal('Untitled chart', chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
@@ -45,7 +45,7 @@ class CreateChartTest < SeatsioTestClient
         {:key => 2, :label => 'Category 2', :color => '#bbbbbb'}
     ]
 
-    chart = @seatsio.charts.create(nil, nil, categories)
+    chart = @seatsio.charts.create categories: categories
     assert_equal('Untitled chart', chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)

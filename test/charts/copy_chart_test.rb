@@ -3,7 +3,7 @@ require "util"
 
 class CopyChartTest < SeatsioTestClient
   def test_copy_chart
-    chart = @seatsio.charts.create("my chart", "BOOTHS")
+    chart = @seatsio.charts.create name: 'my chart', venue_type: 'BOOTHS'
     copied_chart = @seatsio.charts.copy(chart.key)
 
     assert_equal("my chart (copy)", copied_chart.name)
