@@ -48,4 +48,18 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(1, report.items['A-1'].length)
     assert_equal(1, report.items['A-2'].length)
   end
+
+  def test_with_extra_data
+    chart_key = create_test_chart
+    event1 = @seatsio.events.create key: chart_key
+    event2 = @seatsio.events.create key: chart_key
+    extra_data = {"foo" => "bar"}
+
+    @seatsio.events.update_extra_data key: event1.key, object: 'A-1', extra_data: extra_data
+    @seatsio.events.update_extra_data key: event2.key, object: 'A-1', extra_data: extra_data
+
+    report = @seatsio.event_reports.by_label(event1.key)
+
+    assert_equal(extra_data, report.items['A-1'][0].extra_data)
+  end
 end
