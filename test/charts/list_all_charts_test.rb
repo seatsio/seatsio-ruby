@@ -64,6 +64,13 @@ class ListAllChartsTest < SeatsioTestClient
     assert_equal([event2.id, event1.id], event_ids)
   end
 
+  def test_without_charts
+    charts = @seatsio.charts.list.to_a
+
+    assert_equal([], charts)
+
+  end
+
   private
 
   def chart_with_tag(name = nil, tag = nil)
