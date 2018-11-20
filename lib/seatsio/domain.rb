@@ -231,6 +231,8 @@ module Seatsio::Domain
           items << EventReportItem.new(item)
         end
         @items = items
+      elsif data.nil?
+        @items = []
       else
         items = {}
         data.each do |key, values|
