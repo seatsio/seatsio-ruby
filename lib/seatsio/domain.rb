@@ -110,10 +110,11 @@ module Seatsio::Domain
   end
 
   class AccountSettings
-    attr_reader :draft_chart_drawings_enabled, :chart_validation
+    attr_reader :draft_chart_drawings_enabled, :hold_on_select_for_gas, :chart_validation
 
     def initialize(data)
       @draft_chart_drawings_enabled = data['draftChartDrawingsEnabled']
+      @hold_on_select_for_gas = data['holdOnSelectForGAs']
       @chart_validation = ChartValidationSettings.new(data['chartValidation'])
     end
   end
