@@ -19,4 +19,9 @@ class FilterSubaccountsTest < SeatsioTestClient
     subaccounts = @seatsio.subaccounts.list filter: "test-/@/2"
     assert_equal([subaccount2.id], subaccounts.collect {|subaccount| subaccount.id})
   end
+
+  def test_filter_subaccounts_with_no_results
+    subaccounts = @seatsio.subaccounts.list filter: "test-/@/2"
+    assert_equal([], subaccounts.to_a )
+  end
 end
