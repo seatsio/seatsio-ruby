@@ -28,8 +28,10 @@ module Seatsio
       @http_client.post("subaccounts/#{id}", body)
     end
 
-    def list
-      cursor
+    def list(filter: nil)
+      extended_cursor = cursor
+      extended_cursor.set_query_param('filter', filter)
+      extended_cursor
     end
 
     def active
