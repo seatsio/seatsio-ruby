@@ -17,10 +17,7 @@ class HoldObjectsTest < SeatsioTestClient
     assert_equal(Seatsio::Domain::ObjectStatus::HELD, status2.status)
     assert_equal(hold_token.hold_token, status2.hold_token)
 
-    assert_equal({
-                   'A-1' => {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}},
-                   'A-2' => {'own' => {'label' => '2', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}
-                 }, res.labels)
+    assert_equal(res.objects.keys, ['A-1', 'A-2'])
   end
 
   def test_with_order_id

@@ -11,14 +11,26 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal(%w(B-4 B-5 B-6), result.objects)
   end
 
-  def test_labels
+  def test_object_details
     chart_key = create_test_chart
     event = @seatsio.events.create key: chart_key
-    result = @seatsio.events.change_best_available_object_status(key: event.key, number: 2, status: 'myStatus')
-    assert_equal({
-                   'B-4' => {'own' => {'label' => '4', 'type' => 'seat'}, 'parent' => {'label' => 'B', 'type' => 'row'}},
-                   'B-5' => {'own' => {'label' => '5', 'type' => 'seat'}, 'parent' => {'label' => 'B', 'type' => 'row'}}
-                 }, result.labels)
+
+    result = @seatsio.events.change_best_available_object_status(key: event.key, number: 1, status: 'myStatus')
+
+    b5 = result.object_details['B-5']
+    assert_equal('myStatus', b5.status)
+    assert_equal('B-5', b5.label)
+    assert_equal({'own' => {'label' => '5', 'type' => 'seat'}, 'parent' => {'label' => 'B', 'type' => 'row'}}, b5.labels)
+    assert_equal('Cat1', b5.category_label)
+    assert_equal('9', b5.category_key)
+    assert_nil(b5.ticket_type)
+    assert_nil(b5.order_id)
+    assert_equal('seat', b5.object_type)
+    assert_equal(true, b5.for_sale)
+    assert_nil(b5.section)
+    assert_nil(b5.entrance)
+    assert_nil(b5.num_booked)
+    assert_nil(b5.capacity)
   end
 
   def test_categories

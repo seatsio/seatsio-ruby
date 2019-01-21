@@ -2,6 +2,8 @@ require 'seatsio/util'
 
 module Seatsio::Domain
 
+  module_function
+
   class ChartCategories
     attr_accessor :list, :max_category_key
 
@@ -40,6 +42,7 @@ module Seatsio::Domain
 
   class ChartDraft < Chart
     attr_reader :version
+
     def initialize(data)
       super(data)
       @version = data['version']
@@ -158,12 +161,10 @@ module Seatsio::Domain
 
   class ChangeObjectStatusResult
 
-    attr_reader :labels
+    attr_reader :objects
 
     def initialize(data)
-      if data
-        @labels = data['labels'] if data.include? 'labels'
-      end
+      @objects = Seatsio::Domain.to_object_details(data['objects']);
     end
   end
 
@@ -180,12 +181,12 @@ module Seatsio::Domain
 
   class BestAvailableObjects
 
-    attr_reader :next_to_each_other, :objects, :labels
+    attr_reader :next_to_each_other, :objects, :object_details
 
     def initialize(data)
       @next_to_each_other = data['nextToEachOther']
       @objects = data['objects']
-      @labels = data['labels']
+      @object_details = Seatsio::Domain.to_object_details(data['objectDetails'])
     end
   end
 
@@ -277,10 +278,19 @@ module Seatsio::Domain
     def initialize(data)
       @id = data['id']
       @status = data['status']
-      @date = data['date']# TODO: parse_date(data.get("date"))
+      @date = data['date'] # TODO: parse_date(data.get("date"))
       @object_label = data['objectLabel']
       @event_id = data['eventId']
       @extra_data = data['extraData']
     end
   end
+
+  def to_object_details(data)
+    object_details = {}
+    data.each do |key, value|
+      object_details[key] = EventReportItem.new(value)
+    end
+    object_details
+  end
+
 end

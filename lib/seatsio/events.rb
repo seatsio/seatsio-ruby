@@ -53,7 +53,7 @@ module Seatsio
     def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil)
       request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys)
       request[:params] = {
-        'expand' => 'labels'
+        'expand' => 'objects'
       }
       response = @http_client.post("seasons/actions/change-object-status", request)
       Domain::ChangeObjectStatusResult.new(response)

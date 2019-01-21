@@ -13,10 +13,20 @@ class ChangeObjectStatusTest < SeatsioTestClient
     assert_equal('status_foo', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-2').status)
     assert_equal('free', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-3').status)
 
-    assert_equal({
-                   'A-1' => {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}},
-                   'A-2' => {'own' => {'label' => '2', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}
-                 }, res.labels)
+    a1 = res.objects['A-1']
+    assert_equal('status_foo', a1.status)
+    assert_equal('A-1', a1.label)
+    assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, a1.labels)
+    assert_equal('Cat1', a1.category_label)
+    assert_equal('9', a1.category_key)
+    assert_nil(a1.ticket_type)
+    assert_nil(a1.order_id)
+    assert_equal('seat', a1.object_type)
+    assert_equal(true, a1.for_sale)
+    assert_nil(a1.section)
+    assert_nil(a1.entrance)
+    assert_nil(a1.num_booked)
+    assert_nil(a1.capacity)
   end
 
   def test_hold_token
