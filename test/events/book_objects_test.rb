@@ -21,10 +21,7 @@ class BookObjectsTest < SeatsioTestClient
     assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, a2_status)
     assert_equal(Seatsio::Domain::ObjectStatus::FREE, a3_status)
 
-    assert_equal(res.labels, {
-      'A-1' => {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}},
-      'A-2' => {'own' => {'label' => '2', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}
-    })
+    assert_equal(res.objects.keys, ['A-1', 'A-2'])
   end
 
   def test_sections
@@ -41,9 +38,13 @@ class BookObjectsTest < SeatsioTestClient
     assert_equal(Seatsio::Domain::ObjectStatus::BOOKED , a2_status)
     assert_equal(Seatsio::Domain::ObjectStatus::FREE , a3_status)
 
-    assert_equal({'Section A-A-1' => {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}, 'section' => 'Section A', 'entrance' => {'label' => 'Entrance 1'}},
-                  'Section A-A-2' => {'own' => {'label' => '2', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}, 'section' => 'Section A', 'entrance' => {'label' => 'Entrance 1'}}
-                },res.labels)
+    seat_a1 = res.objects['Section A-A-1']
+    assert_equal("Section A", seat_a1.section)
+    assert_equal("Entrance 1", seat_a1.entrance)
+    assert_equal(
+      {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}, 'section' => 'Section A', 'entrance' => {'label' => 'Entrance 1'}},
+      seat_a1.labels
+    )
   end
 
   def test_with_hold_token
