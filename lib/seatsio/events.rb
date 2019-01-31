@@ -165,6 +165,8 @@ module Seatsio
       params.each do |param|
         r = {}
         r["eventKey"] = param[:event_key] if param[:event_key] != nil
+        r["bookWholeTables"] = param[:book_whole_tables] if param[:book_whole_tables] != nil
+        r["tableBookingModes"] = param[:table_booking_modes] if param[:table_booking_modes] != nil
         result.push(r)
       end
       result
