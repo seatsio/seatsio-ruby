@@ -164,6 +164,7 @@ module Seatsio
       result = []
       params.each do |param|
         r = {}
+        r["eventKey"] = param[:event_key] if param[:event_key] != nil
         result.push(r)
       end
       result
