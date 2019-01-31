@@ -10,7 +10,7 @@ class ChartReportsTest < SeatsioTestClient
     events = @seatsio.events.create_multiple(key: chart_key, event_creation_params: event_creation_params)
 
     assert_equal(2, events.length)
-    events.each {|e| assert_not_nil(e["key"])}
+    events.each {|e| assert_not_nil(e.key)}
 
   end
 

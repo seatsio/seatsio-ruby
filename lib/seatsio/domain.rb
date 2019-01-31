@@ -94,7 +94,7 @@ module Seatsio::Domain
     attr_accessor :events
 
     def initialize(data)
-      @events = data['events']
+      @events = Event.create_list(data['events']) if data['events']
     end
   end
 
