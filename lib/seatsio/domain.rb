@@ -90,6 +90,14 @@ module Seatsio::Domain
     end
   end
 
+  class Events
+    attr_accessor :events
+
+    def initialize(data)
+      @events = Event.create_list(data['events']) if data['events']
+    end
+  end
+
   class APIResponse
 
     attr_reader :next_page_starts_after, :previous_page_ends_before, :items
