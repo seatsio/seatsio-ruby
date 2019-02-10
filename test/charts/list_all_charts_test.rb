@@ -71,6 +71,15 @@ class ListAllChartsTest < SeatsioTestClient
 
   end
 
+  def test_chart_amount
+    30.times do
+      @seatsio.charts.create
+    end
+
+    retrieved_charts = @seatsio.charts.list().to_a
+    assert_equal(30, retrieved_charts.size)
+  end
+
   private
 
   def chart_with_tag(name = nil, tag = nil)
