@@ -20,7 +20,7 @@ The reason: we want to play safe and assume that each release might break backwa
 require('seatsio')
 client = Seatsio::Client.new("my-secret-key") # can be found on https://app.seats.io/settings
 chart = client.charts.create
-event = client.events.create(chart.key)
+event = client.events.create key: chart.key
 ```
 
 ### Booking objects
