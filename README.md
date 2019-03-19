@@ -60,15 +60,45 @@ client.events.change_object_status("<EVENT KEY>", ["A-1", "A-2"], "my-custom-sta
 ```ruby
 require('seatsio')
 client = Seatsio::Client.new("my-secret-key")
-charts = client.charts.list # returns a Enumerable
+charts = client.charts.list
+charts.each do |chart|
+  puts chart.key
+end
 ```
 
-### Listing the first page of charts (default page size is 20)
+Note: `list` returns an `Enumerable`, which under the hood calls the seats.io API to fetch charts page by page. So multiple API calls may be done underneath to fetch all charts.
+
+### Listing charts page by page
+
+E.g. to show charts in a paginated list on a dashboard.
+
+Each page is Enumerable, and it has `next_page_starts_after` and `previous_page_ends_before` properties. Those properties are the chart IDs after which the next page starts or the previous page ends.
 
 ```ruby
-require('seatsio')
-client = Seatsio::Client.new("my-secret-key")
-charts = client.charts.list.first_page # returns a Enumerable
+// ... user initially opens the screen ...
+
+firstPage = client.charts.list.first_page()
+firstPage.each do |chart|
+  puts chart.key
+end
+```
+
+```ruby
+// ... user clicks on 'next page' button ...
+
+nextPage = client.charts.list.page_after(firstPage.next_page_starts_after)
+nextPage.each do |chart|
+  puts chart.key
+end
+```
+
+```ruby
+// ... user clicks on 'previous page' button ...
+
+previousPage = client.charts.list.page_before(nextPage.previous_page_ends_before)
+previousPage.each do |chart|
+  puts chart.key
+end
 ```
 
 # Error handling
