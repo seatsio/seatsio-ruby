@@ -8,8 +8,6 @@ module Seatsio
 
       attr_reader :params, :next_page_starts_after, :previous_page_ends_before
 
-      MAX = 20
-
       def initialize(cls, endpoint, http_client, params = {})
         @cls = cls
         @endpoint = endpoint
@@ -60,7 +58,9 @@ module Seatsio
       private
 
       def last?
-        @last_response_empty || @collection.size >= MAX
+        return true if @last_response_empty
+
+        false if @next_page_starts_after.is_a? Integer
       end
 
       # @return [Bool]

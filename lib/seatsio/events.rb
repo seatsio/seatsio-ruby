@@ -21,6 +21,12 @@ module Seatsio
       Domain::Event.new(response)
     end
 
+    def create_multiple(key: nil, event_creation_params: nil)
+      payload = build_events_request(chart_key: key, event_creation_params: event_creation_params)
+      response = @http_client.post("events/actions/create-multiple", payload)
+      Domain::Events.new(response).events
+    end
+
     def update(key:, chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
       payload = build_event_request(chart_key: chart_key, event_key: event_key, book_whole_tables: book_whole_tables, table_booking_modes: table_booking_modes)
       @http_client.post("/events/#{key}", payload)
@@ -146,5 +152,25 @@ module Seatsio
       result["tableBookingModes"] = table_booking_modes if table_booking_modes != nil
       result
     end
+
+    def build_events_request(chart_key: nil, event_creation_params: nil)
+      result = {}
+      result["chartKey"] = chart_key
+      result["events"] = event_creation_params_to_request(params: event_creation_params)
+      result
+    end
+
+    def event_creation_params_to_request(params: nil)
+      result = []
+      params.each do |param|
+        r = {}
+        r["eventKey"] = param[:event_key] if param[:event_key] != nil
+        r["bookWholeTables"] = param[:book_whole_tables] if param[:book_whole_tables] != nil
+        r["tableBookingModes"] = param[:table_booking_modes] if param[:table_booking_modes] != nil
+        result.push(r)
+      end
+      result
+    end
+
   end
 end
