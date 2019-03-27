@@ -49,6 +49,22 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(1, report.items['A-2'].length)
   end
 
+  def test_by_category_key
+    chart_key = create_test_chart
+    report = @seatsio.chart_reports.by_category_key(chart_key)
+    assert_equal(2, report.items.length)
+    assert_equal(17, report.items["9"].length)
+    assert_equal(17, report.items["10"].length)
+  end
+
+  def test_by_category_label
+    chart_key = create_test_chart
+    report = @seatsio.chart_reports.by_category_label(chart_key)
+    assert_equal(2, report.items.length)
+    assert_equal(17, report.items["Cat1"].length)
+    assert_equal(17, report.items["Cat2"].length)
+  end
+
   def test_with_extra_data
     chart_key = create_test_chart
     event1 = @seatsio.events.create key: chart_key
