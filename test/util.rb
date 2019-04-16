@@ -38,3 +38,7 @@ end
 def create_test_chart_with_tables
   create_test_chart_from_file('sampleChartWithTables.json')
 end
+
+def create_test_chart_with_errors
+  create_test_chart_from_file('sampleChartWithErrors.json')
+end
