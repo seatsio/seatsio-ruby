@@ -111,6 +111,15 @@ module Seatsio
       @http_client.post("charts/#{chart_key}/actions/move-out-of-archive")
     end
 
+    def validate_published_version(chart_key)
+      response = @http_client.post("charts/#{chart_key}/version/published/actions/validate")
+      Seatsio::Domain::ChartValidationResult.new(response)
+    end
+
+    def validate_draft_version(chart_key)
+      @http_client.post("charts/#{chart_key}/version/draft/actions/validate")
+    end
+
     private
 
     def build_chart_request(name: nil, venue_type: nil, categories: nil)

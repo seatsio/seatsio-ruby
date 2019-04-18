@@ -40,6 +40,15 @@ module Seatsio::Domain
     end
   end
 
+  class ChartValidationResult
+    attr_reader :errors, :warnings
+
+    def initialize(data)
+      @errors = data['errors']
+      @warnings = data['warnings']
+    end
+  end
+
   class ChartDraft < Chart
     attr_reader :version
 
