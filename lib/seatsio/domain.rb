@@ -40,7 +40,7 @@ module Seatsio::Domain
     end
   end
 
-  class ChartValidation
+  class ChartValidationResult
     attr_reader :errors, :warnings
 
     def initialize(data)
