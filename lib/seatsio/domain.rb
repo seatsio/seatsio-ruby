@@ -269,7 +269,7 @@ module Seatsio::Domain
   class EventReportItem
     attr_reader :labels, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
-                :ticket_type, :num_booked, :for_sale, :section
+                :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section
 
     def initialize(data)
       @status = data['status']
@@ -284,6 +284,8 @@ module Seatsio::Domain
       @section = data['section']
       @entrance = data['entrance']
       @num_booked = data['numBooked']
+      @num_free = data['numFree']
+      @num_held = data['numHeld']
       @capacity = data['capacity']
       @object_type = data['objectType']
       @extra_data = data['extraData']

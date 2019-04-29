@@ -22,7 +22,7 @@ class EventReportsTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create key: chart_key
     extra_data = {'foo' => 'bar'}
-  
+
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], nil, 'order1')
 
     report = @seatsio.event_reports.by_label(event.key)
@@ -62,6 +62,8 @@ class EventReportsTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create key: chart_key
     @seatsio.events.book(event.key, [{:objectId => 'GA1', :quantity => 5}])
+    holdToken = @seatsio.hold_tokens.create
+    @seatsio.events.hold(event.key, [{:objectId => 'GA1', :quantity => 3}], holdToken.hold_token)
 
     report = @seatsio.event_reports.by_label(event.key)
 
@@ -77,6 +79,8 @@ class EventReportsTest < SeatsioTestClient
     assert_nil(report_item.section)
     assert_nil(report_item.entrance)
     assert_equal(5, report_item.num_booked)
+    assert_equal(92, report_item.num_free)
+    assert_equal(3, report_item.num_held)
     assert_equal(100, report_item.capacity)
   end
 
