@@ -65,25 +65,21 @@ class ListAllChartsTest < SeatsioTestClient
   end
 
   def test_with_validation
-    5.times do
-      @seatsio.charts.create
-    end
+    @seatsio.charts.create
 
     retrieved_charts = @seatsio.charts.list(with_validation: true).to_a
     validations = retrieved_charts.collect {|chart| chart.validation}
 
-    assert_equal(validations, [{"errors" => [], "warnings" => []}] * 5)
+    assert_equal(validations, [{"errors" => [], "warnings" => []}])
   end
 
   def test_without_validation
-    5.times do
-      @seatsio.charts.create
-    end
+    @seatsio.charts.create
 
     retrieved_charts = @seatsio.charts.list().to_a
     validations = retrieved_charts.collect {|chart| chart.validation}
 
-    assert_equal(validations, [nil] * 5)
+    assert_equal(validations, [nil])
   end
 
   def test_without_charts
