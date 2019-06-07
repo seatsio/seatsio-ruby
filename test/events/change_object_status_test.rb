@@ -5,7 +5,7 @@ require 'seatsio/domain'
 class ChangeObjectStatusTest < SeatsioTestClient
   def test_change_object_status
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     res = @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'status_foo')
 
@@ -31,7 +31,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
   def test_hold_token
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
     @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token)
 
@@ -49,7 +49,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
   def test_order_id
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'status_foo', nil, 'myOrder')
     assert_equal('myOrder', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-1').order_id)
@@ -58,7 +58,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
   def test_ticket_type
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     props1 = {:objectId => 'A-1', :ticketType => 'Ticket Type 1'}
     props2 = {:objectId => 'A-2', :ticketType => 'Ticket Type 2'}
 
@@ -75,7 +75,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
   def test_quantity
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     props1 = {:objectId => 'GA1', :quantity => 5}
     props2 = {:objectId => 'GA2', :quantity => 10}
 
@@ -86,7 +86,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
   def test_change_object_status_with_extra_data
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     props1 = {:objectId => 'A-1', :extraData => {'foo': 'bar'}}
     props2 = {:objectId => 'A-2', :extraData => {'foo': 'baz'}}
 

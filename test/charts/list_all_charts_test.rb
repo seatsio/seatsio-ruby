@@ -53,8 +53,8 @@ class ListAllChartsTest < SeatsioTestClient
 
   def test_expand
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create key: chart.key
-    event2 = @seatsio.events.create key: chart.key
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
 
     retrieved_charts = @seatsio.charts.list(expand_events: true).to_a
 

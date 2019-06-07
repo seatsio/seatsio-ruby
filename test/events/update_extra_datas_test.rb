@@ -4,7 +4,7 @@ require 'util'
 class UpdateExtraDatasTest < SeatsioTestClient
   def test_update_extra_datas
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     extra_data1 = {'foo1' => 'bar1'}
     extra_data2 = {'foo2' => 'bar2'}
 

@@ -6,7 +6,7 @@ require 'seatsio/exception'
 class DeleteEventTest < SeatsioTestClient
   def test_delete_event
     chart = @seatsio.charts.create
-    event = @seatsio.events.create key: chart.key
+    event = @seatsio.events.create chart_key: chart.key
 
     @seatsio.events.delete key: event.key
 

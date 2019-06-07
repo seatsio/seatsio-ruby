@@ -4,9 +4,9 @@ require 'util'
 class ListFirstPageOfEventsTest < SeatsioTestClient
   def test_all_on_first_page
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create key: chart.key
-    event2 = @seatsio.events.create key: chart.key
-    event3 = @seatsio.events.create key: chart.key
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
+    event3 = @seatsio.events.create chart_key: chart.key
 
     events = @seatsio.events.list.first_page
 
@@ -17,9 +17,9 @@ class ListFirstPageOfEventsTest < SeatsioTestClient
 
   def test_some_on_first_page
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create key: chart.key
-    event2 = @seatsio.events.create key: chart.key
-    event3 = @seatsio.events.create key: chart.key
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
+    event3 = @seatsio.events.create chart_key: chart.key
 
     events = @seatsio.events.list.first_page(2)
 

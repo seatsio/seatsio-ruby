@@ -15,8 +15,8 @@ module Seatsio
       @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
     end
 
-    def create(key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
-      payload = build_event_request(chart_key: key, event_key: event_key, book_whole_tables: book_whole_tables, table_booking_modes: table_booking_modes)
+    def create(chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
+      payload = build_event_request(chart_key: chart_key, event_key: event_key, book_whole_tables: book_whole_tables, table_booking_modes: table_booking_modes)
       response = @http_client.post("events", payload)
       Domain::Event.new(response)
     end
