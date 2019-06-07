@@ -88,13 +88,14 @@ module Seatsio
       @http_client.post("charts/#{chart_key}/version/draft/actions/publish")
     end
 
-    def list(chart_filter: nil, tag: nil, expand_events: nil)
+    def list(chart_filter: nil, tag: nil, expand_events: nil, with_validation: false)
       cursor = Pagination::Cursor.new(Domain::Chart, 'charts', @http_client)
       cursor.set_query_param('filter', chart_filter)
       cursor.set_query_param('tag', tag)
 
       cursor.set_query_param('expand', 'events') if expand_events
-
+      cursor.set_query_param('validation', with_validation) if with_validation
+      
       cursor
     end
 

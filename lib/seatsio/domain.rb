@@ -22,7 +22,7 @@ module Seatsio::Domain
 
     attr_reader :id, :key, :status, :name, :published_version_thumbnail_url,
                 :draft_version_thumbnail_url, :events, :tags, :archived, :venue_type,
-                :categories
+                :categories, :validation
 
     def initialize(data)
       @id = data['id']
@@ -36,7 +36,7 @@ module Seatsio::Domain
       @archived = data['archived']
       @venue_type = data['venueType']
       @categories = ChartCategories.new(data['categories'])
-
+      @validation = data['validation']
     end
   end
 

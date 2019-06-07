@@ -64,6 +64,24 @@ class ListAllChartsTest < SeatsioTestClient
     assert_equal([event2.id, event1.id], event_ids)
   end
 
+  def test_with_validation
+    @seatsio.charts.create
+
+    retrieved_charts = @seatsio.charts.list(with_validation: true).to_a
+    validations = retrieved_charts.collect {|chart| chart.validation}
+
+    assert_equal(validations, [{"errors" => [], "warnings" => []}])
+  end
+
+  def test_without_validation
+    @seatsio.charts.create
+
+    retrieved_charts = @seatsio.charts.list().to_a
+    validations = retrieved_charts.collect {|chart| chart.validation}
+
+    assert_equal(validations, [nil])
+  end
+
   def test_without_charts
     charts = @seatsio.charts.list.to_a
 
