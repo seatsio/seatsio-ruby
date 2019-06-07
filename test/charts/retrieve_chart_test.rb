@@ -23,11 +23,11 @@ class RetrieveChartTest < SeatsioTestClient
 
   def test_with_events
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create key: chart.key
-    event2 = @seatsio.events.create key: chart.key
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
 
     retrieved_chart = @seatsio.charts.retrieve_with_events(chart.key)
-    
+
     retrieved_chart_ids = retrieved_chart.events.collect {|c| c.id}
     assert_equal([event2.id, event1.id], retrieved_chart_ids)
   end

@@ -4,7 +4,7 @@ require 'util'
 class RetrieveEventTest < SeatsioTestClient
   def test_retrieve_event
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_operator(retrieved_event.id, :!=, 0)

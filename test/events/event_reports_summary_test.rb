@@ -6,7 +6,7 @@ require 'seatsio/exception'
 class EventReportsSummaryTest < SeatsioTestClient
   def test_summary_by_status
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
 
@@ -27,7 +27,7 @@ class EventReportsSummaryTest < SeatsioTestClient
 
   def test_summary_by_category_key
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
 
@@ -45,7 +45,7 @@ class EventReportsSummaryTest < SeatsioTestClient
 
   def test_summary_by_category_label
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
 
@@ -63,7 +63,7 @@ class EventReportsSummaryTest < SeatsioTestClient
 
   def test_summary_by_section
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
 

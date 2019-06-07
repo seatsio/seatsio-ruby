@@ -292,13 +292,133 @@ module Seatsio::Domain
     end
   end
 
+  class UsageSummaryForAllMoths
+    attr_reader :items
+
+    def initialize(data)
+      items = []
+      data.each do |item|
+        items << UsageSummaryForMonth.new(item)
+      end
+      @items = items
+    end
+  end
+
+  class UsageSummaryForMonth
+    def initialize(data)
+      @month = Month.from_json(data['month'])
+      @num_used_objects = data['numUsedObjects']
+      @num_first_bookings = data['numFirstBookings']
+      @num_first_bookings_by_status = data['numFirstBookingsByStatus']
+      @num_first_bookings_or_selections = data['numFirstBookingsOrSelections']
+    end
+  end
+
+  class UsageDetails
+
+    attr_reader :subaccount
+
+    def initialize(data)
+      @subaccount = data['subaccount'] ? UsageSubaccount.new(data['subaccount']) : nil
+      @usage_by_chart = data['usageByChart'].map {|usage| UsageByChart.new(usage)}
+    end
+  end
+
+  class UsageSubaccount
+
+    attr_reader :id
+
+    def initialize(data)
+      @id = data['id']
+    end
+  end
+
+  class UsageByChart
+
+    attr_reader :chart, :usage_by_event
+
+    def initialize(data)
+      @chart = data['chart'] ? UsageChart.new(data['chart']) :  nil
+      @usage_by_event = data['usageByEvent'].map {|usage| UsageByEvent.new(usage)}
+    end
+  end
+
+  class UsageChart
+
+    attr_reader :name, :key
+
+    def initialize(data)
+      @name = data['name']
+      @key = data['key']
+    end
+  end
+
+  class UsageByEvent
+
+    attr_reader :event, :num_used_objects, :num_first_bookings, :num_first_bookings_or_selections,
+                :num_ga_selections_without_booking, :num_non_ga_selections_without_booking, :num_object_selections
+
+    def initialize(data)
+      @event = UsageEvent.new(data['event'])
+      @num_used_objects = data['numUsedObjects']
+      @num_first_bookings = data['numFirstBookings']
+      @num_first_bookings_or_selections = data['numFirstBookingsOrSelections']
+      @num_ga_selections_without_booking = data['numGASelectionsWithoutBooking']
+      @num_non_ga_selections_without_booking = data['numNonGASelectionsWithoutBooking']
+      @num_object_selections = data['numObjectSelections']
+    end
+  end
+
+  class UsageEvent
+
+    attr_reader :id, :key
+
+    def initialize(data)
+      @id = data['id']
+      @key = data['key']
+    end
+  end
+
+  class UsageForObject
+
+    attr_reader :object, :num_first_bookings, :first_booking_date, :num_first_bookings, :num_first_bookings_or_selections
+
+    def initialize(data)
+      @object = data['object']
+      @num_first_bookings = data['numFirstBookings']
+      @first_booking_date = data['firstBookingDate'] ? DateTime.iso8601(data['firstBookingDate']) : nil
+      @num_first_selections = data['numFirstSelections']
+      @num_first_bookings_or_selections = data['numFirstBookingsOrSelections']
+    end
+  end
+
+  class Month
+
+    attr_reader :year, :month
+
+    def self.from_json(data)
+      @year = data['year']
+      @month = data['month']
+      self
+    end
+
+    def initialize(year, month)
+      @year = year
+      @month = month
+    end
+
+    def serialize
+      @year.to_s + "-" + @month.to_s.rjust(2, "0")
+    end
+  end
+
   class StatusChange
     attr_reader :extra_data, :object_label, :date, :id, :status, :event_id
 
     def initialize(data)
       @id = data['id']
       @status = data['status']
-      @date = data['date'] # TODO: parse_date(data.get("date"))
+      @date = DateTime.iso8601(data['date'])
       @object_label = data['objectLabel']
       @event_id = data['eventId']
       @extra_data = data['extraData']
