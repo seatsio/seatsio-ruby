@@ -4,7 +4,7 @@ require 'util'
 class ListStatusChangesForObjectTest < SeatsioTestClient
   def test_list_status_changes_for_object
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.change_object_status(event.key, ['A-1'], 'status1')
     @seatsio.events.change_object_status(event.key, ['A-1'], 'status2')

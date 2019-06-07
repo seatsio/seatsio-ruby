@@ -5,7 +5,7 @@ require 'seatsio/domain'
 class ChartReportsTest < SeatsioTestClient
   def test_reportItemProperties
     chart_key = create_test_chart
-  
+
     report = @seatsio.chart_reports.by_label(chart_key)
 
     assert_instance_of(Seatsio::Domain::ChartReport, report)
@@ -38,7 +38,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_nil(report_item.entrance)
     assert_equal(100, report_item.capacity)
   end
-  
+
   def test_by_label
     chart_key = create_test_chart
 
@@ -67,8 +67,8 @@ class ChartReportsTest < SeatsioTestClient
 
   def test_with_extra_data
     chart_key = create_test_chart
-    event1 = @seatsio.events.create key: chart_key
-    event2 = @seatsio.events.create key: chart_key
+    event1 = @seatsio.events.create chart_key: chart_key
+    event2 = @seatsio.events.create chart_key: chart_key
     extra_data = {"foo" => "bar"}
 
     @seatsio.events.update_extra_data key: event1.key, object: 'A-1', extra_data: extra_data

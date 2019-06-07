@@ -4,7 +4,7 @@ require 'util'
 class ListStatusChangesTest < SeatsioTestClient
   def test_status_changes
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.change_object_status(event.key, ['A-1'], status= 'status1')
     @seatsio.events.change_object_status(event.key, ['A-1'], status= 'status2')
     @seatsio.events.change_object_status(event.key, ['A-1'], status= 'status3')
@@ -16,7 +16,7 @@ class ListStatusChangesTest < SeatsioTestClient
   def test_properties_of_status_change
     now = Time.now
     chart_key = create_test_chart
-    event = @seatsio.events.create key: chart_key
+    event = @seatsio.events.create chart_key: chart_key
     object_properties = {:objectId => 'A-1', :extraData => {'foo': 'bar'}}
     @seatsio.events.change_object_status(event.key, object_properties, 'status1', nil, 'order1')
 

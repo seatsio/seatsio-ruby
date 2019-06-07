@@ -4,7 +4,7 @@ require 'util'
 class PublishDraftVersionTest <SeatsioTestClient
   def test_publish_draft_version
     chart = @seatsio.charts.create name: 'oldname'
-    @seatsio.events.create key: chart.key
+    @seatsio.events.create chart_key: chart.key
     @seatsio.charts.update key: chart.key, new_name: 'newname'
 
     @seatsio.charts.publish_draft_version(chart.key)

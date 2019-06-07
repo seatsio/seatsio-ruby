@@ -4,9 +4,9 @@ require 'util'
 class ListEventsBeforeTest < SeatsioTestClient
   def test_with_previous_page
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create key: chart.key
-    event2 = @seatsio.events.create key: chart.key
-    event3 = @seatsio.events.create key: chart.key
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
+    event3 = @seatsio.events.create chart_key: chart.key
 
     events = @seatsio.events.list.page_before(event1.id)
 
@@ -17,9 +17,9 @@ class ListEventsBeforeTest < SeatsioTestClient
 
   def test_with_next_and_previous_pages
     chart = @seatsio.charts.create
-    event1 = @seatsio.events.create key: chart.key
-    event2 = @seatsio.events.create key: chart.key
-    event3 = @seatsio.events.create key: chart.key
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
+    event3 = @seatsio.events.create chart_key: chart.key
 
     events = @seatsio.events.list.page_before(event1.id, 1)
 
