@@ -413,7 +413,7 @@ module Seatsio::Domain
   end
 
   class StatusChange
-    attr_reader :extra_data, :object_label, :date, :id, :status, :event_id
+    attr_reader :extra_data, :object_label, :date, :id, :status, :event_id, :origin
 
     def initialize(data)
       @id = data['id']
@@ -422,6 +422,16 @@ module Seatsio::Domain
       @object_label = data['objectLabel']
       @event_id = data['eventId']
       @extra_data = data['extraData']
+      @origin = StatusChangeOrigin.new(data['origin'])
+    end
+  end
+
+  class StatusChangeOrigin
+    attr_reader :type, :ip
+
+    def initialize(data)
+      @type = data['type']
+      @ip = data['ip']
     end
   end
 

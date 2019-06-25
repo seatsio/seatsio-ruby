@@ -30,6 +30,8 @@ class ListStatusChangesTest < SeatsioTestClient
     assert_equal('A-1', status_change.object_label)
     assert_equal(event.id, status_change.event_id)
     assert_equal({'foo' => 'bar'}, status_change.extra_data)
+    assert_equal('API_CALL', status_change.origin.type)
+    assert_not_nil(status_change.origin.ip)
   end
 
 end
