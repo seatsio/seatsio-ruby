@@ -98,4 +98,40 @@ class ChangeObjectStatusTest < SeatsioTestClient
     assert_equal({'foo' => 'bar'}, object1_status.extra_data)
     assert_equal({'foo' => 'baz'}, object2_status.extra_data)
   end
+
+  def test_keep_extra_data_true
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = {'name' => 'John Doe'}
+    @seatsio.events.update_extra_data key: event.key, object: 'A-1', extra_data: extra_data
+
+    @seatsio.events.change_object_status(event.key, 'A-1', 'someStatus', nil, nil, true)
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, status.extra_data)
+  end
+
+  def test_keep_extra_data_false
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = {'name' => 'John Doe'}
+    @seatsio.events.update_extra_data key: event.key, object: 'A-1', extra_data: extra_data
+
+    @seatsio.events.change_object_status(event.key, 'A-1', 'someStatus', nil, nil, false)
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_nil(nil, status.extra_data)
+  end
+
+  def test_no_keep_extra_data
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = {'name' => 'John Doe'}
+    @seatsio.events.update_extra_data key: event.key, object: 'A-1', extra_data: extra_data
+
+    @seatsio.events.change_object_status(event.key, 'A-1', 'someStatus')
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_nil(nil, status.extra_data)
+  end
 end

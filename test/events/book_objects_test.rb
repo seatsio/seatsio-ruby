@@ -34,9 +34,9 @@ class BookObjectsTest < SeatsioTestClient
     a2_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'Section A-A-2').status
     a3_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'Section A-A-3').status
 
-    assert_equal(Seatsio::Domain::ObjectStatus::BOOKED , a1_status)
-    assert_equal(Seatsio::Domain::ObjectStatus::BOOKED , a2_status)
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE , a3_status)
+    assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, a1_status)
+    assert_equal(Seatsio::Domain::ObjectStatus::BOOKED, a2_status)
+    assert_equal(Seatsio::Domain::ObjectStatus::FREE, a3_status)
 
     seat_a1 = res.objects['Section A-A-1']
     assert_equal("Section A", seat_a1.section)
@@ -82,8 +82,8 @@ class BookObjectsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     objects = [
-      {:objectId => 'A-5', :extraData => { 'name' => 'John Doe' }},
-      {:objectId => 'A-6', :extraData => { 'name' => 'John Doe' }}
+      {:objectId => 'A-5', :extraData => {'name' => 'John Doe'}},
+      {:objectId => 'A-6', :extraData => {'name' => 'John Doe'}}
     ]
 
     @seatsio.events.book(event.key, objects)
@@ -92,5 +92,17 @@ class BookObjectsTest < SeatsioTestClient
     status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-6'
     assert_equal('booked', status1.status)
     assert_equal('booked', status2.status)
+  end
+
+  def test_keep_extra_data_true
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = {'name' => 'John Doe'}
+    @seatsio.events.update_extra_data key: event.key, object: 'A-1', extra_data: extra_data
+
+    @seatsio.events.book(event.key, 'A-1', nil, nil, true)
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, status.extra_data)
   end
 end

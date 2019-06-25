@@ -43,4 +43,16 @@ class ReleaseObjectsTest < SeatsioTestClient
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal('order1', status.order_id)
   end
+
+  def test_keep_extra_data_true
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = {'name' => 'John Doe'}
+    @seatsio.events.book(event.key, [{:objectId => 'A-1', :extraData => extra_data}])
+
+    @seatsio.events.release(event.key, 'A-1', nil, nil, true)
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, status.extra_data)
+  end
 end

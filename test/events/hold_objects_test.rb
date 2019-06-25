@@ -33,4 +33,17 @@ class HoldObjectsTest < SeatsioTestClient
     status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
     assert_equal('order1', status2.order_id)
   end
+
+  def test_keep_extra_data_true
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = {'name' => 'John Doe'}
+    @seatsio.events.update_extra_data key: event.key, object: 'A-1', extra_data: extra_data
+    hold_token = @seatsio.hold_tokens.create
+
+    @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, nil, true)
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, status.extra_data)
+  end
 end

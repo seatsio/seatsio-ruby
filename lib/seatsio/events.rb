@@ -43,7 +43,7 @@ module Seatsio
     end
 
     def retrieve_object_status(key:, object_key:)
-      url = "events/#{key}/objects/#{CGI::escape(object_key).gsub('+','%20')}"
+      url = "events/#{key}/objects/#{CGI::escape(object_key).gsub('+', '%20')}"
       response = @http_client.get(url)
       Domain::ObjectStatus.new(response)
     end
@@ -52,12 +52,12 @@ module Seatsio
     # @param [Object] object_or_objects
     # @param [Object] hold_token
     # @param [Object] order_id
-    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil)
-      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id)
+    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil)
+      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id, keep_extra_data)
     end
 
-    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil)
-      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys)
+    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil, keep_extra_data = nil)
+      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data)
       request[:params] = {
         'expand' => 'objects'
       }
@@ -65,28 +65,26 @@ module Seatsio
       Domain::ChangeObjectStatusResult.new(response)
     end
 
-    def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil)
-      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id)
+    def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil, keep_extra_data = nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id, keep_extra_data)
     end
 
-    def change_best_available_object_status(key:, number:, status:, categories: nil, hold_token: nil, extra_data: nil, order_id: nil)
-      request = create_change_best_available_object_status_request(number, status, categories, extra_data, hold_token, order_id)
+    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, order_id: nil, keep_extra_data: nil)
+      request = create_change_best_available_object_status_request(number, status, categories, extra_data, hold_token, order_id, keep_extra_data)
       response = @http_client.post("events/#{key}/actions/change-object-status", request)
       Domain::BestAvailableObjects.new(response)
     end
 
-    def book_best_available(key:, number:, categories: nil, hold_token: nil, order_id: nil)
-      change_best_available_object_status(key: key, number: number,status: Domain::ObjectStatus::BOOKED,
-                                          categories: categories, hold_token: hold_token, order_id: order_id)
+    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data)
     end
 
-    def hold_best_available(key:, number:, categories: nil, hold_token: nil, order_id: nil)
-      change_best_available_object_status(key: key, number: number, status: Domain::ObjectStatus::HELD,
-                                          categories: categories, hold_token: hold_token, order_id: order_id)
+    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data)
     end
 
-    def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil)
-      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id)
+    def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id, keep_extra_data)
     end
 
     def delete(key:)

@@ -1,4 +1,4 @@
-def create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys)
+def create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data)
   result = {}
   result[:objects] = normalize(object_or_objects)
   result[:status] = status
@@ -9,6 +9,7 @@ def create_change_object_status_request(object_or_objects, status, hold_token, o
   else
     result[:events] = [event_key_or_keys]
   end
+  result[:keepExtraData] = keep_extra_data if keep_extra_data != nil
 
   result
 end
