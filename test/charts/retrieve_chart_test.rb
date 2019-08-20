@@ -17,7 +17,7 @@ class RetrieveChartTest < SeatsioTestClient
     assert(retrieved_chart.published_version_thumbnail_url != nil)
     assert_nil(retrieved_chart.draft_version_thumbnail_url)
     assert_nil(retrieved_chart.events)
-    assert_equal(%w(tag2 tag1), retrieved_chart.tags)
+    assert_equal(%w(tag1 tag2), retrieved_chart.tags.sort)
     assert_equal(false, retrieved_chart.archived)
   end
 
