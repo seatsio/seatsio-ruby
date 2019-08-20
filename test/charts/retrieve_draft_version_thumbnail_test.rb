@@ -8,6 +8,6 @@ class RetrieveDraftVersionThumbnailTest < SeatsioTestClient
     @seatsio.charts.update key: chart.key, new_name: 'newname'
 
     thumbnail = @seatsio.charts.retrieve_draft_version_thumbnail(chart.key)
-    assert_match(/<!DOCTYPE svg/, thumbnail)
+    assert_not_nil(thumbnail)
   end
 end
