@@ -3,7 +3,10 @@ require 'util'
 
 class UpdateChartTest < SeatsioTestClient
   def test_update_name
-    categories = [{'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa'}]
+    categories = [
+      {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false},
+      {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true}
+    ]
     chart = @seatsio.charts.create venue_type: 'BOOTHS', categories: categories
 
     @seatsio.charts.update key: chart.key, new_name: 'aChart'

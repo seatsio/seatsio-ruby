@@ -42,7 +42,7 @@ class CreateChartTest < SeatsioTestClient
   def test_categories
     categories = [
         {:key => 1, :label => 'Category 1', :color => '#aaaaaa'},
-        {:key => 2, :label => 'Category 2', :color => '#bbbbbb'}
+        {:key => 2, :label => 'Category 2', :color => '#bbbbbb', :accessible => true}
     ]
 
     chart = @seatsio.charts.create categories: categories
@@ -50,7 +50,7 @@ class CreateChartTest < SeatsioTestClient
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
     assert_equal('MIXED', drawing.venue_type)
-    assert_includes(drawing.categories.list, {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa'})
-    assert_includes(drawing.categories.list, {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb'})
+    assert_includes(drawing.categories.list, {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false})
+    assert_includes(drawing.categories.list, {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true})
   end
 end
