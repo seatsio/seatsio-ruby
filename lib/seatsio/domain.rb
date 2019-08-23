@@ -165,7 +165,7 @@ module Seatsio::Domain
     HELD = 'reservedByToken'
 
     attr_reader :status, :hold_token, :order_id, :ticket_type,
-                :quantity, :extra_data
+                :quantity, :extra_data, :for_sale
 
     def initialize(data)
       @status = data['status']
@@ -174,6 +174,7 @@ module Seatsio::Domain
       @ticket_type = data['ticketType']
       @quantity = data['quantity']
       @extra_data = data['extraData']
+      @for_sale = data['forSale']
     end
   end
 
