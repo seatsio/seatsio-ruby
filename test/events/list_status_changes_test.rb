@@ -17,8 +17,9 @@ class ListStatusChangesTest < SeatsioTestClient
     now = Time.now
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
+    hold_token = @seatsio.hold_tokens.create
     object_properties = {:objectId => 'A-1', :extraData => {'foo': 'bar'}}
-    @seatsio.events.change_object_status(event.key, object_properties, 'status1', nil, 'order1')
+    @seatsio.events.change_object_status(event.key, object_properties, 'status1', hold_token.hold_token, 'order1')
 
     status_changes =  @seatsio.events.list_status_changes(event.key).to_a
     status_change = status_changes[0]
@@ -33,6 +34,7 @@ class ListStatusChangesTest < SeatsioTestClient
     assert_equal('API_CALL', status_change.origin.type)
     assert_equal('order1', status_change.order_id)
     assert_equal(1, status_change.quantity)
+    assert_equal(hold_token.hold_token, status_change.hold_token)
     assert_not_nil(status_change.origin.ip)
   end
 
