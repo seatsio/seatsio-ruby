@@ -11,8 +11,8 @@ module Seatsio
   class ChartsClient
     attr_reader :archive
 
-    def initialize(secret_key, base_url)
-      @http_client = Seatsio::HttpClient.new(secret_key, base_url)
+    def initialize(secret_key, account_id, base_url)
+      @http_client = Seatsio::HttpClient.new(secret_key, account_id, base_url)
       @archive = Pagination::Cursor.new(Domain::Chart, 'charts/archive', @http_client)
     end
 
@@ -95,7 +95,7 @@ module Seatsio
 
       cursor.set_query_param('expand', 'events') if expand_events
       cursor.set_query_param('validation', with_validation) if with_validation
-      
+
       cursor
     end
 

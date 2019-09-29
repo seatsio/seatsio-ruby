@@ -6,8 +6,8 @@ require 'cgi'
 
 module Seatsio
   class ChartReportsClient
-    def initialize(secret_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
+    def initialize(secret_key, account_id, base_url)
+      @http_client = ::Seatsio::HttpClient.new(secret_key, account_id, base_url)
     end
 
     def by_label(chart_key)

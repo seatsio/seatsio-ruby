@@ -6,14 +6,18 @@ require "uri"
 
 module Seatsio
   class HttpClient
-    def initialize(secret_key, base_url)
+    def initialize(secret_key, account_id, base_url)
       @secret_key = Base64.encode64(secret_key)
+      @account_id = account_id
       @base_url = base_url
     end
 
     def execute(*args)
       begin
         headers = {:Authorization => "Basic #{@secret_key}"}
+        unless @account_id.nil?
+          headers[:'X-Account-ID'] = @account_id
+        end
         if args[2].include? :params
           headers[:params] = args[2][:params]
         end

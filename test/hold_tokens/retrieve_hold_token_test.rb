@@ -9,5 +9,6 @@ class RetrieveHoldTokenTest < SeatsioTestClient
     assert_equal(hold_token.hold_token, retrieved_hold_token.hold_token)
     assert_equal(hold_token.expires_at, retrieved_hold_token.expires_at)
     assert_between(retrieved_hold_token.expires_in_seconds, 14 * 60, 15 * 60)
+    assert_not_nil(hold_token.account_id)
   end
 end

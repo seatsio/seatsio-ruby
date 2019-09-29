@@ -157,6 +157,12 @@ module Seatsio::Domain
   end
 
   class Subaccount < Account
+    attr_reader :account_id
+
+    def initialize(data)
+      super
+      @account_id = data['accountId']
+    end
   end
 
   class ObjectStatus
@@ -189,12 +195,13 @@ module Seatsio::Domain
 
   class HoldToken
 
-    attr_reader :hold_token, :expires_at, :expires_in_seconds
+    attr_reader :hold_token, :expires_at, :expires_in_seconds, :account_id
 
     def initialize(data)
       @hold_token = data['holdToken']
       @expires_at = Time.parse(data['expiresAt'])
       @expires_in_seconds = data['expiresInSeconds']
+      @account_id = data['accountId']
     end
   end
 

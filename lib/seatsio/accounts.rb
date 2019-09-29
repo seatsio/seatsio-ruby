@@ -8,8 +8,8 @@ require "seatsio/domain"
 
 module Seatsio
   class AccountsClient
-    def initialize(secret_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
+    def initialize(secret_key, account_id, base_url)
+      @http_client = ::Seatsio::HttpClient.new(secret_key, account_id, base_url)
     end
 
     def retrieve_my_account
