@@ -13,6 +13,6 @@ class RetrieveSubaccountTest < SeatsioTestClient
     assert_not_blank(retrieved_subaccount.public_key)
     assert_equal('joske', retrieved_subaccount.name)
     assert_true(retrieved_subaccount.active)
-    assert_not_nil(retrieved_subaccount.account_id)
+    assert_not_nil(retrieved_subaccount.workspace_key)
   end
 end

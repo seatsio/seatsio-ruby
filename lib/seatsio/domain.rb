@@ -157,11 +157,11 @@ module Seatsio::Domain
   end
 
   class Subaccount < Account
-    attr_reader :account_id
+    attr_reader :workspace_key
 
     def initialize(data)
       super
-      @account_id = data['accountId']
+      @workspace_key = data['workspaceKey']
     end
   end
 
@@ -195,13 +195,13 @@ module Seatsio::Domain
 
   class HoldToken
 
-    attr_reader :hold_token, :expires_at, :expires_in_seconds, :account_id
+    attr_reader :hold_token, :expires_at, :expires_in_seconds, :workspace_key
 
     def initialize(data)
       @hold_token = data['holdToken']
       @expires_at = Time.parse(data['expiresAt'])
       @expires_in_seconds = data['expiresInSeconds']
-      @account_id = data['accountId']
+      @workspace_key = data['workspaceKey']
     end
   end
 
