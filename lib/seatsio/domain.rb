@@ -157,6 +157,12 @@ module Seatsio::Domain
   end
 
   class Subaccount < Account
+    attr_reader :workspace_key
+
+    def initialize(data)
+      super
+      @workspace_key = data['workspaceKey']
+    end
   end
 
   class ObjectStatus
@@ -189,12 +195,13 @@ module Seatsio::Domain
 
   class HoldToken
 
-    attr_reader :hold_token, :expires_at, :expires_in_seconds
+    attr_reader :hold_token, :expires_at, :expires_in_seconds, :workspace_key
 
     def initialize(data)
       @hold_token = data['holdToken']
       @expires_at = Time.parse(data['expiresAt'])
       @expires_in_seconds = data['expiresInSeconds']
+      @workspace_key = data['workspaceKey']
     end
   end
 

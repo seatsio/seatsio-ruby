@@ -3,7 +3,7 @@ require "securerandom"
 class SeatsioTestClient < Minitest::Test
   def setup
     @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user['secretKey'], 'https://api-staging.seatsio.net')
+    @seatsio = Seatsio::Client.new(@user['secretKey'], nil, 'https://api-staging.seatsio.net')
   end
 
   def random_email

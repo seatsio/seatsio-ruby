@@ -11,8 +11,8 @@ require "seatsio/events/change_best_available_object_status_request"
 module Seatsio
 
   class EventsClient
-    def initialize(secret_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, base_url)
+    def initialize(secret_key, workspace_key, base_url)
+      @http_client = ::Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
     end
 
     def create(chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
