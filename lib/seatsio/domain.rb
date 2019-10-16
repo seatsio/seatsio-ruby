@@ -157,11 +157,20 @@ module Seatsio::Domain
   end
 
   class Subaccount < Account
-    attr_reader :workspace_key
+    attr_reader :workspace
 
     def initialize(data)
       super
-      @workspace_key = data['workspaceKey']
+      @workspace = Workspace.new(data['workspace']) if data['workspace'] != nil
+    end
+  end
+
+  class Workspace
+    attr_reader :id, :key
+
+    def initialize(data)
+      @id = data['id']
+      @key = data['key']
     end
   end
 
