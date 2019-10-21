@@ -81,12 +81,36 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal(%w(B-4 B-5 B-6), best_available_objects.objects)
   end
 
+  def test_book_best_available_with_extra_data
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    extra_data = [{'name' => 'John Doe'}, {'name' => 'Jane Doe'}, {'name' => 'The other guy'}]
+
+    best_available_objects = @seatsio.events.book_best_available(event.key, 3, extra_data: extra_data)
+    assert_equal(true, best_available_objects.next_to_each_other)
+    assert_equal(%w(B-4 B-5 B-6), best_available_objects.objects)
+  end
+
   def test_hold_best_available
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
 
     best_available_objects = @seatsio.events.hold_best_available(event.key, 1, hold_token.hold_token)
+
+    object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal(Seatsio::Domain::ObjectStatus::HELD, object_status.status)
+    assert_equal(hold_token.hold_token, object_status.hold_token)
+  end
+
+  def test_hold_best_available_with_extra_data
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    hold_token = @seatsio.hold_tokens.create
+    extra_data = [{'name' => 'John Doe'}]
+
+
+    best_available_objects = @seatsio.events.hold_best_available(event.key, 1, hold_token.hold_token, extra_data: extra_data)
 
     object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
     assert_equal(Seatsio::Domain::ObjectStatus::HELD, object_status.status)
