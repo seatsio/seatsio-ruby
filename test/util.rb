@@ -17,9 +17,8 @@ def create_test_chart_from_file(file)
   chart_file = File.read(Dir.pwd + "/test/#{file}")
   chart_key = SecureRandom.uuid
 
-  url = "#{BASE_URL}/system/public/#{@user["designerKey"]}/charts/#{chart_key}"
-  post = RestClient.post(url, chart_file)
-
+  url = "#{BASE_URL}/system/public/charts/#{chart_key}"
+  post = RestClient::Request.execute method: :post, url: url, user: @user["secretKey"], payload: chart_file
   if post.is_a?(RestClient::Response)
     chart_key
   else
