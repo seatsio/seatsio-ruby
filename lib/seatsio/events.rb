@@ -75,12 +75,12 @@ module Seatsio
       Domain::BestAvailableObjects.new(response)
     end
 
-    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil)
-      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data)
+    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data)
     end
 
-    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil)
-      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data)
+    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data)
     end
 
     def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil)
