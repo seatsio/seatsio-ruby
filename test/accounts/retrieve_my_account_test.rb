@@ -8,7 +8,6 @@ class RetrieveMyAccountTest < SeatsioTestClient
     assert_operator(account.designer_key, :!=, nil)
     assert_operator(account.public_key, :!=, nil)
     assert_operator(account.email, :!=, nil)
-    assert_equal(false, account.is_subaccount)
     assert_equal(true, account.settings.draft_chart_drawings_enabled)
     assert_equal(true, account.settings.hold_on_select_for_gas)
     assert_equal('ERROR', account.settings.chart_validation.validate_duplicate_labels)

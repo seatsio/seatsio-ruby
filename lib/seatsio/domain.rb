@@ -141,7 +141,7 @@ module Seatsio::Domain
 
   class Account
     attr_reader :id, :secret_key, :designer_key, :public_key, :name,
-                :email, :active, :settings, :is_subaccount
+                :email, :active, :settings
 
     def initialize(data)
       @id = data['id']
@@ -150,7 +150,6 @@ module Seatsio::Domain
       @public_key = data['publicKey']
       @name = data['name']
       @email = data['email']
-      @is_subaccount = data['isSubaccount']
       @active = data['active']
       @settings = AccountSettings.new(data['settings']) if data['settings'] != nil
     end
