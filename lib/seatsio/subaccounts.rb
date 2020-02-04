@@ -12,19 +12,17 @@ module Seatsio
       @http_client = ::Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
     end
 
-    def create(name: nil, email: nil)
+    def create(name: nil)
       body = {}
       body['name'] = name if name
-      body['email'] = email if email
 
       response = @http_client.post("subaccounts", body)
       Domain::Subaccount.new(response)
     end
 
-    def update(id:, name: nil, email: nil)
+    def update(id:, name: nil)
       body = {}
       body['name'] = name if name
-      body['email'] = email if email
       @http_client.post("subaccounts/#{id}", body)
     end
 
@@ -65,10 +63,6 @@ module Seatsio
       Domain::Chart.new(response)
     end
 
-    def create_with_email(email: nil, name: nil)
-      do_create name: name, email: email
-    end
-
     def regenerate_secret_key(id:)
       @http_client.post("/subaccounts/#{id}/secret-key/actions/regenerate")
     end
@@ -78,14 +72,6 @@ module Seatsio
     end
 
     private
-
-    def do_create(name: nil, email: nil)
-      body = {}
-      body['name'] = name if name
-      body['email'] = email if email
-      response = @http_client.post('subaccounts', body)
-      Domain::Subaccount.new(response)
-    end
 
     def cursor(status: nil)
       endpoint = status ? "subaccounts/#{status}" : 'subaccounts'

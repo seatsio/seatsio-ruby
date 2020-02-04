@@ -140,14 +140,13 @@ module Seatsio::Domain
   end
 
   class Account
-    attr_reader :id, :secret_key, :designer_key, :public_key, :name,
+    attr_reader :id, :secret_key, :designer_key, :name,
                 :email, :active, :settings
 
     def initialize(data)
       @id = data['id']
       @secret_key = data['secretKey']
       @designer_key = data['designerKey']
-      @public_key = data['publicKey']
       @name = data['name']
       @email = data['email']
       @active = data['active']
@@ -156,10 +155,11 @@ module Seatsio::Domain
   end
 
   class Subaccount < Account
-    attr_reader :workspace
+    attr_reader :public_key, :workspace
 
     def initialize(data)
       super
+      @public_key = data['publicKey']
       @workspace = Workspace.new(data['workspace']) if data['workspace'] != nil
     end
   end

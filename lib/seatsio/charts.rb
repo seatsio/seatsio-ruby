@@ -118,7 +118,8 @@ module Seatsio
     end
 
     def validate_draft_version(chart_key)
-      @http_client.post("charts/#{chart_key}/version/draft/actions/validate")
+      response = @http_client.post("charts/#{chart_key}/version/draft/actions/validate")
+      Seatsio::Domain::ChartValidationResult.new(response)
     end
 
     private
