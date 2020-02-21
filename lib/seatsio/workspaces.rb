@@ -27,8 +27,10 @@ module Seatsio
       @http_client.post("workspaces/#{key}", body)
     end
 
-    def list()
-      return cursor
+    def list(filter: nil)
+      extended_cursor = cursor
+      extended_cursor.set_query_param('filter', filter)
+      extended_cursor
     end
 
     def retrieve(key:)
