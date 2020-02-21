@@ -8,7 +8,7 @@ class CopyChartToSubaccountTest < SeatsioTestClient
 
     copied_chart = @seatsio.charts.copy_to_subaccount(chart.key, subaccount.id)
 
-    subaccount_client = Seatsio::Client.new(subaccount.secret_key, nil, "https://api-staging.seatsio.net")
+    subaccount_client = test_client(subaccount.secret_key, nil)
     assert_equal("my chart", copied_chart.name)
 
     retrieved_chart = subaccount_client.charts.retrieve(copied_chart.key)

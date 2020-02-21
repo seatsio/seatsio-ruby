@@ -160,16 +160,18 @@ module Seatsio::Domain
     def initialize(data)
       super
       @public_key = data['publicKey']
-      @workspace = Workspace.new(data['workspace']) if data['workspace'] != nil
     end
   end
 
   class Workspace
-    attr_reader :id, :key
+    attr_reader :id, :name, :key, :secret_key, :is_test
 
     def initialize(data)
       @id = data['id']
+      @name = data['name']
       @key = data['key']
+      @secret_key = data['secretKey']
+      @is_test = data['isTest']
     end
   end
 
