@@ -2,7 +2,7 @@ require 'test_helper'
 require 'util'
 require 'seatsio/domain'
 
-class ChartReportsTest < SeatsioTestClient
+class CreateEventTest < SeatsioTestClient
   def test_chart_key_is_required
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
