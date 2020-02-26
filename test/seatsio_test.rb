@@ -8,7 +8,7 @@ class SeatsioTest < Minitest::Test
 
   def setup
     @user = create_test_user
-    @seatsio = Seatsio::Client.new(@user["secretKey"], nil, "http://localhost:9006")
+    @seatsio = test_client(@user["secretKey"], nil)
   end
 
   def test_that_it_has_a_version_number
