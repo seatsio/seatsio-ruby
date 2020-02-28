@@ -203,6 +203,15 @@ module Seatsio::Domain
     end
   end
 
+  class ChangeObjectStatusInBatchResult
+
+    attr_reader :results
+
+    def initialize(data)
+      @results = data['results'].map { |r| ChangeObjectStatusResult.new(r) }
+    end
+  end
+
   class HoldToken
 
     attr_reader :hold_token, :expires_at, :expires_in_seconds, :workspace_key
@@ -338,7 +347,7 @@ module Seatsio::Domain
 
     def initialize(data)
       @subaccount = data['subaccount'] ? UsageSubaccount.new(data['subaccount']) : nil
-      @usage_by_chart = data['usageByChart'].map {|usage| UsageByChart.new(usage)}
+      @usage_by_chart = data['usageByChart'].map { |usage| UsageByChart.new(usage) }
     end
   end
 
@@ -356,8 +365,8 @@ module Seatsio::Domain
     attr_reader :chart, :usage_by_event
 
     def initialize(data)
-      @chart = data['chart'] ? UsageChart.new(data['chart']) :  nil
-      @usage_by_event = data['usageByEvent'].map {|usage| UsageByEvent.new(usage)}
+      @chart = data['chart'] ? UsageChart.new(data['chart']) : nil
+      @usage_by_event = data['usageByEvent'].map { |usage| UsageByEvent.new(usage) }
     end
   end
 
