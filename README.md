@@ -101,6 +101,14 @@ previousPage.each do |chart|
 end
 ```
 
+### Creating a workspace
+
+```ruby
+require('seatsio')
+client = Seatsio::Client.new("my-company-admin-key")
+client.workspaces.create name: "a workspace"
+```
+
 # Error handling
 
 When an API call results in a 4xx or 5xx error (e.g. when a chart could not be found), a SeatsioException is thrown.
