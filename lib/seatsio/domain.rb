@@ -118,48 +118,16 @@ module Seatsio::Domain
     end
   end
 
-  class ChartValidationSettings
-    attr_reader :validate_duplicate_labels, :validate_objects_without_categories,
-                :validate_unlabeled_objects
-
-    def initialize(data)
-      @validate_duplicate_labels = data['VALIDATE_DUPLICATE_LABELS']
-      @validate_objects_without_categories = data['VALIDATE_OBJECTS_WITHOUT_CATEGORIES']
-      @validate_unlabeled_objects = data['VALIDATE_UNLABELED_OBJECTS']
-    end
-  end
-
-  class AccountSettings
-    attr_reader :draft_chart_drawings_enabled, :hold_on_select_for_gas, :chart_validation
-
-    def initialize(data)
-      @draft_chart_drawings_enabled = data['draftChartDrawingsEnabled']
-      @hold_on_select_for_gas = data['holdOnSelectForGAs']
-      @chart_validation = ChartValidationSettings.new(data['chartValidation'])
-    end
-  end
-
-  class Account
-    attr_reader :id, :secret_key, :designer_key, :name,
-                :email, :active, :settings
+  class Subaccount
+    attr_reader :id, :secret_key, :designer_key, :public_key, :name, :active
 
     def initialize(data)
       @id = data['id']
+      @public_key = data['publicKey']
       @secret_key = data['secretKey']
       @designer_key = data['designerKey']
       @name = data['name']
-      @email = data['email']
       @active = data['active']
-      @settings = AccountSettings.new(data['settings']) if data['settings'] != nil
-    end
-  end
-
-  class Subaccount < Account
-    attr_reader :public_key, :workspace
-
-    def initialize(data)
-      super
-      @public_key = data['publicKey']
     end
   end
 
