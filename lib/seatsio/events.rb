@@ -59,10 +59,19 @@ module Seatsio
     def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil, keep_extra_data = nil)
       request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data)
       request[:params] = {
-        'expand' => 'objects'
+          :expand => 'objects'
       }
       response = @http_client.post("seasons/actions/change-object-status", request)
       Domain::ChangeObjectStatusResult.new(response)
+    end
+
+    def change_object_status_in_batch(status_change_requests)
+      request = {
+          :statusChanges => status_change_requests,
+          :params => { :expand => 'objects' }
+      }
+      response = @http_client.post("events/actions/change-object-status", request)
+      Domain::ChangeObjectStatusInBatchResult.new(response).results
     end
 
     def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil, keep_extra_data = nil)
