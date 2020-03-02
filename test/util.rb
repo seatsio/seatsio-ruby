@@ -10,10 +10,10 @@ end
 
 def create_test_user
   begin
-    post = RestClient.post(BASE_URL + "/system/public/users/actions/create-test-user", {})
+    post = RestClient.post(BASE_URL + "/system/public/users/actions/create-test-company", {})
     JSON.parse(post)
   rescue
-    raise Seatsio::Exception::SeatsioException.new("Failed to create a test user")
+    raise Seatsio::Exception::SeatsioException.new("Failed to create a test company")
   end
 end
 

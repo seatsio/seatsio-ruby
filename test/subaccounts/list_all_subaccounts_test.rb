@@ -8,6 +8,6 @@ class ListAllSubaccountsTest < SeatsioTestClient
     subaccount3 = @seatsio.subaccounts.create
 
     subaccounts = @seatsio.subaccounts.list
-    assert_equal([subaccount3.id, subaccount2.id, subaccount1.id, @user["mainWorkspace"]["primaryUser"]["id"]], subaccounts.collect {|subaccount| subaccount.id})
+    assert_equal([subaccount3.id, subaccount2.id, subaccount1.id, @subaccount['id']], subaccounts.collect {|subaccount| subaccount.id})
   end
 end

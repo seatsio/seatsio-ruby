@@ -9,6 +9,6 @@ class ListActiveSubaccountsTest < SeatsioTestClient
     @seatsio.subaccounts.deactivate id: subaccount2.id
 
     active_subaccounts = @seatsio.subaccounts.active
-    assert_equal([subaccount3.id, subaccount1.id, @user["mainWorkspace"]["primaryUser"]["id"]], active_subaccounts.collect {|subaccount| subaccount.id})
+    assert_equal([subaccount3.id, subaccount1.id, @subaccount['id']], active_subaccounts.collect {|subaccount| subaccount.id})
   end
 end

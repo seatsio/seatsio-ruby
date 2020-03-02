@@ -9,7 +9,7 @@ class ListSubaccountsAfterTest < SeatsioTestClient
 
     subaccounts = @seatsio.subaccounts.list.page_after(subaccount3.id)
 
-    assert_equal([subaccount2.id, subaccount1.id, @user["mainWorkspace"]["primaryUser"]["id"]], subaccounts.collect {|subaccount| subaccount.id})
+    assert_equal([subaccount2.id, subaccount1.id, @subaccount['id']], subaccounts.collect {|subaccount| subaccount.id})
     assert_nil(subaccounts.next_page_starts_after)
     assert_equal(subaccount2.id, subaccounts.previous_page_ends_before)
   end
