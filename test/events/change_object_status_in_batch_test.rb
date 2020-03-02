@@ -10,7 +10,7 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     chart_key2 = create_test_chart
     event2 = @seatsio.events.create chart_key: chart_key2
 
-    res = @seatsio.events.change_object_status_in_batch([create_change_object_status_jn_batch_request(event1.key, ['A-1'], 'foo'), create_change_object_status_jn_batch_request(event2.key, ['A-2'], 'fa')])
+    res = @seatsio.events.change_object_status_in_batch([{ :event => event1.key, :objects => ['A-1'], :status => 'foo'}, { :event => event2.key, :objects => ['A-2'], :status => 'fa'}])
 
     assert_equal('foo', res[0].objects['A-1'].status)
     assert_equal('foo', @seatsio.events.retrieve_object_status(key: event1.key, object_key: 'A-1').status)
