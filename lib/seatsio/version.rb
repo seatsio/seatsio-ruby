@@ -1,3 +1,3 @@
 module Seatsio
-  VERSION = "22"
+  VERSION = "23"
 end
