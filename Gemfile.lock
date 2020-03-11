@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    seatsio (23)
+    seatsio (24)
 
 GEM
   remote: https://rubygems.org/
@@ -47,4 +47,4 @@ DEPENDENCIES
   webmock (~> 3.4, >= 3.4.2)
 
 BUNDLED WITH
-   1.17.3
+   1.16.1
