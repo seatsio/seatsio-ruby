@@ -10,7 +10,7 @@ class ListAllWorkspacesTest < SeatsioTestClient
     workspaces = @seatsio.workspaces.list
 
     workspace_names = workspaces.collect { |workspace| workspace.name }
-    assert_equal(['ws3', 'ws2', 'ws1', 'Main workspace'], workspace_names)
+    assert_equal(['ws3', 'ws2', 'ws1', 'Default workspace'], workspace_names)
   end
 
   def test_filter
