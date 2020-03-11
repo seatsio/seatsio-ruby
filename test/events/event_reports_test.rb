@@ -43,6 +43,10 @@ class EventReportsTest < SeatsioTestClient
     assert_nil(report_item.num_booked)
     assert_nil(report_item.capacity)
     assert_equal(extra_data, report_item.extra_data)
+    assert_false(report_item.is_accessible)
+    assert_false(report_item.is_companion_seat)
+    assert_false(report_item.has_restricted_view)
+    assert_nil(report_item.displayed_object_type)
   end
 
   def test_hold_token
@@ -82,6 +86,10 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(92, report_item.num_free)
     assert_equal(3, report_item.num_held)
     assert_equal(100, report_item.capacity)
+    assert_nil(report_item.is_accessible)
+    assert_nil(report_item.is_companion_seat)
+    assert_nil(report_item.has_restricted_view)
+    assert_nil(report_item.displayed_object_type)
   end
 
   def test_by_status
