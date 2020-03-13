@@ -4,12 +4,9 @@
 
 This is the official Ruby client library for the [Seats.io V2 REST API](https://docs.seats.io/docs/api-overview), supporting Ruby 2.2.0+
 
+## Versioning
 
-# Versioning
-
-seatsio-ruby only uses major version numbers: v5, v6, v7 etc. Each release - backwards compatible or not - receives a new major version number.
-
-The reason: we want to play safe and assume that each release might break backwards compatibility.
+seatsio-ruby follows semver since v23.2.0.
 
 ## Examples
 
