@@ -6,7 +6,7 @@ This is the official Ruby client library for the [Seats.io V2 REST API](https://
 
 ## Versioning
 
-seatsio-ruby follows semver since v23.2.0.
+seatsio-ruby follows semver since v23.3.0.
 
 ## Examples
 
