@@ -27,6 +27,11 @@ module Seatsio
       @http_client.post("workspaces/#{key}", body)
     end
 
+    def regenerate_secret_key(key:)
+      response = @http_client.post("workspaces/#{key}/actions/regenerate-secret-key")
+      response['secretKey']
+    end
+
     def list(filter: nil)
       extended_cursor = cursor
       extended_cursor.set_query_param('filter', filter)

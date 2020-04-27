@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class RegenerateSecretKeyTest < SeatsioTestClient
+class RegenerateSubaccountSecretKeyTest < SeatsioTestClient
   def test_regenerate_secret_key
     subaccount = @seatsio.subaccounts.create
 
