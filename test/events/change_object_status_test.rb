@@ -27,6 +27,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
     assert_nil(a1.entrance)
     assert_nil(a1.num_booked)
     assert_nil(a1.capacity)
+    assert_nil(a1.left_neighbour)
+    assert_equal('A-2', a1.right_neighbour)
   end
 
   def test_hold_token

@@ -205,7 +205,8 @@ module Seatsio::Domain
 
   class ChartReportItem
 
-    attr_reader :label, :labels, :category_key, :category_label, :section, :entrance, :capacity, :object_type
+    attr_reader :label, :labels, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
+    :left_neighbour, :right_neighbour
 
     def initialize(data)
       @label = data['label']
@@ -216,6 +217,8 @@ module Seatsio::Domain
       @entrance = data['entrance']
       @capacity = data['capacity']
       @object_type = data['objectType']
+      @left_neighbour = data['leftNeighbour']
+      @right_neighbour = data['rightNeighbour']
     end
   end
 
@@ -265,7 +268,8 @@ module Seatsio::Domain
     attr_reader :labels, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
-                :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type
+                :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
+                :left_neighbour, :right_neighbour
 
     def initialize(data)
       @status = data['status']
@@ -289,6 +293,8 @@ module Seatsio::Domain
       @is_companion_seat = data['isCompanionSeat']
       @has_restricted_view = data['hasRestrictedView']
       @displayed_object_type = data['displayedObjectType']
+      @left_neighbour = data['leftNeighbour']
+      @right_neighbour = data['rightNeighbour']
     end
   end
 

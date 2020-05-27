@@ -31,6 +31,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_nil(b5.entrance)
     assert_nil(b5.num_booked)
     assert_nil(b5.capacity)
+    assert_equal('B-4', b5.left_neighbour)
+    assert_equal('B-6', b5.right_neighbour)
   end
 
   def test_categories
