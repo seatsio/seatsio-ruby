@@ -71,10 +71,31 @@ module Seatsio::Domain
     end
   end
 
+  class Channel
+    attr_reader :key, :name, :color, :index, :objects
+
+    def initialize(key, name, color, index, objects)
+      @key = key
+      @name = name
+      @color = color
+      @index = index
+      @objects = objects
+    end
+
+    def == (other)
+      self.key == other.key &&
+      self.name == other.name &&
+      self.color == other.color &&
+      self.index == other.index &&
+      self.objects == other.objects
+    end
+
+  end
+
   class Event
 
     attr_accessor :id, :key, :chart_key, :book_whole_tables, :supports_best_available,
-                  :table_booking_modes, :for_sale_config, :created_on, :updated_on
+                  :table_booking_modes, :for_sale_config, :created_on, :updated_on, :channels
 
     def initialize(data)
       @id = data['id']
@@ -86,6 +107,9 @@ module Seatsio::Domain
       @for_sale_config = ForSaleConfig.new(data['forSaleConfig']) if data['forSaleConfig']
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
+      @channels = data['channels'].map {
+          |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
+      }
     end
 
     def self.create_list(list = [])
@@ -206,7 +230,7 @@ module Seatsio::Domain
   class ChartReportItem
 
     attr_reader :label, :labels, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
-    :left_neighbour, :right_neighbour
+                :left_neighbour, :right_neighbour
 
     def initialize(data)
       @label = data['label']

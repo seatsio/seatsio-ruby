@@ -136,6 +136,14 @@ module Seatsio
       @http_client.post("events/#{key}/actions/mark-as-for-sale", request)
     end
 
+    def update_channels(key:, channels:)
+      @http_client.post("events/#{key}/channels/update", channels: channels)
+    end
+
+    def assign_objects_to_channels(key:, channelConfig:)
+      @http_client.post("events/#{key}/channels/assign-objects", channelConfig: channelConfig)
+    end
+
     private
 
     def build_parameters_for_mark_as_sale(objects: nil, categories: nil)
