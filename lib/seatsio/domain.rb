@@ -109,7 +109,7 @@ module Seatsio::Domain
       @updated_on = parse_date(data['updatedOn'])
       @channels = data['channels'].map {
           |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
-      }
+      } if data['channels']
     end
 
     def self.create_list(list = [])
