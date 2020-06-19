@@ -15,8 +15,9 @@ module Seatsio
       @http_client = ::Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
     end
 
-    def create(chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
-      payload = build_event_request(chart_key: chart_key, event_key: event_key, book_whole_tables: book_whole_tables, table_booking_modes: table_booking_modes)
+    def create(chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil, social_distancing_ruleset_key: nil)
+      payload = build_event_request(chart_key: chart_key, event_key: event_key, book_whole_tables: book_whole_tables,
+                                    table_booking_modes: table_booking_modes, social_distancing_ruleset_key: social_distancing_ruleset_key)
       response = @http_client.post("events", payload)
       Domain::Event.new(response)
     end
@@ -27,8 +28,9 @@ module Seatsio
       Domain::Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
-      payload = build_event_request(chart_key: chart_key, event_key: event_key, book_whole_tables: book_whole_tables, table_booking_modes: table_booking_modes)
+    def update(key:, chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil, social_distancing_ruleset_key: nil)
+      payload = build_event_request(chart_key: chart_key, event_key: event_key, book_whole_tables: book_whole_tables,
+                                    table_booking_modes: table_booking_modes, social_distancing_ruleset_key: social_distancing_ruleset_key)
       @http_client.post("/events/#{key}", payload)
     end
 
@@ -159,12 +161,13 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil)
+    def build_event_request(chart_key: nil, event_key: nil, book_whole_tables: nil, table_booking_modes: nil, social_distancing_ruleset_key: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
       result["bookWholeTables"] = book_whole_tables if book_whole_tables != nil
       result["tableBookingModes"] = table_booking_modes if table_booking_modes != nil
+      result["socialDistancingRulesetKey"] = social_distancing_ruleset_key if social_distancing_ruleset_key != nil
       result
     end
 

@@ -43,4 +43,15 @@ class CreateEventTest < SeatsioTestClient
     assert_equal(false, event.book_whole_tables)
     assert_equal(table_booking_modes, event.table_booking_modes)
   end
+
+  def test_social_distancing_ruleset_key_is_optional
+    chart_key = create_test_chart
+    @seatsio.charts.save_social_distancing_rulesets(chart_key, {
+        "ruleset1" => {"name" => "My first ruleset"}
+    })
+
+    event = @seatsio.events.create chart_key: chart_key, social_distancing_ruleset_key: "ruleset1"
+
+    assert_equal("ruleset1", event.social_distancing_ruleset_key)
+  end
 end

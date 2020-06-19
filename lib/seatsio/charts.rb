@@ -94,6 +94,11 @@ module Seatsio
       @http_client.post("charts/#{chart_key}/version/draft/actions/publish")
     end
 
+    def save_social_distancing_rulesets(chart_key, rulesets)
+      payload = {"socialDistancingRulesets": rulesets}
+      @http_client.post("charts/#{chart_key}/social-distancing-rulesets", payload)
+    end
+
     def list(chart_filter: nil, tag: nil, expand_events: nil, with_validation: false)
       cursor = Pagination::Cursor.new(Domain::Chart, 'charts', @http_client)
       cursor.set_query_param('filter', chart_filter)
