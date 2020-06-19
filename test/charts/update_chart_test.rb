@@ -15,7 +15,7 @@ class UpdateChartTest < SeatsioTestClient
     assert_equal('aChart', retrieved_chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(retrieved_chart.key)
-    assert_equal('BOOTHS', drawing.venue_type)
-    assert_equal(categories, drawing.categories.list)
+    assert_equal('BOOTHS', drawing['venueType'])
+    assert_equal(categories, drawing['categories']['list'])
   end
 end

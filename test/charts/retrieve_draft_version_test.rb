@@ -9,6 +9,6 @@ class RetrieveDraftVersionTest < SeatsioTestClient
 
     draft_drawing = @seatsio.charts.retrieve_draft_version(chart.key)
 
-    assert_equal('newname', draft_drawing.name)
+    assert_equal('newname', draft_drawing['name'])
   end
 end

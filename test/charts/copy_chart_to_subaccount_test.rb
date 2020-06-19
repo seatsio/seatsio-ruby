@@ -15,7 +15,7 @@ class CopyChartToSubaccountTest < SeatsioTestClient
     assert_equal("my chart", retrieved_chart.name)
 
     drawing = subaccount_client.charts.retrieve_published_version(copied_chart.key)
-    assert_equal("BOOTHS", drawing.venue_type)
+    assert_equal("BOOTHS", drawing['venueType'])
 
   end
 
