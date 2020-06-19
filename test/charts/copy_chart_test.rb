@@ -9,6 +9,6 @@ class CopyChartTest < SeatsioTestClient
     assert_equal("my chart (copy)", copied_chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(copied_chart.key)
-    assert_equal("BOOTHS", drawing.venue_type)
+    assert_equal("BOOTHS", drawing['venueType'])
   end
 end

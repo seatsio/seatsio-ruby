@@ -69,13 +69,11 @@ module Seatsio
     end
 
     def retrieve_published_version(key)
-      response = @http_client.get("charts/#{key}/version/published")
-      Domain::Chart.new(response)
+      @http_client.get("charts/#{key}/version/published")
     end
 
     def retrieve_draft_version(key)
-      response = @http_client.get("charts/#{key}/version/draft")
-      Domain::ChartDraft.new(response)
+      @http_client.get("charts/#{key}/version/draft")
     end
 
     def retrieve_draft_version_thumbnail(key)
@@ -92,6 +90,11 @@ module Seatsio
 
     def publish_draft_version(chart_key)
       @http_client.post("charts/#{chart_key}/version/draft/actions/publish")
+    end
+
+    def save_social_distancing_rulesets(chart_key, rulesets)
+      payload = {"socialDistancingRulesets": rulesets}
+      @http_client.post("charts/#{chart_key}/social-distancing-rulesets", payload)
     end
 
     def list(chart_filter: nil, tag: nil, expand_events: nil, with_validation: false)

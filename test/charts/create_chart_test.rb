@@ -17,8 +17,8 @@ class CreateChartTest < SeatsioTestClient
     assert_equal(false, chart.archived)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
-    assert_equal('MIXED', drawing.venue_type)
-    assert_empty(drawing.categories.list)
+    assert_equal('MIXED', drawing['venueType'])
+    assert_empty(drawing['categories']['list'])
   end
 
   def test_name
@@ -26,8 +26,8 @@ class CreateChartTest < SeatsioTestClient
     assert_equal('aChart', chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
-    assert_equal('MIXED', drawing.venue_type)
-    assert_empty(drawing.categories.list)
+    assert_equal('MIXED', drawing['venueType'])
+    assert_empty(drawing['categories']['list'])
   end
 
   def test_venue_type
@@ -35,8 +35,8 @@ class CreateChartTest < SeatsioTestClient
     assert_equal('Untitled chart', chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
-    assert_equal('BOOTHS', drawing.venue_type)
-    assert_empty(drawing.categories.list)
+    assert_equal('BOOTHS', drawing['venueType'])
+    assert_empty(drawing['categories']['list'])
   end
 
   def test_categories
@@ -49,8 +49,8 @@ class CreateChartTest < SeatsioTestClient
     assert_equal('Untitled chart', chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(chart.key)
-    assert_equal('MIXED', drawing.venue_type)
-    assert_includes(drawing.categories.list, {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false})
-    assert_includes(drawing.categories.list, {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true})
+    assert_equal('MIXED', drawing['venueType'])
+    assert_includes(drawing['categories']['list'], {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false})
+    assert_includes(drawing['categories']['list'], {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true})
   end
 end

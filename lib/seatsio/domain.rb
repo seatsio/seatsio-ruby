@@ -4,25 +4,11 @@ module Seatsio::Domain
 
   module_function
 
-  class ChartCategories
-    attr_accessor :list, :max_category_key
-
-    def initialize(data)
-      if data
-        @list = data['list']
-        @max_category_key = data['maxCategoryKey']
-      else
-        @list = []
-        @max_category_key = ''
-      end
-    end
-  end
-
   class Chart
 
     attr_reader :id, :key, :status, :name, :published_version_thumbnail_url,
-                :draft_version_thumbnail_url, :events, :tags, :archived, :venue_type,
-                :categories, :validation
+                :draft_version_thumbnail_url, :events, :tags, :archived,
+                :categories, :validation, :social_distancing_rulesets
 
     def initialize(data)
       @id = data['id']
@@ -34,9 +20,12 @@ module Seatsio::Domain
       @events = Event.create_list(data['events']) if data['events']
       @tags = data['tags']
       @archived = data['archived']
-      @venue_type = data['venueType']
-      @categories = ChartCategories.new(data['categories'])
       @validation = data['validation']
+      @social_distancing_rulesets = data['socialDistancingRulesets'].map {
+          |key, r| [key, SocialDistancingRuleset.new(r['name'], r['numberOfDisabledSeatsToTheSides'], r['disableSeatsInFrontAndBehind'],
+                                                     r['numberOfDisabledAisleSeats'], r['maxGroupSize'],
+                                                     r['disabledSeats'], r['enabledSeats'], r['index'])]
+      }.to_h
     end
   end
 
@@ -84,10 +73,10 @@ module Seatsio::Domain
 
     def == (other)
       self.key == other.key &&
-      self.name == other.name &&
-      self.color == other.color &&
-      self.index == other.index &&
-      self.objects == other.objects
+          self.name == other.name &&
+          self.color == other.color &&
+          self.index == other.index &&
+          self.objects == other.objects
     end
 
   end
@@ -95,7 +84,8 @@ module Seatsio::Domain
   class Event
 
     attr_accessor :id, :key, :chart_key, :book_whole_tables, :supports_best_available,
-                  :table_booking_modes, :for_sale_config, :created_on, :updated_on, :channels
+                  :table_booking_modes, :for_sale_config, :created_on, :updated_on, :channels,
+                  :social_distancing_ruleset_key
 
     def initialize(data)
       @id = data['id']
@@ -110,6 +100,7 @@ module Seatsio::Domain
       @channels = data['channels'].map {
           |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
       } if data['channels']
+      @social_distancing_ruleset_key = data['socialDistancingRulesetKey']
     end
 
     def self.create_list(list = [])
@@ -474,6 +465,35 @@ module Seatsio::Domain
       object_details[key] = EventReportItem.new(value)
     end
     object_details
+  end
+
+  class SocialDistancingRuleset
+    attr_reader :name, :number_of_disabled_seats_to_the_sides, :disable_seats_in_front_and_behind,
+                :number_of_disabled_aisle_seats, :max_group_size, :disabled_seats, :enabled_seats, :index
+
+    def initialize(name, number_of_disabled_seats_to_the_sides = 0, disable_seats_in_front_and_behind = false, number_of_disabled_aisle_seats = 0,
+                   max_group_size = 0, disabled_seats = [], enabled_seats = [], index = 0)
+      @name = name
+      @number_of_disabled_seats_to_the_sides = number_of_disabled_seats_to_the_sides
+      @disable_seats_in_front_and_behind = disable_seats_in_front_and_behind
+      @number_of_disabled_aisle_seats = number_of_disabled_aisle_seats
+      @max_group_size = max_group_size
+      @disabled_seats = disabled_seats
+      @enabled_seats = enabled_seats
+      @index = index
+    end
+
+    def == (other)
+      self.name == other.name &&
+          self.number_of_disabled_seats_to_the_sides == other.number_of_disabled_seats_to_the_sides &&
+          self.disable_seats_in_front_and_behind == other.disable_seats_in_front_and_behind &&
+          self.number_of_disabled_aisle_seats == other.number_of_disabled_aisle_seats &&
+          self.max_group_size == other.max_group_size &&
+          self.disabled_seats == other.disabled_seats &&
+          self.enabled_seats == other.enabled_seats &&
+          self.index == other.index
+    end
+
   end
 
 end
