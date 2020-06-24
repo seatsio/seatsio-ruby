@@ -8,7 +8,7 @@ class EventReportsSummaryTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
+    @seatsio.events.book(event.key, ['A-1'])
 
     report = @seatsio.event_reports.summary_by_status(event.key)
 
@@ -29,7 +29,7 @@ class EventReportsSummaryTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
+    @seatsio.events.book(event.key, ['A-1'])
 
     report = @seatsio.event_reports.summary_by_category_key(event.key)
 
@@ -47,7 +47,7 @@ class EventReportsSummaryTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
+    @seatsio.events.book(event.key, ['A-1'])
 
     report = @seatsio.event_reports.summary_by_category_label(event.key)
 
@@ -65,7 +65,7 @@ class EventReportsSummaryTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1'}], nil, 'order1')
+    @seatsio.events.book(event.key, ['A-1'])
 
     report = @seatsio.event_reports.summary_by_section(event.key)
 
@@ -76,5 +76,22 @@ class EventReportsSummaryTest < SeatsioTestClient
     assert_equal(116, report['NO_SECTION']['byCategoryKey']['10'])
     assert_equal(116, report['NO_SECTION']['byCategoryLabel']['Cat1'])
     assert_equal(116, report['NO_SECTION']['byCategoryLabel']['Cat2'])
+  end
+
+  def test_summary_by_selectability
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.book(event.key, ['A-1'])
+
+    report = @seatsio.event_reports.summary_by_selectability(event.key)
+
+    assert_equal(231, report['selectable']['count'])
+    assert_equal(231, report['selectable']['bySection']['NO_SECTION'])
+    assert_equal(231, report['selectable']['byStatus']['free'])
+
+    assert_equal(1, report['not_selectable']['count'])
+    assert_equal(1, report['not_selectable']['bySection']['NO_SECTION'])
+    assert_equal(1, report['not_selectable']['byStatus']['booked'])
   end
 end
