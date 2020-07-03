@@ -12,6 +12,7 @@ class CreateWorkspaceTest < SeatsioTestClient
     assert_operator(workspace.key, :!=, nil)
     assert_operator(workspace.secret_key, :!=, nil)
     assert_false(workspace.is_test)
+    assert_true(workspace.is_active)
   end
 
   def test_create_test_workspace
@@ -22,5 +23,6 @@ class CreateWorkspaceTest < SeatsioTestClient
     assert_operator(workspace.key, :!=, nil)
     assert_operator(workspace.secret_key, :!=, nil)
     assert_true(workspace.is_test)
+    assert_true(workspace.is_active)
   end
 end

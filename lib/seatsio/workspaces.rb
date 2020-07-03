@@ -32,6 +32,14 @@ module Seatsio
       response['secretKey']
     end
 
+    def activate(key:)
+      @http_client.post("workspaces/#{key}/actions/activate")
+    end
+
+    def deactivate(key:)
+      @http_client.post("workspaces/#{key}/actions/deactivate")
+    end
+
     def list(filter: nil)
       extended_cursor = cursor
       extended_cursor.set_query_param('filter', filter)

@@ -13,5 +13,6 @@ class RetrieveWorkspaceTest < SeatsioTestClient
     assert_operator(retrieved_workspace.key, :!=, nil)
     assert_operator(retrieved_workspace.secret_key, :!=, nil)
     assert_false(retrieved_workspace.is_test)
+    assert_true(retrieved_workspace.is_active)
   end
 end

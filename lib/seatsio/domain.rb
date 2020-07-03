@@ -147,7 +147,7 @@ module Seatsio::Domain
   end
 
   class Workspace
-    attr_reader :id, :name, :key, :secret_key, :is_test
+    attr_reader :id, :name, :key, :secret_key, :is_test, :is_active
 
     def initialize(data)
       @id = data['id']
@@ -155,6 +155,7 @@ module Seatsio::Domain
       @key = data['key']
       @secret_key = data['secretKey']
       @is_test = data['isTest']
+      @is_active = data['isActive']
     end
   end
 
