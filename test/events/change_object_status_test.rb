@@ -136,4 +136,20 @@ class ChangeObjectStatusTest < SeatsioTestClient
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_nil(nil, status.extra_data)
   end
+
+  def test_channel_keys
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+        "channelKey1" => ["A-1", "A-2"]
+    }
+
+    @seatsio.events.change_object_status(event.key, 'A-1', "someStatus", nil, nil, true, ["channelKey1"])
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_equal("someStatus", status.status)
+  end
 end

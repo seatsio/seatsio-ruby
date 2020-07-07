@@ -54,12 +54,14 @@ module Seatsio
     # @param [Object] object_or_objects
     # @param [Object] hold_token
     # @param [Object] order_id
-    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil)
-      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id, keep_extra_data)
+    # @param [Object] keep_extra_data
+    # @param [Object] channel_keys
+    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil, channel_keys = nil)
+      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id, keep_extra_data, channel_keys)
     end
 
-    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil, keep_extra_data = nil)
-      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data)
+    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil, keep_extra_data = nil, channel_keys = nil)
+      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, channel_keys)
       request[:params] = {
           :expand => 'objects'
       }
@@ -76,8 +78,8 @@ module Seatsio
       Domain::ChangeObjectStatusInBatchResult.new(response).results
     end
 
-    def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil, keep_extra_data = nil)
-      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id, keep_extra_data)
+    def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil, keep_extra_data = nil, channel_keys = nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id, keep_extra_data, channel_keys)
     end
 
     def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, order_id: nil, keep_extra_data: nil)
@@ -94,8 +96,8 @@ module Seatsio
       change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data)
     end
 
-    def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil)
-      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id, keep_extra_data)
+    def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil, channel_keys = nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id, keep_extra_data, channel_keys)
     end
 
     def delete(key:)
