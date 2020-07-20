@@ -40,6 +40,10 @@ module Seatsio
       @http_client.post("workspaces/#{key}/actions/deactivate")
     end
 
+    def set_default(key:)
+      @http_client.post("workspaces/actions/set-default/#{key}")
+    end
+
     def list(filter: nil)
       extended_cursor = cursor
       extended_cursor.set_query_param('filter', filter)
