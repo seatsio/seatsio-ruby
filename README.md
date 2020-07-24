@@ -40,7 +40,7 @@ client.events.release(event.key, ["A-1", "A-2"])
 ```ruby
 require('seatsio')
 client = Seatsio::Client.new("my-workspace-secret-key")
-client.events.book(event.key, ["A-1", "A-2"], "a-hold-token")
+client.events.book(event.key, ["A-1", "A-2"], hold_token: "a-hold-token")
 ```
 
 ### Changing object status
