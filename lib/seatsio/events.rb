@@ -50,18 +50,12 @@ module Seatsio
       Domain::ObjectStatus.new(response)
     end
 
-    # @param [Object] event_key_or_keys
-    # @param [Object] object_or_objects
-    # @param [Object] hold_token
-    # @param [Object] order_id
-    # @param [Object] keep_extra_data
-    # @param [Object] channel_keys
-    def book(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil, channel_keys = nil)
-      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token, order_id, keep_extra_data, channel_keys)
+    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      self.change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::BOOKED, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token = nil, order_id = nil, keep_extra_data = nil, channel_keys = nil)
-      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, channel_keys)
+    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys)
       request[:params] = {
           :expand => 'objects'
       }
@@ -78,26 +72,26 @@ module Seatsio
       Domain::ChangeObjectStatusInBatchResult.new(response).results
     end
 
-    def hold(event_key_or_keys, object_or_objects, hold_token, order_id = nil, keep_extra_data = nil, channel_keys = nil)
-      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token, order_id, keep_extra_data, channel_keys)
+    def hold(event_key_or_keys, object_or_objects, hold_token, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, order_id: nil, keep_extra_data: nil)
-      request = create_change_best_available_object_status_request(number, status, categories, extra_data, hold_token, order_id, keep_extra_data)
+    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      request = create_change_best_available_object_status_request(number, status, categories, extra_data, hold_token, order_id, keep_extra_data, ignore_channels, channel_keys)
       response = @http_client.post("events/#{key}/actions/change-object-status", request)
       Domain::BestAvailableObjects.new(response)
     end
 
-    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil)
-      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data)
+    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil)
-      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data)
+    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def release(event_key_or_keys, object_or_objects, hold_token = nil, order_id = nil, keep_extra_data = nil, channel_keys = nil)
-      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token, order_id, keep_extra_data, channel_keys)
+    def release(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::FREE, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
     def delete(key:)

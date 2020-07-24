@@ -26,7 +26,7 @@ class ReleaseObjectsTest < SeatsioTestClient
     hold_token = @seatsio.hold_tokens.create
     @seatsio.events.hold(event.key, ['A-1'], hold_token.hold_token)
 
-    @seatsio.events.release(event.key, ['A-1'], hold_token.hold_token)
+    @seatsio.events.release(event.key, ['A-1'], hold_token: hold_token.hold_token)
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)
@@ -38,7 +38,7 @@ class ReleaseObjectsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.book(event.key, ['A-1'])
 
-    @seatsio.events.release(event.key, ['A-1'], nil, 'order1')
+    @seatsio.events.release(event.key, ['A-1'], order_id: 'order1')
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal('order1', status.order_id)
@@ -50,7 +50,7 @@ class ReleaseObjectsTest < SeatsioTestClient
     extra_data = {'name' => 'John Doe'}
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :extraData => extra_data}])
 
-    @seatsio.events.release(event.key, 'A-1', nil, nil, true)
+    @seatsio.events.release(event.key, 'A-1', keep_extra_data: true)
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal(extra_data, status.extra_data)
@@ -65,9 +65,26 @@ class ReleaseObjectsTest < SeatsioTestClient
     @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
         "channelKey1" => ["A-1", "A-2"]
     }
-    @seatsio.events.book(event.key, 'A-1', nil, nil, true, ["channelKey1"])
+    @seatsio.events.book(event.key, 'A-1', channel_keys: ["channelKey1"])
 
-    @seatsio.events.release(event.key, 'A-1', nil, nil, true, ["channelKey1"])
+    @seatsio.events.release(event.key, 'A-1', channel_keys: ["channelKey1"])
+
+    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
+    assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)
+  end
+
+  def test_ignore_channels
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+        "channelKey1" => ["A-1", "A-2"]
+    }
+    @seatsio.events.book(event.key, 'A-1', channel_keys: ["channelKey1"])
+
+    @seatsio.events.release(event.key, 'A-1', ignore_channels: true)
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
     assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)

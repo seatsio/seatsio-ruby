@@ -19,7 +19,7 @@ class ListStatusChangesTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
     object_properties = {:objectId => 'A-1', :extraData => {'foo': 'bar'}}
-    @seatsio.events.change_object_status(event.key, object_properties, 'status1', hold_token.hold_token, 'order1')
+    @seatsio.events.change_object_status(event.key, object_properties, 'status1', hold_token: hold_token.hold_token, order_id: 'order1')
 
     status_changes =  @seatsio.events.list_status_changes(event.key).to_a
     status_change = status_changes[0]

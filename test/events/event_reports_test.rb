@@ -9,7 +9,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     extra_data = {'foo' => 'bar'}
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], nil, 'order1')
+    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], order_id: 'order1')
 
     report = @seatsio.event_reports.by_label(event.key)
     report_item = report.items['A-1'][0]
@@ -23,7 +23,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     extra_data = {'foo' => 'bar'}
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], nil, 'order1')
+    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], order_id: 'order1')
 
     report = @seatsio.event_reports.by_label(event.key)
 
@@ -189,8 +189,8 @@ class EventReportsTest < SeatsioTestClient
   def test_by_order_id
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.book(event.key, %w(A-1 A-2), nil, 'order1')
-    @seatsio.events.book(event.key, ['A-3'], nil, 'order2')
+    @seatsio.events.book(event.key, %w(A-1 A-2), order_id: 'order1')
+    @seatsio.events.book(event.key, ['A-3'], order_id: 'order2')
 
     report = @seatsio.event_reports.by_order_id(event.key)
     assert_equal(2, report.items['order1'].length)
@@ -201,8 +201,8 @@ class EventReportsTest < SeatsioTestClient
   def test_by_specific_order_id
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.book(event.key, %w(A-1 A-2), nil, 'order1')
-    @seatsio.events.book(event.key, ['A-3'], nil, 'order2')
+    @seatsio.events.book(event.key, %w(A-1 A-2), order_id: 'order1')
+    @seatsio.events.book(event.key, ['A-3'], order_id: 'order2')
 
     report = @seatsio.event_reports.by_order_id(event.key, 'order1')
     assert_equal(2, report.items.length)
