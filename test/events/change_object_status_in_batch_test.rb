@@ -18,4 +18,34 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     assert_equal('fa', res[1].objects['A-2'].status)
     assert_equal('fa', @seatsio.events.retrieve_object_status(key: event2.key, object_key: 'A-2').status)
   end
+
+  def test_channel_keys
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+        "channelKey1" => ["A-1"]
+    }
+
+    res = @seatsio.events.change_object_status_in_batch([{ :event => event.key, :objects => ['A-1'], :status => 'foo', :channelKeys => ['channelKey1']}])
+
+    assert_equal('foo', res[0].objects['A-1'].status)
+  end
+
+  def test_ignore_channels
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+        "channelKey1" => ["A-1"]
+    }
+
+    res = @seatsio.events.change_object_status_in_batch([{ :event => event.key, :objects => ['A-1'], :status => 'foo', :ignoreChannels => true}])
+
+    assert_equal('foo', res[0].objects['A-1'].status)
+  end
 end
