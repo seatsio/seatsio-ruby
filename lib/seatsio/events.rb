@@ -76,18 +76,18 @@ module Seatsio
       change_object_status(event_key_or_keys, object_or_objects, Domain::ObjectStatus::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      request = create_change_best_available_object_status_request(number, status, categories, extra_data, hold_token, order_id, keep_extra_data, ignore_channels, channel_keys)
+    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, ticket_types: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      request = create_change_best_available_object_status_request(number, status, categories, extra_data, ticket_types, hold_token, order_id, keep_extra_data, ignore_channels, channel_keys)
       response = @http_client.post("events/#{key}/actions/change-object-status", request)
       Domain::BestAvailableObjects.new(response)
     end
 
-    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
+    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ticket_types: nil, ignore_channels: nil, channel_keys: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ticket_types: ticket_types, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
+    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ticket_types: nil, ignore_channels: nil, channel_keys: nil)
+      change_best_available_object_status(key, number, Domain::ObjectStatus::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ticket_types: ticket_types, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
     def release(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)

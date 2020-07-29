@@ -105,17 +105,25 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal(hold_token.hold_token, object_status.hold_token)
   end
 
-  def test_hold_best_available_with_extra_data
+  def test_extra_data
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    hold_token = @seatsio.hold_tokens.create
-    extra_data = [{ name: 'John Doe'}]
-
-    best_available_objects = @seatsio.events.hold_best_available(event.key, 1, hold_token.hold_token, extra_data: extra_data)
+    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', extra_data: [{ "name" => 'John Doe'}])
 
     object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, object_status.status)
-    assert_equal(hold_token.hold_token, object_status.hold_token)
+    assert_equal({ "name" => 'John Doe'}, object_status.extra_data)
+  end
+
+  def test_ticket_types
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 2, 'someStatus', ticket_types: ['adult', 'child'])
+
+    object_status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal('adult', object_status1.ticket_type)
+    object_status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[1]
+    assert_equal('child', object_status2.ticket_type)
   end
 
   def test_keep_extra_data_true
