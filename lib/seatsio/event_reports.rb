@@ -31,6 +31,10 @@ module Seatsio
       fetch_summary_report('bySelectability', event_key)
     end
 
+    def summary_by_channel(event_key)
+      fetch_summary_report('byChannel', event_key)
+    end
+
     def by_label(event_key, label = nil)
       fetch_report('byLabel', event_key, label)
     end
@@ -57,6 +61,10 @@ module Seatsio
 
     def by_selectability(event_key, selectability = nil)
       fetch_report('bySelectability', event_key, selectability)
+    end
+
+    def by_channel(event_key, channelKey = nil)
+      fetch_report('byChannel', event_key, channelKey)
     end
 
     private

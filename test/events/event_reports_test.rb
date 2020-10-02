@@ -25,6 +25,11 @@ class EventReportsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], order_id: 'order1')
 
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1"]}
+
     report = @seatsio.event_reports.by_label(event.key)
 
     report_item = report.items['A-1'][0]
@@ -51,6 +56,7 @@ class EventReportsTest < SeatsioTestClient
     assert_equal('A-2', report_item.right_neighbour)
     assert_false(report_item.is_selectable)
     assert_false(report_item.is_disabled_by_social_distancing)
+    assert_equal('channelKey1', report_item.channel)
   end
 
   def test_hold_token
@@ -125,13 +131,16 @@ class EventReportsTest < SeatsioTestClient
     @seatsio.events.change_object_status(event.key, ['A-3'], 'booked')
 
     report = @seatsio.event_reports.by_status(event.key, 'mystatus')
+
     assert_equal(2, report.items.length)
   end
 
   def test_by_missing_status
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
+
     report = @seatsio.event_reports.by_status(event.key, 'mystatus')
+
     assert_equal(0, report.items.length)
   end
 
@@ -140,6 +149,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_category_label(event.key)
+
     assert_equal(17, report.items['Cat1'].length)
     assert_equal(17, report.items['Cat2'].length)
   end
@@ -149,6 +159,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_category_label(event.key, 'Cat1')
+
     assert_equal(17, report.items.length)
   end
 
@@ -157,6 +168,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_category_key(event.key)
+
     assert_equal(17, report.items['9'].length)
     assert_equal(17, report.items['10'].length)
   end
@@ -166,6 +178,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_category_key(event.key, '9')
+
     assert_equal(17, report.items.length)
   end
 
@@ -174,6 +187,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_label(event.key)
+
     assert_equal(1, report.items['A-1'].length)
     assert_equal(1, report.items['A-2'].length)
   end
@@ -183,6 +197,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_label(event.key, 'A-1')
+
     assert_equal(1, report.items.length)
   end
 
@@ -193,6 +208,7 @@ class EventReportsTest < SeatsioTestClient
     @seatsio.events.book(event.key, ['A-3'], order_id: 'order2')
 
     report = @seatsio.event_reports.by_order_id(event.key)
+
     assert_equal(2, report.items['order1'].length)
     assert_equal(1, report.items['order2'].length)
     assert_equal(31, report.items['NO_ORDER_ID'].length)
@@ -205,6 +221,7 @@ class EventReportsTest < SeatsioTestClient
     @seatsio.events.book(event.key, ['A-3'], order_id: 'order2')
 
     report = @seatsio.event_reports.by_order_id(event.key, 'order1')
+
     assert_equal(2, report.items.length)
   end
 
@@ -213,6 +230,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_section(event.key)
+
     assert_equal(34, report.items['NO_SECTION'].length)
   end
 
@@ -221,6 +239,7 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_section(event.key, 'NO_SECTION')
+
     assert_equal(34, report.items.length)
   end
 
@@ -230,6 +249,7 @@ class EventReportsTest < SeatsioTestClient
     @seatsio.events.book(event.key, %w(A-1 A-2))
 
     report = @seatsio.event_reports.by_selectability(event.key)
+
     assert_equal(32, report.items['selectable'].length)
     assert_equal(2, report.items['not_selectable'].length)
   end
@@ -239,6 +259,34 @@ class EventReportsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     report = @seatsio.event_reports.by_selectability(event.key, 'selectable')
+
     assert_equal(34, report.items.length)
+  end
+
+  def test_by_channel
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1", "A-2"]}
+
+    report = @seatsio.event_reports.by_channel(event.key)
+
+    assert_equal(32, report.items['NO_CHANNEL'].length)
+    assert_equal(2, report.items['channelKey1'].length)
+  end
+
+  def test_by_specific_channel
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.update_channels key: event.key, channels: {
+        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+    }
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1", "A-2"]}
+
+    report = @seatsio.event_reports.by_channel(event.key, 'channelKey1')
+
+    assert_equal(2, report.items.length)
   end
 end
