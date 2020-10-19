@@ -24,7 +24,7 @@ module Seatsio::Domain
       @social_distancing_rulesets = data['socialDistancingRulesets'].map {
           |key, r| [key, SocialDistancingRuleset.new(r['name'], r['numberOfDisabledSeatsToTheSides'], r['disableSeatsInFrontAndBehind'],
                                                      r['numberOfDisabledAisleSeats'], r['maxGroupSize'],
-                                                     r['maxOccupancyAbsolute'], r['maxOccupancyPercentage'], r['fixedGroupLayout'],
+                                                     r['maxOccupancyAbsolute'], r['maxOccupancyPercentage'], r['oneGroupPerTable'], r['fixedGroupLayout'],
                                                      r['disabledSeats'], r['enabledSeats'], r['index'])]
       }.to_h
     end
@@ -476,11 +476,11 @@ module Seatsio::Domain
   class SocialDistancingRuleset
     attr_reader :name, :number_of_disabled_seats_to_the_sides, :disable_seats_in_front_and_behind,
                 :number_of_disabled_aisle_seats, :max_group_size, :max_occupancy_absolute,
-                :max_occupancy_percentage, :fixed_group_layout, :disabled_seats, :enabled_seats, :index
+                :max_occupancy_percentage, :one_group_per_table, :fixed_group_layout, :disabled_seats, :enabled_seats, :index
 
     def initialize(name, number_of_disabled_seats_to_the_sides = 0, disable_seats_in_front_and_behind = false, number_of_disabled_aisle_seats = 0,
-                   max_group_size = 0, max_occupancy_absolute = 0, max_occupancy_percentage = 0, fixed_group_layout = false,
-                   disabled_seats = [], enabled_seats = [], index = 0)
+                   max_group_size = 0, max_occupancy_absolute = 0, max_occupancy_percentage = 0, one_group_per_table = false,
+                   fixed_group_layout = false, disabled_seats = [], enabled_seats = [], index = 0)
       @name = name
       @number_of_disabled_seats_to_the_sides = number_of_disabled_seats_to_the_sides
       @disable_seats_in_front_and_behind = disable_seats_in_front_and_behind
@@ -488,6 +488,7 @@ module Seatsio::Domain
       @max_group_size = max_group_size
       @max_occupancy_absolute = max_occupancy_absolute
       @max_occupancy_percentage = max_occupancy_percentage
+      @one_group_per_table = one_group_per_table
       @fixed_group_layout = fixed_group_layout
       @disabled_seats = disabled_seats
       @enabled_seats = enabled_seats
@@ -495,15 +496,15 @@ module Seatsio::Domain
     end
 
     def self.fixed(name, disabled_seats = [], index = 0)
-      SocialDistancingRuleset.new(name, 0, false, 0, 0, 0, 0, true, disabled_seats, [], index)
+      SocialDistancingRuleset.new(name, 0, false, 0, 0, 0, 0, false, true, disabled_seats, [], index)
     end
 
     def self.rule_based(name, number_of_disabled_seats_to_the_sides = 0, disable_seats_in_front_and_behind = false, number_of_disabled_aisle_seats = 0,
-                        max_group_size = 0, max_occupancy_absolute = 0, max_occupancy_percentage = 0,
+                        max_group_size = 0, max_occupancy_absolute = 0, max_occupancy_percentage = 0, one_group_per_table = false,
                         disabled_seats = [], enabled_seats = [], index = 0)
       SocialDistancingRuleset.new(name, number_of_disabled_seats_to_the_sides, disable_seats_in_front_and_behind, number_of_disabled_aisle_seats,
                                   max_group_size, max_occupancy_absolute, max_occupancy_percentage,
-                                  false, disabled_seats, enabled_seats, index)
+                                  one_group_per_table, false, disabled_seats, enabled_seats, index)
     end
 
     def == (other)
@@ -514,6 +515,7 @@ module Seatsio::Domain
           self.max_group_size == other.max_group_size &&
           self.max_occupancy_absolute == other.max_occupancy_absolute &&
           self.max_occupancy_percentage == other.max_occupancy_percentage &&
+          self.one_group_per_table == other.one_group_per_table &&
           self.fixed_group_layout == other.fixed_group_layout &&
           self.disabled_seats == other.disabled_seats &&
           self.enabled_seats == other.enabled_seats &&
