@@ -51,6 +51,42 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(1, report.items['A-2'].length)
   end
 
+  def test_by_label_book_whole_tables_nil
+    chart_key = create_test_chart_with_tables
+
+    report = @seatsio.chart_reports.by_label(chart_key)
+
+    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_equal(14, report.items.length)
+  end
+
+  def test_by_label_book_whole_tables_chart
+    chart_key = create_test_chart_with_tables
+
+    report = @seatsio.chart_reports.by_label(chart_key, 'chart')
+
+    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_equal(7, report.items.length)
+  end
+
+  def test_by_label_book_whole_tables_true
+    chart_key = create_test_chart_with_tables
+
+    report = @seatsio.chart_reports.by_label(chart_key, 'true')
+
+    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_equal(2, report.items.length)
+  end
+
+  def test_by_label_book_whole_tables_false
+    chart_key = create_test_chart_with_tables
+
+    report = @seatsio.chart_reports.by_label(chart_key, 'false')
+
+    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_equal(12, report.items.length)
+  end
+
   def test_by_category_key
     chart_key = create_test_chart
     report = @seatsio.chart_reports.by_category_key(chart_key)
