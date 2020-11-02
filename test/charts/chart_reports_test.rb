@@ -8,10 +8,10 @@ class ChartReportsTest < SeatsioTestClient
 
     report = @seatsio.chart_reports.by_label(chart_key)
 
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
 
     report_item = report.items['A-1'][0]
-    assert_instance_of(Seatsio::Domain::ChartReportItem, report_item)
+    assert_instance_of(Seatsio::ChartReportItem, report_item)
     assert_equal('A-1', report_item.label)
     assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, report_item.labels)
     assert_equal('Cat1', report_item.category_label)
@@ -28,10 +28,10 @@ class ChartReportsTest < SeatsioTestClient
     chart_key = create_test_chart
 
     report = @seatsio.chart_reports.by_label(chart_key)
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
 
     report_item = report.items['GA1'][0]
-    assert_instance_of(Seatsio::Domain::ChartReportItem, report_item)
+    assert_instance_of(Seatsio::ChartReportItem, report_item)
     assert_equal('GA1', report_item.label)
     assert_equal('generalAdmission', report_item.object_type)
     assert_equal('Cat1', report_item.category_label)
@@ -46,7 +46,7 @@ class ChartReportsTest < SeatsioTestClient
 
     report = @seatsio.chart_reports.by_label(chart_key)
 
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
     assert_equal(1, report.items['A-1'].length)
     assert_equal(1, report.items['A-2'].length)
   end
@@ -56,7 +56,7 @@ class ChartReportsTest < SeatsioTestClient
 
     report = @seatsio.chart_reports.by_label(chart_key)
 
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
     assert_equal(14, report.items.length)
   end
 
@@ -65,7 +65,7 @@ class ChartReportsTest < SeatsioTestClient
 
     report = @seatsio.chart_reports.by_label(chart_key, 'chart')
 
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
     assert_equal(7, report.items.length)
   end
 
@@ -74,7 +74,7 @@ class ChartReportsTest < SeatsioTestClient
 
     report = @seatsio.chart_reports.by_label(chart_key, 'true')
 
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
     assert_equal(2, report.items.length)
   end
 
@@ -83,7 +83,7 @@ class ChartReportsTest < SeatsioTestClient
 
     report = @seatsio.chart_reports.by_label(chart_key, 'false')
 
-    assert_instance_of(Seatsio::Domain::ChartReport, report)
+    assert_instance_of(Seatsio::ChartReport, report)
     assert_equal(12, report.items.length)
   end
 

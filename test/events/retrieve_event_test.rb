@@ -10,7 +10,7 @@ class RetrieveEventTest < SeatsioTestClient
     assert_operator(retrieved_event.id, :!=, 0)
     assert_operator(retrieved_event.key, :!=, nil)
     assert_equal(chart_key, retrieved_event.chart_key)
-    assert_equal(false, retrieved_event.book_whole_tables)
+    assert_equal('INHERIT', retrieved_event.table_booking_config.mode)
     assert_equal(true, retrieved_event.supports_best_available)
     assert_nil(retrieved_event.for_sale_config)
     assert_nil(retrieved_event.updated_on)

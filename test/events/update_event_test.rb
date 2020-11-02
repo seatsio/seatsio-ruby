@@ -28,31 +28,14 @@ class UpdateEventTest < SeatsioTestClient
     # TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
 
-  def test_update_book_whole_tables
-    chart = @seatsio.charts.create
-    event = @seatsio.events.create chart_key: chart.key
-
-    @seatsio.events.update key: event.key, book_whole_tables: true
-
-    retrieved_event = @seatsio.events.retrieve key: event.key
-    assert_equal(true, retrieved_event.book_whole_tables)
-    # TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
-
-    @seatsio.events.update key: event.key, book_whole_tables: false
-
-    retrieved_event = @seatsio.events.retrieve key: event.key
-    assert_equal(false, retrieved_event.book_whole_tables)
-    # TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
-  end
-
-  def test_update_table_booking_modes
+  def test_update_table_booking_config
     chart_key = create_test_chart_with_tables
-    event = @seatsio.events.create chart_key: chart_key, table_booking_modes: {'T1' => 'BY_TABLE'}
+    event = @seatsio.events.create chart_key: chart_key, table_booking_config: Seatsio::TableBookingConfig::custom({'T1' => 'BY_TABLE'})
 
-    @seatsio.events.update key: event.key, table_booking_modes: {'T1' => 'BY_SEAT'}
+    @seatsio.events.update key: event.key, table_booking_config: Seatsio::TableBookingConfig::custom({'T1' => 'BY_SEAT'})
 
     retrieved_event = @seatsio.events.retrieve key: event.key
-    assert_equal({'T1' => 'BY_SEAT'}, retrieved_event.table_booking_modes)
+    assert_equal({'T1' => 'BY_SEAT'}, retrieved_event.table_booking_config.tables)
     #TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
 

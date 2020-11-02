@@ -13,9 +13,9 @@ class ReleaseObjectsTest < SeatsioTestClient
     a2_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-2').status
     a3_status = @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-3').status
 
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE, a1_status)
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE, a2_status)
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE, a3_status)
+    assert_equal(Seatsio::ObjectStatus::FREE, a1_status)
+    assert_equal(Seatsio::ObjectStatus::FREE, a2_status)
+    assert_equal(Seatsio::ObjectStatus::FREE, a3_status)
 
     assert_equal(res.objects.keys, ['A-1', 'A-2'])
   end
@@ -29,7 +29,7 @@ class ReleaseObjectsTest < SeatsioTestClient
     @seatsio.events.release(event.key, ['A-1'], hold_token: hold_token.hold_token)
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)
+    assert_equal(Seatsio::ObjectStatus::FREE, status.status)
     assert_nil(status.hold_token)
   end
 
@@ -70,7 +70,7 @@ class ReleaseObjectsTest < SeatsioTestClient
     @seatsio.events.release(event.key, 'A-1', channel_keys: ["channelKey1"])
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)
+    assert_equal(Seatsio::ObjectStatus::FREE, status.status)
   end
 
   def test_ignore_channels
@@ -87,6 +87,6 @@ class ReleaseObjectsTest < SeatsioTestClient
     @seatsio.events.release(event.key, 'A-1', ignore_channels: true)
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::Domain::ObjectStatus::FREE, status.status)
+    assert_equal(Seatsio::ObjectStatus::FREE, status.status)
   end
 end

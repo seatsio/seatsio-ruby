@@ -34,7 +34,7 @@ class MarkObjectsAsForSaleTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
 
-    assert_instance_of(Seatsio::Domain::ForSaleConfig, retrieved_event.for_sale_config)
+    assert_instance_of(Seatsio::ForSaleConfig, retrieved_event.for_sale_config)
     assert_equal(true, retrieved_event.for_sale_config.for_sale)
     assert_equal([], retrieved_event.for_sale_config.objects)
     assert_equal(%w(cat1 cat2), retrieved_event.for_sale_config.categories)

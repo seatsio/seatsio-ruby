@@ -29,8 +29,8 @@ class SaveSocialDistancingRulesetsTest < SeatsioTestClient
 
     retrieved_chart = @seatsio.charts.retrieve(chart.key)
     epected_rulesets = {
-        "ruleset1" => Seatsio::Domain::SocialDistancingRuleset.new("My first ruleset", 1, true, 2, 1, 10, 0, true, false, ["A-1"], ["A-2"], 4),
-        "ruleset2" => Seatsio::Domain::SocialDistancingRuleset.new("My second ruleset")
+        "ruleset1" => Seatsio::SocialDistancingRuleset.new("My first ruleset", 1, true, 2, 1, 10, 0, true, false, ["A-1"], ["A-2"], 4),
+        "ruleset2" => Seatsio::SocialDistancingRuleset.new("My second ruleset")
     }
     assert_equal(epected_rulesets, retrieved_chart.social_distancing_rulesets)
   end
@@ -50,7 +50,7 @@ class SaveSocialDistancingRulesetsTest < SeatsioTestClient
 
     retrieved_chart = @seatsio.charts.retrieve(chart.key)
     epected_rulesets = {
-        "ruleset1" => Seatsio::Domain::SocialDistancingRuleset.fixed("My first ruleset", ["A-1"], 4),
+        "ruleset1" => Seatsio::SocialDistancingRuleset.fixed("My first ruleset", ["A-1"], 4),
     }
     assert_equal(epected_rulesets, retrieved_chart.social_distancing_rulesets)
   end
@@ -78,7 +78,7 @@ class SaveSocialDistancingRulesetsTest < SeatsioTestClient
 
     retrieved_chart = @seatsio.charts.retrieve(chart.key)
     epected_rulesets = {
-        "ruleset1" => Seatsio::Domain::SocialDistancingRuleset.rule_based("My first ruleset", 1, true, 2, 1, 10, 0, true, ["A-1"], ["A-2"], 4),
+        "ruleset1" => Seatsio::SocialDistancingRuleset.rule_based("My first ruleset", 1, true, 2, 1, 10, 0, true, ["A-1"], ["A-2"], 4),
     }
     assert_equal(epected_rulesets, retrieved_chart.social_distancing_rulesets)
   end

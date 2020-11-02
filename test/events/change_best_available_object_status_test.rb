@@ -59,10 +59,10 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
 
-    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, Seatsio::Domain::ObjectStatus::HELD, hold_token: hold_token.hold_token)
+    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, Seatsio::ObjectStatus::HELD, hold_token: hold_token.hold_token)
 
     object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, object_status.status)
+    assert_equal(Seatsio::ObjectStatus::HELD, object_status.status)
     assert_equal(hold_token.hold_token, object_status.hold_token)
   end
 
@@ -101,7 +101,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     best_available_objects = @seatsio.events.hold_best_available(event.key, 1, hold_token.hold_token)
 
     object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, object_status.status)
+    assert_equal(Seatsio::ObjectStatus::HELD, object_status.status)
     assert_equal(hold_token.hold_token, object_status.hold_token)
   end
 

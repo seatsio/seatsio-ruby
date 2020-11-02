@@ -1,6 +1,6 @@
 require 'seatsio/util'
 
-module Seatsio::Domain
+module Seatsio
 
   module_function
 
@@ -61,6 +61,38 @@ module Seatsio::Domain
     end
   end
 
+  class TableBookingConfig
+
+    attr_reader :mode, :tables
+
+    def initialize(mode, tables = nil)
+      @mode = mode
+      @tables = tables
+    end
+
+    def self.inherit
+      TableBookingConfig.new('INHERIT')
+    end
+
+    def self.all_by_seat
+      TableBookingConfig.new('ALL_BY_SEAT')
+    end
+
+    def self.all_by_table
+      TableBookingConfig.new('ALL_BY_TABLE')
+    end
+
+    def self.custom(tables)
+      TableBookingConfig.new('CUSTOM', tables)
+    end
+
+    def self.from_json(data)
+      if data
+        TableBookingConfig.new(data['mode'], data['tables'])
+      end
+    end
+  end
+
   class Channel
     attr_reader :key, :name, :color, :index, :objects
 
@@ -84,17 +116,16 @@ module Seatsio::Domain
 
   class Event
 
-    attr_accessor :id, :key, :chart_key, :book_whole_tables, :supports_best_available,
-                  :table_booking_modes, :for_sale_config, :created_on, :updated_on, :channels,
+    attr_accessor :id, :key, :chart_key, :supports_best_available,
+                  :table_booking_config, :for_sale_config, :created_on, :updated_on, :channels,
                   :social_distancing_ruleset_key
 
     def initialize(data)
       @id = data['id']
       @key = data['key']
       @chart_key = data['chartKey']
-      @book_whole_tables = data['bookWholeTables']
       @supports_best_available = data['supportsBestAvailable']
-      @table_booking_modes = data['tableBookingModes']
+      @table_booking_config = TableBookingConfig::from_json(data['tableBookingConfig'])
       @for_sale_config = ForSaleConfig.new(data['forSaleConfig']) if data['forSaleConfig']
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
@@ -185,7 +216,7 @@ module Seatsio::Domain
     attr_reader :objects
 
     def initialize(data)
-      @objects = Seatsio::Domain.to_object_details(data['objects']);
+      @objects = Seatsio.to_object_details(data['objects']);
     end
   end
 
@@ -217,7 +248,7 @@ module Seatsio::Domain
     def initialize(data)
       @next_to_each_other = data['nextToEachOther']
       @objects = data['objects']
-      @object_details = Seatsio::Domain.to_object_details(data['objectDetails'])
+      @object_details = Seatsio.to_object_details(data['objectDetails'])
     end
   end
 

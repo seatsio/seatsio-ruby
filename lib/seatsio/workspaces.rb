@@ -18,7 +18,7 @@ module Seatsio
       body['isTest'] = is_test if is_test
 
       response = @http_client.post("workspaces", body)
-      Domain::Workspace.new(response)
+      Workspace.new(response)
     end
 
     def update(key:, name:)
@@ -52,13 +52,13 @@ module Seatsio
 
     def retrieve(key:)
       response = @http_client.get("/workspaces/#{key}")
-      Domain::Workspace.new(response)
+      Workspace.new(response)
     end
 
     private
 
     def cursor()
-      Pagination::Cursor.new(Domain::Workspace, 'workspaces', @http_client)
+      Pagination::Cursor.new(Workspace, 'workspaces', @http_client)
     end
   end
 end

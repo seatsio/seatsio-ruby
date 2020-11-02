@@ -18,8 +18,8 @@ class AssignObjectsToChannelsTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     expected_channels = [
-        Seatsio::Domain::Channel.new("channelKey1", "channel 1", "#FF0000", 1, ["A-1", "A-2"]),
-        Seatsio::Domain::Channel.new("channelKey2", "channel 2", "#0000FF", 2, ["A-3"])
+        Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, ["A-1", "A-2"]),
+        Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, ["A-3"])
     ]
     assert_equal(expected_channels, retrieved_event.channels)
 

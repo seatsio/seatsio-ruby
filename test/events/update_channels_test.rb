@@ -14,8 +14,8 @@ class UpdateEventTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     expected_channels = [
-        Seatsio::Domain::Channel.new("channelKey1", "channel 1", "#FF0000", 1, []),
-        Seatsio::Domain::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
+        Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, []),
+        Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
     ]
     assert_equal(expected_channels, retrieved_event.channels)
   end

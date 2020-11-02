@@ -9,7 +9,7 @@ class RetrieveChartTest < SeatsioTestClient
 
     retrieved_chart = @seatsio.charts.retrieve(chart.key)
 
-    assert_instance_of(Seatsio::Domain::Chart, retrieved_chart)
+    assert_instance_of(Seatsio::Chart, retrieved_chart)
     assert_operator(retrieved_chart.id, :!=, 0)
     assert(retrieved_chart.key != nil) # assert_that(retrieved_chart.key).is_not_blank()
     assert_equal('NOT_USED', retrieved_chart.status)

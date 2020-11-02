@@ -78,11 +78,11 @@ module Seatsio
       if report_filter
         url = "reports/events/#{event_key}/#{report_type}/#{report_filter}"
         body = @http_client.get(url)
-        Domain::EventReport.new(body[report_filter])
+        EventReport.new(body[report_filter])
       else
         url = "reports/events/#{event_key}/#{report_type}"
         body = @http_client.get(url)
-        Domain::EventReport.new(body)
+        EventReport.new(body)
       end
     end
   end

@@ -58,7 +58,7 @@ class ListAllChartsTest < SeatsioTestClient
 
     retrieved_charts = @seatsio.charts.list(expand_events: true).to_a
 
-    assert_instance_of(Seatsio::Domain::Event, retrieved_charts[0].events[0])
+    assert_instance_of(Seatsio::Event, retrieved_charts[0].events[0])
 
     event_ids = retrieved_charts[0].events.collect {|event| event.id}
     assert_equal([event2.id, event1.id], event_ids)

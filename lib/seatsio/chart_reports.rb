@@ -28,7 +28,7 @@ module Seatsio
       params = book_whole_tables.nil? ? {} : { bookWholeTables: book_whole_tables }
       url = "reports/charts/#{chart_key}/#{report_type}"
       body = @http_client.get(url, params)
-      Domain::ChartReport.new(body)
+      ChartReport.new(body)
     end
   end
 end

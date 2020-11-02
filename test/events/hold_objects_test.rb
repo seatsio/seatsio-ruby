@@ -10,11 +10,11 @@ class HoldObjectsTest < SeatsioTestClient
     res = @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token)
 
     status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, status1.status)
+    assert_equal(Seatsio::ObjectStatus::HELD, status1.status)
     assert_equal(hold_token.hold_token, status1.hold_token)
 
     status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, status2.status)
+    assert_equal(Seatsio::ObjectStatus::HELD, status2.status)
     assert_equal(hold_token.hold_token, status2.hold_token)
 
     assert_equal(res.objects.keys, ['A-1', 'A-2'])
@@ -61,7 +61,7 @@ class HoldObjectsTest < SeatsioTestClient
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, channel_keys: ["channelKey1"])
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, status.status)
+    assert_equal(Seatsio::ObjectStatus::HELD, status.status)
   end
 
   def test_ignore_channels
@@ -78,6 +78,6 @@ class HoldObjectsTest < SeatsioTestClient
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, ignore_channels: true)
 
     status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::Domain::ObjectStatus::HELD, status.status)
+    assert_equal(Seatsio::ObjectStatus::HELD, status.status)
   end
 end

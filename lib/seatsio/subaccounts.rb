@@ -17,7 +17,7 @@ module Seatsio
       body['name'] = name if name
 
       response = @http_client.post("subaccounts", body)
-      Domain::Subaccount.new(response)
+      Subaccount.new(response)
     end
 
     def update(id:, name: nil)
@@ -50,17 +50,17 @@ module Seatsio
 
     def retrieve(id:)
       response = @http_client.get("/subaccounts/#{id}")
-      Domain::Subaccount.new(response)
+      Subaccount.new(response)
     end
 
     def copy_chart_to_parent(id: nil, chart_key: nil)
       response = @http_client.post("/subaccounts/#{id}/charts/#{chart_key}/actions/copy-to/parent")
-      Domain::Chart.new(response)
+      Chart.new(response)
     end
 
     def copy_chart_to_subaccount(from_id: nil, to_id: nil, chart_key: nil)
       response = @http_client.post("/subaccounts/#{from_id}/charts/#{chart_key}/actions/copy-to/#{to_id}")
-      Domain::Chart.new(response)
+      Chart.new(response)
     end
 
     def regenerate_secret_key(id:)
@@ -75,7 +75,7 @@ module Seatsio
 
     def cursor(status: nil)
       endpoint = status ? "subaccounts/#{status}" : 'subaccounts'
-      Pagination::Cursor.new(Domain::Subaccount, endpoint, @http_client)
+      Pagination::Cursor.new(Subaccount, endpoint, @http_client)
     end
   end
 end

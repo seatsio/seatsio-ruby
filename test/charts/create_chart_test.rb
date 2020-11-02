@@ -5,7 +5,7 @@ class CreateChartTest < SeatsioTestClient
   def test_default_parameters
     chart = @seatsio.charts.create
 
-    assert_instance_of(Seatsio::Domain::Chart, chart)
+    assert_instance_of(Seatsio::Chart, chart)
     assert_operator(chart.id, :>, 0)
     assert chart.key != ''
     assert_equal('NOT_USED', chart.status)
