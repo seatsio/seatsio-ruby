@@ -22,10 +22,19 @@ module Seatsio
       @archived = data['archived']
       @validation = data['validation']
       @social_distancing_rulesets = data['socialDistancingRulesets'].map {
-          |key, r| [key, SocialDistancingRuleset.new(r['name'], r['numberOfDisabledSeatsToTheSides'], r['disableSeatsInFrontAndBehind'],
-                                                     r['numberOfDisabledAisleSeats'], r['maxGroupSize'],
-                                                     r['maxOccupancyAbsolute'], r['maxOccupancyPercentage'], r['oneGroupPerTable'], r['fixedGroupLayout'],
-                                                     r['disabledSeats'], r['enabledSeats'], r['index'])]
+          |key, r| [key, SocialDistancingRuleset.new(r['name'],
+                                                     number_of_disabled_seats_to_the_sides: r['numberOfDisabledSeatsToTheSides'],
+                                                     disable_seats_in_front_and_behind: r['disableSeatsInFrontAndBehind'],
+                                                     disable_diagonal_seats_in_front_and_behind: r['disableDiagonalSeatsInFrontAndBehind'],
+                                                     number_of_disabled_aisle_seats: r['numberOfDisabledAisleSeats'],
+                                                     max_group_size: r['maxGroupSize'],
+                                                     max_occupancy_absolute: r['maxOccupancyAbsolute'],
+                                                     max_occupancy_percentage: r['maxOccupancyPercentage'],
+                                                     one_group_per_table: r['oneGroupPerTable'],
+                                                     fixed_group_layout: r['fixedGroupLayout'],
+                                                     disabled_seats: r['disabledSeats'],
+                                                     enabled_seats: r['enabledSeats'],
+                                                     index: r['index'])]
       }.to_h
     end
   end
@@ -506,15 +515,16 @@ module Seatsio
 
   class SocialDistancingRuleset
     attr_reader :name, :number_of_disabled_seats_to_the_sides, :disable_seats_in_front_and_behind,
-                :number_of_disabled_aisle_seats, :max_group_size, :max_occupancy_absolute,
+                :disable_diagonal_seats_in_front_and_behind, :number_of_disabled_aisle_seats, :max_group_size, :max_occupancy_absolute,
                 :max_occupancy_percentage, :one_group_per_table, :fixed_group_layout, :disabled_seats, :enabled_seats, :index
 
-    def initialize(name, number_of_disabled_seats_to_the_sides = 0, disable_seats_in_front_and_behind = false, number_of_disabled_aisle_seats = 0,
-                   max_group_size = 0, max_occupancy_absolute = 0, max_occupancy_percentage = 0, one_group_per_table = false,
-                   fixed_group_layout = false, disabled_seats = [], enabled_seats = [], index = 0)
+    def initialize(name, number_of_disabled_seats_to_the_sides: 0, disable_seats_in_front_and_behind: false, disable_diagonal_seats_in_front_and_behind: false,
+                   number_of_disabled_aisle_seats: 0, max_group_size: 0, max_occupancy_absolute: 0, max_occupancy_percentage: 0, one_group_per_table: false,
+                   fixed_group_layout: false, disabled_seats: [], enabled_seats: [], index: 0)
       @name = name
       @number_of_disabled_seats_to_the_sides = number_of_disabled_seats_to_the_sides
       @disable_seats_in_front_and_behind = disable_seats_in_front_and_behind
+      @disable_diagonal_seats_in_front_and_behind = disable_diagonal_seats_in_front_and_behind
       @number_of_disabled_aisle_seats = number_of_disabled_aisle_seats
       @max_group_size = max_group_size
       @max_occupancy_absolute = max_occupancy_absolute
@@ -526,22 +536,33 @@ module Seatsio
       @index = index
     end
 
-    def self.fixed(name, disabled_seats = [], index = 0)
-      SocialDistancingRuleset.new(name, 0, false, 0, 0, 0, 0, false, true, disabled_seats, [], index)
+    def self.fixed(name, disabled_seats: [], index: 0)
+      return SocialDistancingRuleset.new(name, index: index, disabled_seats: disabled_seats, fixed_group_layout: true)
     end
 
-    def self.rule_based(name, number_of_disabled_seats_to_the_sides = 0, disable_seats_in_front_and_behind = false, number_of_disabled_aisle_seats = 0,
-                        max_group_size = 0, max_occupancy_absolute = 0, max_occupancy_percentage = 0, one_group_per_table = false,
-                        disabled_seats = [], enabled_seats = [], index = 0)
-      SocialDistancingRuleset.new(name, number_of_disabled_seats_to_the_sides, disable_seats_in_front_and_behind, number_of_disabled_aisle_seats,
-                                  max_group_size, max_occupancy_absolute, max_occupancy_percentage,
-                                  one_group_per_table, false, disabled_seats, enabled_seats, index)
+    def self.rule_based(name, number_of_disabled_seats_to_the_sides: 0, disable_seats_in_front_and_behind: false, disable_diagonal_seats_in_front_and_behind: false,
+                        number_of_disabled_aisle_seats: 0, max_group_size: 0, max_occupancy_absolute: 0, max_occupancy_percentage: 0, one_group_per_table: false,
+                        disabled_seats: [], enabled_seats: [], index: 0)
+      return SocialDistancingRuleset.new(name,
+                                         number_of_disabled_seats_to_the_sides: number_of_disabled_seats_to_the_sides,
+                                         disable_seats_in_front_and_behind: disable_seats_in_front_and_behind,
+                                         disable_diagonal_seats_in_front_and_behind: disable_diagonal_seats_in_front_and_behind,
+                                         number_of_disabled_aisle_seats: number_of_disabled_aisle_seats,
+                                         max_group_size: max_group_size,
+                                         max_occupancy_absolute: max_occupancy_absolute,
+                                         max_occupancy_percentage: max_occupancy_percentage,
+                                         one_group_per_table: one_group_per_table,
+                                         fixed_group_layout: false,
+                                         disabled_seats: disabled_seats,
+                                         enabled_seats: enabled_seats,
+                                         index: index)
     end
 
     def == (other)
       self.name == other.name &&
           self.number_of_disabled_seats_to_the_sides == other.number_of_disabled_seats_to_the_sides &&
           self.disable_seats_in_front_and_behind == other.disable_seats_in_front_and_behind &&
+          self.disable_diagonal_seats_in_front_and_behind == other.disable_diagonal_seats_in_front_and_behind &&
           self.number_of_disabled_aisle_seats == other.number_of_disabled_aisle_seats &&
           self.max_group_size == other.max_group_size &&
           self.max_occupancy_absolute == other.max_occupancy_absolute &&
