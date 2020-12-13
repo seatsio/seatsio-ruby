@@ -49,12 +49,12 @@ module Seatsio
       ObjectStatus.new(response)
     end
 
-    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      self.change_object_status(event_key_or_keys, object_or_objects, ObjectStatus::BOOKED, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
+    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil)
+      self.change_object_status(event_key_or_keys, object_or_objects, ObjectStatus::BOOKED, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys, ignore_social_distancing: ignore_social_distancing)
     end
 
-    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys)
+    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil)
+      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, ignore_social_distancing)
       request[:params] = {
           :expand => 'objects'
       }
@@ -71,8 +71,8 @@ module Seatsio
       ChangeObjectStatusInBatchResult.new(response).results
     end
 
-    def hold(event_key_or_keys, object_or_objects, hold_token, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      change_object_status(event_key_or_keys, object_or_objects, ObjectStatus::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
+    def hold(event_key_or_keys, object_or_objects, hold_token, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil)
+      change_object_status(event_key_or_keys, object_or_objects, ObjectStatus::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys, ignore_social_distancing: ignore_social_distancing)
     end
 
     def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, ticket_types: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
@@ -96,7 +96,6 @@ module Seatsio
     def delete(key:)
       @http_client.delete("/events/#{key}")
     end
-
 
     def retrieve(key:)
       response = @http_client.get("events/#{key}")

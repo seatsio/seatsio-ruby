@@ -1,4 +1,4 @@
-def create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys)
+def create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, ignore_social_distancing)
   result = {}
   result[:objects] = normalize(object_or_objects)
   result[:status] = status
@@ -12,6 +12,7 @@ def create_change_object_status_request(object_or_objects, status, hold_token, o
   result[:keepExtraData] = keep_extra_data if keep_extra_data != nil
   result[:ignoreChannels] = ignore_channels if ignore_channels != nil
   result[:channelKeys] = channel_keys if channel_keys != nil
+  result[:ignoreSocialDistancing] = ignore_social_distancing if ignore_social_distancing != nil
   result
 end
 
