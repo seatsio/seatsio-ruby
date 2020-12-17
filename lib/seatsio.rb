@@ -9,12 +9,12 @@ require 'seatsio/event_reports'
 require 'seatsio/usage_reports'
 
 module Seatsio
-  # Main Seatsio Class
   class Client
     attr_reader :charts, :subaccounts, :workspaces, :events,
                 :hold_tokens, :chart_reports, :event_reports, :usage_reports
 
-    def initialize(secret_key, workspace_key = nil, base_url = 'https://api.seatsio.net')
+    def initialize(region, secret_key, workspace_key = nil)
+      base_url = region.url
       @charts = ChartsClient.new(secret_key, workspace_key, base_url)
       @subaccounts = SubaccountsClient.new(secret_key, workspace_key, base_url)
       @workspaces = WorkspacesClient.new(secret_key, base_url)
@@ -23,6 +23,26 @@ module Seatsio
       @chart_reports = ChartReportsClient.new(secret_key, workspace_key, base_url)
       @event_reports = EventReportsClient.new(secret_key, workspace_key, base_url)
       @usage_reports = UsageReportsClient.new(secret_key, workspace_key, base_url)
+    end
+  end
+
+  class Region
+    attr_reader :url
+
+    def initialize(url)
+      @url = url
+    end
+
+    def self.US()
+      return Region.new(Region.url_for_id("us"))
+    end
+
+    def self.EU()
+      return Region.new(Region.url_for_id("eu"))
+    end
+
+    def self.url_for_id(id)
+      return "https://api-" + id + ".seatsio.net"
     end
   end
 end

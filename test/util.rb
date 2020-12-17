@@ -5,7 +5,7 @@ require 'seatsio/exception'
 BASE_URL = "https://api-staging.seatsio.net"
 
 def test_client(secretKey, workspaceKey)
-  Seatsio::Client.new(secretKey, workspaceKey, BASE_URL)
+  Seatsio::Client.new(Seatsio::Region.new(BASE_URL), secretKey, workspaceKey)
 end
 
 def create_test_user
