@@ -15,24 +15,48 @@ module Seatsio
       fetch_summary_report('byStatus', event_key)
     end
 
+    def deep_summary_by_status(event_key)
+      fetch_deep_summary_report('byStatus', event_key)
+    end
+
     def summary_by_category_key(event_key)
       fetch_summary_report('byCategoryKey', event_key)
+    end
+
+    def deep_summary_by_category_key(event_key)
+      fetch_deep_summary_report('byCategoryKey', event_key)
     end
 
     def summary_by_category_label(event_key)
       fetch_summary_report('byCategoryLabel', event_key)
     end
 
+    def deep_summary_by_category_label(event_key)
+      fetch_deep_summary_report('byCategoryLabel', event_key)
+    end
+
     def summary_by_section(event_key)
       fetch_summary_report('bySection', event_key)
+    end
+
+    def deep_summary_by_section(event_key)
+      fetch_deep_summary_report('bySection', event_key)
     end
 
     def summary_by_selectability(event_key)
       fetch_summary_report('bySelectability', event_key)
     end
 
+    def deep_summary_by_selectability(event_key)
+      fetch_deep_summary_report('bySelectability', event_key)
+    end
+
     def summary_by_channel(event_key)
       fetch_summary_report('byChannel', event_key)
+    end
+
+    def deep_summary_by_channel(event_key)
+      fetch_deep_summary_report('byChannel', event_key)
     end
 
     def by_label(event_key, label = nil)
@@ -71,6 +95,11 @@ module Seatsio
 
     def fetch_summary_report(report_type, event_key)
       url = "reports/events/#{event_key}/#{report_type}/summary"
+      @http_client.get(url)
+    end
+
+    def fetch_deep_summary_report(report_type, event_key)
+      url = "reports/events/#{event_key}/#{report_type}/summary/deep"
       @http_client.get(url)
     end
 
