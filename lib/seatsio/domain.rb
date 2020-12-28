@@ -383,15 +383,15 @@ module Seatsio
 
   class UsageDetails
 
-    attr_reader :subaccount
+    attr_reader :workspace
 
     def initialize(data)
-      @subaccount = data['subaccount'] ? UsageSubaccount.new(data['subaccount']) : nil
+      @workspace = data['workspace'] ? UsageWorkspace.new(data['workspace']) : nil
       @usage_by_chart = data['usageByChart'].map { |usage| UsageByChart.new(usage) }
     end
   end
 
-  class UsageSubaccount
+  class UsageWorkspace
 
     attr_reader :id
 
