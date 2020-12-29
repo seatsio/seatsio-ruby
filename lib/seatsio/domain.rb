@@ -383,20 +383,11 @@ module Seatsio
 
   class UsageDetails
 
-    attr_reader :workspace
+    attr_reader :workspace, @usage_by_chart
 
     def initialize(data)
-      @workspace = data['workspace'] ? UsageWorkspace.new(data['workspace']) : nil
+      @workspace = data['workspace']
       @usage_by_chart = data['usageByChart'].map { |usage| UsageByChart.new(usage) }
-    end
-  end
-
-  class UsageWorkspace
-
-    attr_reader :id
-
-    def initialize(data)
-      @id = data['id']
     end
   end
 
