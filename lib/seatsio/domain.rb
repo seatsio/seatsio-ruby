@@ -383,7 +383,7 @@ module Seatsio
 
   class UsageDetails
 
-    attr_reader :workspace, @usage_by_chart
+    attr_reader :workspace, :usage_by_chart
 
     def initialize(data)
       @workspace = data['workspace']
