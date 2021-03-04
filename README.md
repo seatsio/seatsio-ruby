@@ -1,6 +1,6 @@
 # seatsio-ruby, the official Seats.io Ruby client library
 
-[![Build Status](https://travis-ci.org/seatsio/seatsio-ruby.svg?branch=master)](https://travis-ci.org/seatsio/seatsio-ruby)
+![Build](https://github.com/seatsio/seatsio-ruby/workflows/Build/badge.svg)
 
 This is the official Ruby client library for the [Seats.io V2 REST API](https://docs.seats.io/docs/api-overview), supporting Ruby 2.2.0+
 

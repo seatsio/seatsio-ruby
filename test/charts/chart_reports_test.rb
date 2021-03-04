@@ -22,6 +22,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_nil(report_item.capacity)
     assert_nil(report_item.left_neighbour)
     assert_equal('A-2', report_item.right_neighbour)
+    assert_nil(report_item.book_as_a_whole)
   end
 
   def test_report_item_properties_for_GA
@@ -39,6 +40,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_nil(report_item.section)
     assert_nil(report_item.entrance)
     assert_equal(100, report_item.capacity)
+    assert_false(report_item.book_as_a_whole)
   end
 
   def test_by_label

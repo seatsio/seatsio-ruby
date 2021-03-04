@@ -25,7 +25,7 @@ class CreateEventTest < SeatsioTestClient
     assert_equal('eventje', event.key)
   end
 
-  def test_table_booking_config_is_optional
+  def test_table_booking_config_custom_can_be_used
     chart_key = create_test_chart_with_tables
     table_booking_config = Seatsio::TableBookingConfig::custom({'T1' => 'BY_TABLE', 'T2' => 'BY_SEAT'})
 
@@ -33,6 +33,14 @@ class CreateEventTest < SeatsioTestClient
     assert_operator(event.key, :!=, '')
     assert_equal(table_booking_config.mode, event.table_booking_config.mode)
     assert_equal(table_booking_config.tables, event.table_booking_config.tables)
+  end
+
+  def test_table_booking_config_inherit_can_be_used
+    chart_key = create_test_chart_with_tables
+
+    event = @seatsio.events.create chart_key: chart_key, table_booking_config: Seatsio::TableBookingConfig::inherit()
+    assert_operator(event.key, :!=, '')
+    assert_equal('INHERIT', event.table_booking_config.mode)
   end
 
   def test_social_distancing_ruleset_key_is_optional
