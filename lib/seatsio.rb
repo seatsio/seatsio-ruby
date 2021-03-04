@@ -33,12 +33,20 @@ module Seatsio
       @url = url
     end
 
-    def self.US()
-      return Region.new(Region.url_for_id("us"))
-    end
-
     def self.EU()
       return Region.new(Region.url_for_id("eu"))
+    end
+
+    def self.NA()
+      return Region.new(Region.url_for_id("na"))
+    end
+
+    def self.SA()
+      return Region.new(Region.url_for_id("sa"))
+    end
+
+    def self.OC()
+      return Region.new(Region.url_for_id("oc"))
     end
 
     def self.url_for_id(id)
