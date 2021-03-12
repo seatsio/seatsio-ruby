@@ -2,10 +2,10 @@ require "rest-client"
 require "json"
 require 'seatsio/exception'
 
-BASE_URL = "https://api-staging.seatsio.net"
+BASE_URL = "https://api-staging-eu.seatsio.net"
 
 def test_client(secretKey, workspaceKey)
-  Seatsio::Client.new(secretKey, workspaceKey, BASE_URL)
+  Seatsio::Client.new(Seatsio::Region.new(BASE_URL), secretKey, workspaceKey)
 end
 
 def create_test_user

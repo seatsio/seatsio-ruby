@@ -14,7 +14,7 @@ seatsio-ruby follows semver since v23.3.0.
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-workspace-secret-key") # can be found on https://app.seats.io/workspace-settings
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key") # can be found on https://app.seats.io/workspace-settings
 chart = client.charts.create
 event = client.events.create key: chart.key
 ```
@@ -23,7 +23,7 @@ event = client.events.create key: chart.key
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-workspace-secret-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 client.events.book(event.key, ["A-1", "A-2"])
 ```
 
@@ -31,7 +31,7 @@ client.events.book(event.key, ["A-1", "A-2"])
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-workspace-secret-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 client.events.release(event.key, ["A-1", "A-2"])
 ```
 
@@ -39,7 +39,7 @@ client.events.release(event.key, ["A-1", "A-2"])
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-workspace-secret-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 client.events.book(event.key, ["A-1", "A-2"], hold_token: "a-hold-token")
 ```
 
@@ -47,7 +47,7 @@ client.events.book(event.key, ["A-1", "A-2"], hold_token: "a-hold-token")
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-workspace-secret-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 client.events.change_object_status("<EVENT KEY>", ["A-1", "A-2"], "my-custom-status")
 ```
 
@@ -55,7 +55,7 @@ client.events.change_object_status("<EVENT KEY>", ["A-1", "A-2"], "my-custom-sta
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-workspace-secret-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 charts = client.charts.list
 charts.each do |chart|
   puts chart.key
@@ -101,7 +101,7 @@ end
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new("my-company-admin-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-company-admin-key")
 client.workspaces.create name: "a workspace"
 ```
 
