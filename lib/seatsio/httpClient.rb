@@ -41,9 +41,6 @@ module Seatsio
       rescue RestClient::NotFound => e
         raise Exception::NotFoundException.new(e.response)
       rescue RestClient::ExceptionWithResponse => e
-        if e.response.empty?
-          raise Exception::NoMorePagesException
-        end
         raise Exception::SeatsioException.new(e.response)
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")

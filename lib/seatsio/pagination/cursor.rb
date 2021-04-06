@@ -89,8 +89,6 @@ module Seatsio
 
         @collection += parsed_items
         set_query_param(:start_after_id, items.last['id']) unless last?
-      rescue Seatsio::Exception::NoMorePagesException
-        @last_response_empty = true
       end
     end
   end
