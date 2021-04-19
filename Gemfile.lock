@@ -41,7 +41,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.16)
+  bundler (~> 2.2)
   minitest (~> 5.0)
   rake (~> 13.0)
   rest-client (~> 2.0, >= 2.0.2)
