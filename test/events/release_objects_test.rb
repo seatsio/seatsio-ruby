@@ -17,7 +17,7 @@ class ReleaseObjectsTest < SeatsioTestClient
     assert_equal(Seatsio::ObjectStatus::FREE, a2_status)
     assert_equal(Seatsio::ObjectStatus::FREE, a3_status)
 
-    assert_equal(res.objects.keys, ['A-1', 'A-2'])
+    assert_equal(res.objects.keys.sort, ['A-1', 'A-2'])
   end
 
   def test_with_hold_token
