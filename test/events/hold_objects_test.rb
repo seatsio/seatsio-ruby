@@ -17,7 +17,7 @@ class HoldObjectsTest < SeatsioTestClient
     assert_equal(Seatsio::ObjectStatus::HELD, status2.status)
     assert_equal(hold_token.hold_token, status2.hold_token)
 
-    assert_equal(res.objects.keys, ['A-1', 'A-2'])
+    assert_equal(res.objects.keys.sort, ['A-1', 'A-2'])
   end
 
   def test_with_order_id
