@@ -17,6 +17,17 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
     assert_equal(1, report['booked']['bySection']['NO_SECTION']['bySelectability']['not_selectable'])
   end
 
+  def test_deep_summary_by_object_type
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.deep_summary_by_object_type(event.key)
+
+    assert_equal(32, report['seat']['count'])
+    assert_equal(32, report['seat']['bySection']['NO_SECTION']['count'])
+    assert_equal(32, report['seat']['bySection']['NO_SECTION']['bySelectability']['selectable'])
+  end
+
   def test_deep_summary_by_category_key
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key

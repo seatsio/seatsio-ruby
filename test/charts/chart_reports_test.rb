@@ -89,6 +89,14 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(12, report.items.length)
   end
 
+  def test_by_object_type
+    chart_key = create_test_chart
+    report = @seatsio.chart_reports.by_object_type(chart_key)
+    assert_equal(2, report.items.length)
+    assert_equal(32, report.items["seat"].length)
+    assert_equal(2, report.items["generalAdmission"].length)
+  end
+
   def test_by_category_key
     chart_key = create_test_chart
     report = @seatsio.chart_reports.by_category_key(chart_key)

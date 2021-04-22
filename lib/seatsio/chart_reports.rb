@@ -14,6 +14,10 @@ module Seatsio
       get_chart_report('byLabel', chart_key, book_whole_tables)
     end
 
+    def by_object_type(chart_key, book_whole_tables = nil)
+      get_chart_report('byObjectType', chart_key, book_whole_tables)
+    end
+
     def by_category_key(chart_key, book_whole_tables = nil)
       get_chart_report('byCategoryKey', chart_key, book_whole_tables)
     end

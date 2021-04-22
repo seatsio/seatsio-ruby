@@ -27,6 +27,31 @@ class EventReportsSummaryTest < SeatsioTestClient
     assert_equal(231, report['free']['byChannel']['NO_CHANNEL'])
   end
 
+  def test_summary_by_object_type
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.summary_by_object_type(event.key)
+
+    assert_equal(32, report['seat']['count'])
+    assert_equal(32, report['seat']['bySection']['NO_SECTION'])
+    assert_equal(16, report['seat']['byCategoryKey']['9'])
+    assert_equal(16, report['seat']['byCategoryKey']['10'])
+    assert_equal(16, report['seat']['byCategoryLabel']['Cat1'])
+    assert_equal(16, report['seat']['byCategoryLabel']['Cat2'])
+    assert_equal(32, report['seat']['byChannel']['NO_CHANNEL'])
+    assert_equal(32, report['seat']['byStatus']['free'])
+
+    assert_equal(200, report['generalAdmission']['count'])
+    assert_equal(200, report['generalAdmission']['bySection']['NO_SECTION'])
+    assert_equal(100, report['generalAdmission']['byCategoryKey']['9'])
+    assert_equal(100, report['generalAdmission']['byCategoryKey']['10'])
+    assert_equal(100, report['generalAdmission']['byCategoryLabel']['Cat1'])
+    assert_equal(100, report['generalAdmission']['byCategoryLabel']['Cat2'])
+    assert_equal(200, report['generalAdmission']['byChannel']['NO_CHANNEL'])
+    assert_equal(200, report['generalAdmission']['byStatus']['free'])
+  end
+
   def test_summary_by_category_key
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key

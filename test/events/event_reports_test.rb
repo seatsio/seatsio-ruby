@@ -117,6 +117,18 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(31, report.items['free'].length)
   end
 
+  def test_by_object_type
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.by_object_type(event.key)
+
+    assert_equal(32, report.items['seat'].length)
+    assert_equal(2, report.items['generalAdmission'].length)
+    assert_equal(0, report.items['booth'].length)
+    assert_equal(0, report.items['table'].length)
+  end
+
   def test_by_status_empty_chart
     chart_key = @seatsio.charts.create.key
     event = @seatsio.events.create chart_key: chart_key
