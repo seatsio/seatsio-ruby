@@ -58,6 +58,7 @@ class EventReportsTest < SeatsioTestClient
     assert_false(report_item.is_selectable)
     assert_false(report_item.is_disabled_by_social_distancing)
     assert_equal('channelKey1', report_item.channel)
+    assert_not_nil(report_item.distance_to_focal_point)
   end
 
   def test_hold_token

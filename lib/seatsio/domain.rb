@@ -264,7 +264,7 @@ module Seatsio
   class ChartReportItem
 
     attr_reader :label, :labels, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
-                :left_neighbour, :right_neighbour, :book_as_a_whole
+                :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point
 
     def initialize(data)
       @label = data['label']
@@ -278,6 +278,7 @@ module Seatsio
       @left_neighbour = data['leftNeighbour']
       @right_neighbour = data['rightNeighbour']
       @book_as_a_whole = data['bookAsAWhole']
+      @distance_to_focal_point = data['distanceToFocalPoint']
     end
   end
 
@@ -329,7 +330,7 @@ module Seatsio
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_selectable, :is_disabled_by_social_distancing, :channel,
-                :book_as_a_whole
+                :book_as_a_whole, :distance_to_focal_point
 
     def initialize(data)
       @status = data['status']
@@ -359,6 +360,7 @@ module Seatsio
       @is_disabled_by_social_distancing = data['isDisabledBySocialDistancing']
       @channel = data['channel']
       @book_as_a_whole = data['bookAsAWhole']
+      @distance_to_focal_point = data['distanceToFocalPoint']
     end
   end
 
