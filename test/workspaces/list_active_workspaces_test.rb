@@ -1,26 +1,29 @@
 require 'test_helper'
 require 'util'
 
-class ListAllWorkspacesTest < SeatsioTestClient
-  def test_list_all_workspaces
+class ListActiveWorkspacesTest < SeatsioTestClient
+  def test_list_active_workspaces
     @seatsio.workspaces.create name: 'ws1'
     ws2 = @seatsio.workspaces.create name: 'ws2'
     @seatsio.workspaces.deactivate key: ws2.key
     @seatsio.workspaces.create name: 'ws3'
 
-    workspaces = @seatsio.workspaces.list
+    workspaces = @seatsio.workspaces.active.each
 
     workspace_names = workspaces.collect { |workspace| workspace.name }
-    assert_equal(['ws3', 'ws2', 'ws1', 'Default workspace'], workspace_names)
+    assert_equal(['ws3', 'ws1', 'Default workspace'], workspace_names)
   end
 
   def test_filter
     @seatsio.workspaces.create name: 'someWorkspace'
-    ws = @seatsio.workspaces.create name: 'anotherWorkspace'
-    @seatsio.workspaces.deactivate key: ws.key
+    @seatsio.workspaces.create name: 'anotherWorkspace'
     @seatsio.workspaces.create name: 'anotherAnotherWorkspace'
+    ws = @seatsio.workspaces.create name: 'anotherAnotherAnotherWorkspace'
+    @seatsio.workspaces.deactivate key: ws.key
 
-    workspaces = @seatsio.workspaces.list filter: 'another'
+    cursor = @seatsio.workspaces.active
+    cursor.set_query_param('filter', 'another')
+    workspaces = cursor.each
 
     workspace_names = workspaces.collect { |workspace| workspace.name }
     assert_equal(['anotherAnotherWorkspace', 'anotherWorkspace'], workspace_names)
