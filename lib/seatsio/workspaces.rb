@@ -9,13 +9,8 @@ require "seatsio/domain"
 module Seatsio
   class WorkspacesClient
 
-    attr_reader :active
-    attr_reader :inactive
-
     def initialize(secret_key, base_url)
       @http_client = ::Seatsio::HttpClient.new(secret_key, nil, base_url)
-      @active = Pagination::Cursor.new(Workspace, 'workspaces/active', @http_client)
-      @inactive = Pagination::Cursor.new(Workspace, 'workspaces/inactive', @http_client)
     end
 
     def create(name:, is_test: nil)
@@ -52,6 +47,18 @@ module Seatsio
 
     def list(filter: nil)
       extended_cursor = cursor
+      extended_cursor.set_query_param('filter', filter)
+      extended_cursor
+    end
+
+    def active(filter: nil)
+      extended_cursor = Pagination::Cursor.new(Workspace, 'workspaces/active', @http_client)
+      extended_cursor.set_query_param('filter', filter)
+      extended_cursor
+    end
+
+    def inactive(filter: nil)
+      extended_cursor = Pagination::Cursor.new(Workspace, 'workspaces/inactive', @http_client)
       extended_cursor.set_query_param('filter', filter)
       extended_cursor
     end

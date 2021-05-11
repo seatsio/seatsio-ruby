@@ -8,7 +8,7 @@ class ListActiveWorkspacesTest < SeatsioTestClient
     @seatsio.workspaces.deactivate key: ws2.key
     @seatsio.workspaces.create name: 'ws3'
 
-    workspaces = @seatsio.workspaces.active.each
+    workspaces = @seatsio.workspaces.active
 
     workspace_names = workspaces.collect { |workspace| workspace.name }
     assert_equal(['ws3', 'ws1', 'Default workspace'], workspace_names)
@@ -21,9 +21,7 @@ class ListActiveWorkspacesTest < SeatsioTestClient
     ws = @seatsio.workspaces.create name: 'anotherAnotherAnotherWorkspace'
     @seatsio.workspaces.deactivate key: ws.key
 
-    cursor = @seatsio.workspaces.active
-    cursor.set_query_param('filter', 'another')
-    workspaces = cursor.each
+    workspaces = @seatsio.workspaces.active filter: 'another'
 
     workspace_names = workspaces.collect { |workspace| workspace.name }
     assert_equal(['anotherAnotherWorkspace', 'anotherWorkspace'], workspace_names)
