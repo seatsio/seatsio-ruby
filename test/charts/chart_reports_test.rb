@@ -14,6 +14,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_instance_of(Seatsio::ChartReportItem, report_item)
     assert_equal('A-1', report_item.label)
     assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, report_item.labels)
+    assert_equal({'own' => '1', 'parent' => 'A'}, report_item.ids)
     assert_equal('Cat1', report_item.category_label)
     assert_equal('9', report_item.category_key)
     assert_equal('seat', report_item.object_type)

@@ -17,6 +17,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
     assert_equal('status_foo', a1.status)
     assert_equal('A-1', a1.label)
     assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, a1.labels)
+    assert_equal({'own' => '1', 'parent' => 'A'}, a1.ids)
     assert_equal('Cat1', a1.category_label)
     assert_equal('9', a1.category_key)
     assert_nil(a1.ticket_type)

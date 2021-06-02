@@ -37,6 +37,7 @@ class EventReportsTest < SeatsioTestClient
     assert_equal('booked', report_item.status)
     assert_equal('A-1', report_item.label)
     assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, report_item.labels)
+    assert_equal({'own' => '1', 'parent' => 'A'}, report_item.ids)
     assert_equal('Cat1', report_item.category_label)
     assert_equal('9', report_item.category_key)
     assert_equal('tt1', report_item.ticket_type)

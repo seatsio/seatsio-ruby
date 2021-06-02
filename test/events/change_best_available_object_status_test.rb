@@ -21,6 +21,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal('myStatus', b5.status)
     assert_equal('B-5', b5.label)
     assert_equal({'own' => {'label' => '5', 'type' => 'seat'}, 'parent' => {'label' => 'B', 'type' => 'row'}}, b5.labels)
+    assert_equal({'own' => '5', 'parent' => 'B'}, b5.ids)
     assert_equal('Cat1', b5.category_label)
     assert_equal('9', b5.category_key)
     assert_nil(b5.ticket_type)

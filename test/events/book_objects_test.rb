@@ -45,6 +45,10 @@ class BookObjectsTest < SeatsioTestClient
       {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}, 'section' => 'Section A', 'entrance' => {'label' => 'Entrance 1'}},
       seat_a1.labels
     )
+    assert_equal(
+      {'own' => '1', 'parent' => 'A', 'section' => 'Section A'},
+      seat_a1.ids
+    )
   end
 
   def test_with_hold_token

@@ -263,12 +263,13 @@ module Seatsio
 
   class ChartReportItem
 
-    attr_reader :label, :labels, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
+    attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
                 :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point
 
     def initialize(data)
       @label = data['label']
       @labels = data['labels']
+      @ids = data['ids']
       @category_label = data['categoryLabel']
       @category_key = data['categoryKey']
       @section = data['section']
@@ -325,7 +326,7 @@ module Seatsio
   end
 
   class EventReportItem
-    attr_reader :labels, :label, :order_id, :extra_data, :capacity, :status,
+    attr_reader :labels, :ids, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
@@ -336,6 +337,7 @@ module Seatsio
       @status = data['status']
       @label = data['label']
       @labels = data['labels']
+      @ids = data['ids']
       @category_label = data['categoryLabel']
       @category_key = data['categoryKey']
       @ticket_type = data['ticketType']
