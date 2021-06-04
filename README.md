@@ -17,7 +17,7 @@ seatsio-ruby follows semver since v23.3.0.
 require('seatsio')
 client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key") # can be found on https://app.seats.io/workspace-settings
 chart = client.charts.create
-event = client.events.create key: chart.key
+event = client.events.create chart_key: chart.key
 ```
 
 ### Booking objects
