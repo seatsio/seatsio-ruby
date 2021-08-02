@@ -6,7 +6,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.7.0)
+    addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     crack (0.4.5)
       rexml
@@ -22,7 +22,7 @@ GEM
     minitest (5.14.4)
     netrc (0.11.0)
     public_suffix (4.0.6)
-    rake (13.0.3)
+    rake (13.0.6)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
