@@ -13,9 +13,9 @@ module Seatsio
     attr_reader :charts, :subaccounts, :workspaces, :events,
                 :hold_tokens, :chart_reports, :event_reports, :usage_reports
 
-    def initialize(region, secret_key, workspace_key = nil)
+    def initialize(region, secret_key, workspace_key = nil, max_retries = 5)
       base_url = region.url
-      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
+      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url, max_retries)
       @charts = ChartsClient.new(@http_client)
       @subaccounts = SubaccountsClient.new(@http_client)
       @workspaces = WorkspacesClient.new(@http_client)
@@ -26,10 +26,6 @@ module Seatsio
       @usage_reports = UsageReportsClient.new(@http_client)
     end
 
-    def max_retries(max_retries)
-      @http_client.set_max_retries(max_retries)
-      self
-    end
   end
 
 

@@ -127,7 +127,7 @@ To change the maximum number of retries, create the client as follows:
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key").max_retries(3)
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key", max_retries = 3)
 ```
 
 Passing in 0 disables exponential backoff completely. In that case, the client will never retry a failed request.

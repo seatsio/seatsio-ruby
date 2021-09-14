@@ -6,11 +6,11 @@ require "uri"
 
 module Seatsio
   class HttpClient
-    def initialize(secret_key, workspace_key, base_url)
+    def initialize(secret_key, workspace_key, base_url, max_retries)
       @secret_key = Base64.encode64(secret_key)
       @workspace_key = workspace_key
       @base_url = base_url
-      @max_retries = 5
+      @max_retries = max_retries
     end
 
     def execute(*args)
@@ -82,11 +82,6 @@ module Seatsio
 
     def delete(endpoint)
       execute(:delete, endpoint, {})
-    end
-
-    def set_max_retries(max_retries)
-      @max_retries = max_retries
-      self
     end
   end
 end

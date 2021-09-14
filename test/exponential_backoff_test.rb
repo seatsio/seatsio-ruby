@@ -5,7 +5,7 @@ class ExponentialBackoffTest < SeatsioTestClient
   def test_aborts_eventually_if_server_keeps_returning_429
     start = Time.now
     begin
-      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org")
+      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org", 5)
       client.get("/status/429")
       raise "Should have failed"
     rescue Seatsio::Exception::SeatsioException => e
@@ -18,7 +18,7 @@ class ExponentialBackoffTest < SeatsioTestClient
   def test_aborts_directly_if_server_returns_other_error_than_429
     start = Time.now
     begin
-      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org")
+      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org", 5)
       client.get("/status/400")
       raise "Should have failed"
     rescue Seatsio::Exception::SeatsioException => e
@@ -31,7 +31,7 @@ class ExponentialBackoffTest < SeatsioTestClient
   def test_aborts_directly_if_server_returns_429_but_0_max_retries
     start = Time.now
     begin
-      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org").set_max_retries(0)
+      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org", 0)
       client.get("/status/429")
       raise "Should have failed"
     rescue Seatsio::Exception::SeatsioException => e
@@ -42,7 +42,7 @@ class ExponentialBackoffTest < SeatsioTestClient
   end
 
   def test_returns_successfully_when_server_sends_429_and_then_successful_response
-    client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org")
+    client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org", 5)
 
     i = 0
     while i < 20
