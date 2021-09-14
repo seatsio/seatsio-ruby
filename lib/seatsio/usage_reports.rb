@@ -6,8 +6,8 @@ require 'cgi'
 
 module Seatsio
   class UsageReportsClient
-    def initialize(secret_key, workspace_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
+    def initialize(http_client)
+      @http_client = http_client
     end
 
     def summary_for_all_months

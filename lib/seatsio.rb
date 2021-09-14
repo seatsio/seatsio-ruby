@@ -15,16 +15,23 @@ module Seatsio
 
     def initialize(region, secret_key, workspace_key = nil)
       base_url = region.url
-      @charts = ChartsClient.new(secret_key, workspace_key, base_url)
-      @subaccounts = SubaccountsClient.new(secret_key, workspace_key, base_url)
-      @workspaces = WorkspacesClient.new(secret_key, base_url)
-      @events = EventsClient.new(secret_key, workspace_key, base_url)
-      @hold_tokens = HoldTokensClient.new(secret_key, workspace_key, base_url)
-      @chart_reports = ChartReportsClient.new(secret_key, workspace_key, base_url)
-      @event_reports = EventReportsClient.new(secret_key, workspace_key, base_url)
-      @usage_reports = UsageReportsClient.new(secret_key, workspace_key, base_url)
+      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
+      @charts = ChartsClient.new(@http_client)
+      @subaccounts = SubaccountsClient.new(@http_client)
+      @workspaces = WorkspacesClient.new(@http_client)
+      @events = EventsClient.new(@http_client)
+      @hold_tokens = HoldTokensClient.new(@http_client)
+      @chart_reports = ChartReportsClient.new(@http_client)
+      @event_reports = EventReportsClient.new(@http_client)
+      @usage_reports = UsageReportsClient.new(@http_client)
+    end
+
+    def max_retries(max_retries)
+      @http_client.max_retries=(max_retries)
+      self
     end
   end
+
 
   class Region
     attr_reader :url

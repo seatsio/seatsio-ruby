@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    seatsio (32.5.0)
+    seatsio (32.6.0)
 
 GEM
   remote: https://rubygems.org/

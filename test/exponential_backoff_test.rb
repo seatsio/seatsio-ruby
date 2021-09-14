@@ -28,6 +28,19 @@ class ExponentialBackoffTest < SeatsioTestClient
     end
   end
 
+  def test_aborts_directly_if_server_returns_429_but_0_max_retries
+    start = Time.now
+    begin
+      client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org").max_retries(0)
+      client.get("/status/429")
+      raise "Should have failed"
+    rescue Seatsio::Exception::SeatsioException => e
+      assert_equal(429, e.message.code)
+      wait_time = Time.now.to_i - start.to_i
+      assert_true(wait_time < 2)
+    end
+  end
+
   def test_returns_successfully_when_server_sends_429_and_then_successful_response
     client = Seatsio::HttpClient.new("aSecretKey", nil, "https://httpbin.org")
 

@@ -10,6 +10,7 @@ module Seatsio
       @secret_key = Base64.encode64(secret_key)
       @workspace_key = workspace_key
       @base_url = base_url
+      @max_retries = 5
     end
 
     def execute(*args)
@@ -55,7 +56,7 @@ module Seatsio
         begin
           return RestClient::Request.execute(request_options)
         rescue RestClient::ExceptionWithResponse => e
-          if e.response.code != 429 || retry_count >= 5
+          if e.response.code != 429 || retry_count >= @max_retries
             raise e
           else
             wait_time = (2 ** (retry_count + 2)) / 10.0
@@ -81,6 +82,10 @@ module Seatsio
 
     def delete(endpoint)
       execute(:delete, endpoint, {})
+    end
+
+    def max_retries=(max_retries)
+      @max_retries = max_retries
     end
   end
 end

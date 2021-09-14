@@ -11,8 +11,8 @@ module Seatsio
 
   class HoldTokensClient
     # @return [Seatsio::HoldTokensClient]
-    def initialize(secret_key, workspace_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
+    def initialize(http_client)
+      @http_client = http_client
     end
 
     def create(expires_in_minutes: nil)

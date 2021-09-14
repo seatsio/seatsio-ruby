@@ -11,8 +11,8 @@ module Seatsio
   class ChartsClient
     attr_reader :archive
 
-    def initialize(secret_key, workspace_key, base_url)
-      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url)
+    def initialize(http_client)
+      @http_client = http_client
       @archive = Pagination::Cursor.new(Chart, 'charts/archive', @http_client)
     end
 

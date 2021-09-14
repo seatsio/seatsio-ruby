@@ -9,8 +9,8 @@ require "seatsio/domain"
 module Seatsio
   class WorkspacesClient
 
-    def initialize(secret_key, base_url)
-      @http_client = ::Seatsio::HttpClient.new(secret_key, nil, base_url)
+    def initialize(http_client)
+      @http_client = http_client
     end
 
     def create(name:, is_test: nil)
