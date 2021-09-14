@@ -86,6 +86,7 @@ module Seatsio
 
     def max_retries=(max_retries)
       @max_retries = max_retries
+      self
     end
   end
 end
