@@ -27,7 +27,7 @@ module Seatsio
     end
 
     def max_retries(max_retries)
-      @http_client.max_retries=(max_retries)
+      @http_client.set_max_retries(max_retries)
       self
     end
   end

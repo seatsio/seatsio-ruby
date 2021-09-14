@@ -84,7 +84,7 @@ module Seatsio
       execute(:delete, endpoint, {})
     end
 
-    def max_retries=(max_retries)
+    def set_max_retries(max_retries)
       @max_retries = max_retries
       self
     end
