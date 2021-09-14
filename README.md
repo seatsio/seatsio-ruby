@@ -121,7 +121,7 @@ This exception contains a message string describing what went wrong, and also tw
 This library supports [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff).
 
 When you send too many concurrent requests, the server returns an error `429 - Too Many Requests`. The client reacts to this by waiting for a while, and then retrying the request.
-If the request still fails with an error `429`, it waits a little longer, and try again. This happens at most 5 times, before giving up (after approximately 15 seconds).
+If the request still fails with an error `429`, it waits a little longer, and try again. By default this happens 5 times, before giving up (after approximately 15 seconds).
 
 To change the maximum number of retries, create the client as follows:
 
