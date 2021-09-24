@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class RetrieveObjectInfoTest < SeatsioTestClient
+class RetrieveEventObjectInfoTest < SeatsioTestClient
   def test_retrieve_object_info
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
