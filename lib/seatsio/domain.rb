@@ -201,25 +201,6 @@ module Seatsio
     end
   end
 
-  class ObjectStatus
-    FREE = 'free'
-    BOOKED = 'booked'
-    HELD = 'reservedByToken'
-
-    attr_reader :status, :hold_token, :order_id, :ticket_type,
-                :quantity, :extra_data, :for_sale
-
-    def initialize(data)
-      @status = data['status']
-      @hold_token = data['holdToken']
-      @order_id = data['orderId']
-      @ticket_type = data['ticketType']
-      @quantity = data['quantity']
-      @extra_data = data['extraData']
-      @for_sale = data['forSale']
-    end
-  end
-
   class ChangeObjectStatusResult
 
     attr_reader :objects
@@ -307,7 +288,7 @@ module Seatsio
       if data.is_a? Array
         items = []
         data.each do |item|
-          items << EventReportItem.new(item)
+          items << ObjectInfo.new(item)
         end
         @items = items
       elsif data.nil?
@@ -317,7 +298,7 @@ module Seatsio
         data.each do |key, values|
           items[key] = []
           values.each do |value|
-            items[key] << EventReportItem.new(value)
+            items[key] << ObjectInfo.new(value)
           end
         end
         @items = items
@@ -325,7 +306,11 @@ module Seatsio
     end
   end
 
-  class EventReportItem
+  class ObjectInfo
+    FREE = 'free'
+    BOOKED = 'booked'
+    HELD = 'reservedByToken'
+
     attr_reader :labels, :ids, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
@@ -506,7 +491,7 @@ module Seatsio
   def to_object_details(data)
     object_details = {}
     data.each do |key, value|
-      object_details[key] = EventReportItem.new(value)
+      object_details[key] = ObjectInfo.new(value)
     end
     object_details
   end

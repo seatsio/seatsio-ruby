@@ -19,11 +19,18 @@ module Seatsio
         unless @workspace_key.nil?
           headers[:'X-Workspace-Key'] = @workspace_key
         end
-        if args[2].include? :params
-          headers[:params] = args[2][:params]
-        end
 
         url = "#{@base_url}/#{args[1]}"
+
+        if args[2].include? :params
+          params = args[2][:params]
+          if params.is_a? Hash
+            headers[:params] = params
+          else
+            url += "?" + params
+          end
+        end
+
 
         request_options = { method: args[0], url: url, headers: headers }
 

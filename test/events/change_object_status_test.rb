@@ -9,9 +9,9 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     res = @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'status_foo')
 
-    assert_equal('status_foo', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-1').status)
-    assert_equal('status_foo', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-2').status)
-    assert_equal('free', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-3').status)
+    assert_equal('status_foo', @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-1').status)
+    assert_equal('status_foo', @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-2').status)
+    assert_equal('free', @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-3').status)
 
     a1 = res.objects['A-1']
     assert_equal('status_foo', a1.status)
@@ -40,13 +40,13 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'status_foo', hold_token: hold_token.hold_token)
 
-    status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal('status_foo', status1.status)
-    assert_nil(status1.hold_token)
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal('status_foo', object_info1.status)
+    assert_nil(object_info1.hold_token)
 
-    status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
-    assert_equal('status_foo', status2.status)
-    assert_nil(status2.hold_token)
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    assert_equal('status_foo', object_info2.status)
+    assert_nil(object_info2.hold_token)
 
   end
 
@@ -55,8 +55,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.change_object_status(event.key, %w(A-1 A-2), 'status_foo', order_id: 'myOrder')
-    assert_equal('myOrder', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-1').order_id)
-    assert_equal('myOrder', @seatsio.events.retrieve_object_status(key: event.key, object_key: 'A-2').order_id)
+    assert_equal('myOrder', @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-1').order_id)
+    assert_equal('myOrder', @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-2').order_id)
   end
 
   def test_ticket_type
@@ -67,13 +67,13 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, [props1, props2], 'status_foo')
 
-    status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal('status_foo', status1.status)
-    assert_equal('Ticket Type 1', status1.ticket_type)
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal('status_foo', object_info1.status)
+    assert_equal('Ticket Type 1', object_info1.ticket_type)
 
-    status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
-    assert_equal('status_foo', status2.status)
-    assert_equal('Ticket Type 2', status2.ticket_type)
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    assert_equal('status_foo', object_info2.status)
+    assert_equal('Ticket Type 2', object_info2.ticket_type)
   end
 
   def test_quantity
@@ -83,8 +83,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
     props2 = {:objectId => 'GA2', :quantity => 10}
 
     @seatsio.events.change_object_status(event.key, [props1, props2], 'status_foo')
-    assert_equal(5, @seatsio.events.retrieve_object_status(key: event.key, object_key: 'GA1').quantity)
-    assert_equal(10, @seatsio.events.retrieve_object_status(key: event.key, object_key: 'GA2').quantity)
+    assert_equal(5, @seatsio.events.retrieve_object_info(key: event.key, object_key: 'GA1').num_booked)
+    assert_equal(10, @seatsio.events.retrieve_object_info(key: event.key, object_key: 'GA2').num_booked)
   end
 
   def test_change_object_status_with_extra_data
@@ -95,11 +95,11 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, [props1, props2], 'status_foo')
 
-    object1_status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    object2_status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
 
-    assert_equal({'foo' => 'bar'}, object1_status.extra_data)
-    assert_equal({'foo' => 'baz'}, object2_status.extra_data)
+    assert_equal({'foo' => 'bar'}, object_info1.extra_data)
+    assert_equal({'foo' => 'baz'}, object_info2.extra_data)
   end
 
   def test_keep_extra_data_true
@@ -110,8 +110,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, 'A-1', 'someStatus', keep_extra_data: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(extra_data, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, object_info.extra_data)
   end
 
   def test_keep_extra_data_false
@@ -122,8 +122,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, 'A-1', 'someStatus', keep_extra_data: false)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_nil(nil, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_nil(nil, object_info.extra_data)
   end
 
   def test_no_keep_extra_data
@@ -134,8 +134,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, 'A-1', 'someStatus')
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_nil(nil, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_nil(nil, object_info.extra_data)
   end
 
   def test_channel_keys
@@ -150,8 +150,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, 'A-1', "someStatus", channel_keys: ["channelKey1"])
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal("someStatus", status.status)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal("someStatus", object_info.status)
   end
 
   def test_ignore_channels
@@ -166,8 +166,8 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, 'A-1', "someStatus", ignore_channels: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal("someStatus", status.status)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal("someStatus", object_info.status)
   end
 
   def test_ignore_social_distancing
@@ -184,7 +184,7 @@ class ChangeObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_object_status(event.key, 'A-1', "someStatus", ignore_social_distancing: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal("someStatus", status.status)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal("someStatus", object_info.status)
   end
 end

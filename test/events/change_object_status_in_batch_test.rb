@@ -13,10 +13,10 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     res = @seatsio.events.change_object_status_in_batch([{ :event => event1.key, :objects => ['A-1'], :status => 'foo'}, { :event => event2.key, :objects => ['A-2'], :status => 'fa'}])
 
     assert_equal('foo', res[0].objects['A-1'].status)
-    assert_equal('foo', @seatsio.events.retrieve_object_status(key: event1.key, object_key: 'A-1').status)
+    assert_equal('foo', @seatsio.events.retrieve_object_info(key: event1.key, object_key: 'A-1').status)
 
     assert_equal('fa', res[1].objects['A-2'].status)
-    assert_equal('fa', @seatsio.events.retrieve_object_status(key: event2.key, object_key: 'A-2').status)
+    assert_equal('fa', @seatsio.events.retrieve_object_info(key: event2.key, object_key: 'A-2').status)
   end
 
   def test_channel_keys

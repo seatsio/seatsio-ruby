@@ -51,8 +51,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     extra_data = [d1, d2]
     result = @seatsio.events.change_best_available_object_status(event.key, 2, 'mystatus', extra_data: extra_data)
     assert_equal(%w(B-4 B-5), result.objects)
-    assert_equal(d1, @seatsio.events.retrieve_object_status(key: event.key, object_key: 'B-4').extra_data)
-    assert_equal(d2, @seatsio.events.retrieve_object_status(key: event.key, object_key: 'B-5').extra_data)
+    assert_equal(d1, @seatsio.events.retrieve_object_info(key: event.key, object_key: 'B-4').extra_data)
+    assert_equal(d2, @seatsio.events.retrieve_object_info(key: event.key, object_key: 'B-5').extra_data)
   end
 
   def test_hold_token
@@ -60,19 +60,19 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
 
-    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, Seatsio::ObjectStatus::HELD, hold_token: hold_token.hold_token)
+    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, Seatsio::ObjectInfo::HELD, hold_token: hold_token.hold_token)
 
-    object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal(Seatsio::ObjectStatus::HELD, object_status.status)
-    assert_equal(hold_token.hold_token, object_status.hold_token)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info.status)
+    assert_equal(hold_token.hold_token, object_info.hold_token)
   end
 
   def test_order_id
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, 'mystatus', order_id: 'anOrder')
-    object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal('anOrder', object_status.order_id)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal('anOrder', object_info.order_id)
   end
 
   def test_book_best_available
@@ -101,9 +101,9 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.hold_best_available(event.key, 1, hold_token.hold_token)
 
-    object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal(Seatsio::ObjectStatus::HELD, object_status.status)
-    assert_equal(hold_token.hold_token, object_status.hold_token)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info.status)
+    assert_equal(hold_token.hold_token, object_info.hold_token)
   end
 
   def test_extra_data
@@ -111,8 +111,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', extra_data: [{ "name" => 'John Doe'}])
 
-    object_status = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal({ "name" => 'John Doe'}, object_status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal({ "name" => 'John Doe'}, object_info.extra_data)
   end
 
   def test_ticket_types
@@ -121,10 +121,10 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 2, 'someStatus', ticket_types: ['adult', 'child'])
 
-    object_status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[0]
-    assert_equal('adult', object_status1.ticket_type)
-    object_status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: best_available_objects.objects[1]
-    assert_equal('child', object_status2.ticket_type)
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    assert_equal('adult', object_info1.ticket_type)
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[1]
+    assert_equal('child', object_info2.ticket_type)
   end
 
   def test_keep_extra_data_true
@@ -135,8 +135,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', keep_extra_data: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(extra_data, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, object_info.extra_data)
   end
 
   def test_keep_extra_data_false
@@ -147,8 +147,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', keep_extra_data: false)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_nil(nil, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_nil(nil, object_info.extra_data)
   end
 
   def test_no_keep_extra_data
@@ -159,8 +159,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus')
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_nil(nil, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_nil(nil, object_info.extra_data)
   end
 
   def test_channel_keys

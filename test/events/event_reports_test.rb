@@ -15,7 +15,7 @@ class EventReportsTest < SeatsioTestClient
     report_item = report.items['A-1'][0]
 
     assert_instance_of(Seatsio::EventReport, report)
-    assert_instance_of(Seatsio::EventReportItem, report_item)
+    assert_instance_of(Seatsio::ObjectInfo, report_item)
   end
 
   def test_report_item_properties

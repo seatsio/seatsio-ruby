@@ -9,13 +9,13 @@ class HoldObjectsTest < SeatsioTestClient
 
     res = @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token)
 
-    status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::ObjectStatus::HELD, status1.status)
-    assert_equal(hold_token.hold_token, status1.hold_token)
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info1.status)
+    assert_equal(hold_token.hold_token, object_info1.hold_token)
 
-    status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
-    assert_equal(Seatsio::ObjectStatus::HELD, status2.status)
-    assert_equal(hold_token.hold_token, status2.hold_token)
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info2.status)
+    assert_equal(hold_token.hold_token, object_info2.hold_token)
 
     assert_equal(res.objects.keys.sort, ['A-1', 'A-2'])
   end
@@ -27,11 +27,11 @@ class HoldObjectsTest < SeatsioTestClient
 
     @seatsio.events.hold(event.key, %w(A-1 A-2), hold_token.hold_token, order_id: 'order1')
 
-    status1 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal('order1', status1.order_id)
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal('order1', object_info1.order_id)
 
-    status2 = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-2'
-    assert_equal('order1', status2.order_id)
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    assert_equal('order1', object_info2.order_id)
   end
 
   def test_keep_extra_data_true
@@ -43,8 +43,8 @@ class HoldObjectsTest < SeatsioTestClient
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, keep_extra_data: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(extra_data, status.extra_data)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(extra_data, object_info.extra_data)
   end
 
   def test_channel_keys
@@ -60,8 +60,8 @@ class HoldObjectsTest < SeatsioTestClient
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, channel_keys: ["channelKey1"])
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::ObjectStatus::HELD, status.status)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info.status)
   end
 
   def test_ignore_channels
@@ -77,8 +77,8 @@ class HoldObjectsTest < SeatsioTestClient
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, ignore_channels: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::ObjectStatus::HELD, status.status)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info.status)
   end
 
   def test_ignore_social_distancing
@@ -96,7 +96,7 @@ class HoldObjectsTest < SeatsioTestClient
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, ignore_social_distancing: true)
 
-    status = @seatsio.events.retrieve_object_status key: event.key, object_key: 'A-1'
-    assert_equal(Seatsio::ObjectStatus::HELD, status.status)
+    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    assert_equal(Seatsio::ObjectInfo::HELD, object_info.status)
   end
 end
