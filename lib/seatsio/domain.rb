@@ -316,7 +316,7 @@ module Seatsio
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_selectable, :is_disabled_by_social_distancing, :channel,
-                :book_as_a_whole, :distance_to_focal_point
+                :book_as_a_whole, :distance_to_focal_point, :holds
 
     def initialize(data)
       @status = data['status']
@@ -348,6 +348,7 @@ module Seatsio
       @channel = data['channel']
       @book_as_a_whole = data['bookAsAWhole']
       @distance_to_focal_point = data['distanceToFocalPoint']
+      @holds = data['holds']
     end
   end
 
