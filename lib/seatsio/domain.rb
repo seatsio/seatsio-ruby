@@ -242,7 +242,7 @@ module Seatsio
     end
   end
 
-  class ChartReportItem
+  class ChartObjectInfo
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
                 :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point
@@ -273,7 +273,7 @@ module Seatsio
       data.each do |key, values|
         items[key] = []
         values.each do |value|
-          items[key] << ChartReportItem.new(value)
+          items[key] << ChartObjectInfo.new(value)
         end
       end
       @items = items
@@ -288,7 +288,7 @@ module Seatsio
       if data.is_a? Array
         items = []
         data.each do |item|
-          items << ObjectInfo.new(item)
+          items << EventObjectInfo.new(item)
         end
         @items = items
       elsif data.nil?
@@ -298,7 +298,7 @@ module Seatsio
         data.each do |key, values|
           items[key] = []
           values.each do |value|
-            items[key] << ObjectInfo.new(value)
+            items[key] << EventObjectInfo.new(value)
           end
         end
         @items = items
@@ -306,7 +306,7 @@ module Seatsio
     end
   end
 
-  class ObjectInfo
+  class EventObjectInfo
     FREE = 'free'
     BOOKED = 'booked'
     HELD = 'reservedByToken'
@@ -492,7 +492,7 @@ module Seatsio
   def to_object_details(data)
     object_details = {}
     data.each do |key, value|
-      object_details[key] = ObjectInfo.new(value)
+      object_details[key] = EventObjectInfo.new(value)
     end
     object_details
   end

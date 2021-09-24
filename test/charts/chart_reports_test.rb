@@ -11,7 +11,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_instance_of(Seatsio::ChartReport, report)
 
     report_item = report.items['A-1'][0]
-    assert_instance_of(Seatsio::ChartReportItem, report_item)
+    assert_instance_of(Seatsio::ChartObjectInfo, report_item)
     assert_equal('A-1', report_item.label)
     assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, report_item.labels)
     assert_equal({'own' => '1', 'parent' => 'A'}, report_item.ids)
@@ -34,7 +34,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_instance_of(Seatsio::ChartReport, report)
 
     report_item = report.items['GA1'][0]
-    assert_instance_of(Seatsio::ChartReportItem, report_item)
+    assert_instance_of(Seatsio::ChartObjectInfo, report_item)
     assert_equal('GA1', report_item.label)
     assert_equal('generalAdmission', report_item.object_type)
     assert_equal('Cat1', report_item.category_label)

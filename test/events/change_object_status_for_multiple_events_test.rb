@@ -22,10 +22,10 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
     event2 = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book([event1.key, event2.key], %w(A-1 A-2))
-    assert_equal(Seatsio::ObjectInfo::BOOKED, fetch_status(event1.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::BOOKED, fetch_status(event2.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::BOOKED, fetch_status(event1.key, 'A-2'))
-    assert_equal(Seatsio::ObjectInfo::BOOKED, fetch_status(event2.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event1.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event2.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event1.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event2.key, 'A-2'))
   end
 
   def test_hold
@@ -36,10 +36,10 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
 
     @seatsio.events.hold([event1.key, event2.key], %w(A-1 A-2), hold_token.hold_token)
 
-    assert_equal(Seatsio::ObjectInfo::HELD, fetch_status(event1.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::HELD, fetch_status(event2.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::HELD, fetch_status(event1.key, 'A-2'))
-    assert_equal(Seatsio::ObjectInfo::HELD, fetch_status(event2.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::HELD, fetch_status(event1.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::HELD, fetch_status(event2.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::HELD, fetch_status(event1.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::HELD, fetch_status(event2.key, 'A-2'))
   end
 
   def test_release
@@ -51,10 +51,10 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
 
     @seatsio.events.release([event1.key, event2.key], %w(A-1 A-2))
 
-    assert_equal(Seatsio::ObjectInfo::FREE, fetch_status(event1.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::FREE, fetch_status(event2.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::FREE, fetch_status(event1.key, 'A-2'))
-    assert_equal(Seatsio::ObjectInfo::FREE, fetch_status(event2.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::FREE, fetch_status(event1.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::FREE, fetch_status(event2.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::FREE, fetch_status(event1.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::FREE, fetch_status(event2.key, 'A-2'))
   end
 
   def fetch_status(event, o)
@@ -76,7 +76,7 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
 
     @seatsio.events.book([event1.key, event2.key], %w(A-1), ignore_social_distancing: true)
 
-    assert_equal(Seatsio::ObjectInfo::BOOKED, fetch_status(event1.key, 'A-1'))
-    assert_equal(Seatsio::ObjectInfo::BOOKED, fetch_status(event2.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event1.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event2.key, 'A-1'))
   end
 end
