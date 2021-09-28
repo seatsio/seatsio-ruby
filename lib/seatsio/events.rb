@@ -43,10 +43,9 @@ module Seatsio
       @http_client.post("events/#{key}/actions/update-extra-data", payload)
     end
 
-    def retrieve_object_info(key:, object_key:)
-      url = "events/#{key}/objects/#{CGI::escape(object_key).gsub('+', '%20')}"
-      response = @http_client.get(url)
-      EventObjectInfo.new(response)
+    def retrieve_object_info(key:, label:)
+      result = retrieve_object_infos key: key, labels: [label]
+      result[label]
     end
 
     def retrieve_object_infos(key:, labels:)
