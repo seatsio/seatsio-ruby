@@ -52,6 +52,22 @@ client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 client.events.change_object_status("<EVENT KEY>", ["A-1", "A-2"], "my-custom-status")
 ```
 
+### Retrieving object category and status (and other information)
+
+```ruby
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
+object_infos = client.events.retrieve_object_infos key: event.key, labels: ['A-1', 'A-2']
+
+puts object_infos['A-1'].category_key
+puts object_infos['A-1'].category_label
+puts object_infos['A-1'].status
+
+puts object_infos['A-2'].category_key
+puts object_infos['A-2'].category_label
+puts object_infos['A-2'].status
+```
+
 ### Listing all charts
 
 ```ruby
