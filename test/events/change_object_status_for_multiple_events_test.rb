@@ -58,7 +58,7 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
   end
 
   def fetch_status(event, o)
-    @seatsio.events.retrieve_object_info(key: event, object_key: o).status
+    @seatsio.events.retrieve_object_info(key: event, label: o).status
   end
 
   def test_ignore_social_distancing

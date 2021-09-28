@@ -10,10 +10,10 @@ class UpdateExtraDatasTest < SeatsioTestClient
 
     @seatsio.events.update_extra_datas key: event.key, extra_data: {'A-1': extra_data1, 'A-2': extra_data2}
 
-    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(extra_data1, object_info1.extra_data)
 
-    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-2'
     assert_equal(extra_data2, object_info2.extra_data)
   end
 end

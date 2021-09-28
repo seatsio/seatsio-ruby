@@ -51,8 +51,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     extra_data = [d1, d2]
     result = @seatsio.events.change_best_available_object_status(event.key, 2, 'mystatus', extra_data: extra_data)
     assert_equal(%w(B-4 B-5), result.objects)
-    assert_equal(d1, @seatsio.events.retrieve_object_info(key: event.key, object_key: 'B-4').extra_data)
-    assert_equal(d2, @seatsio.events.retrieve_object_info(key: event.key, object_key: 'B-5').extra_data)
+    assert_equal(d1, @seatsio.events.retrieve_object_info(key: event.key, label: 'B-4').extra_data)
+    assert_equal(d2, @seatsio.events.retrieve_object_info(key: event.key, label: 'B-5').extra_data)
   end
 
   def test_hold_token
@@ -62,7 +62,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, Seatsio::EventObjectInfo::HELD, hold_token: hold_token.hold_token)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[0]
     assert_equal(Seatsio::EventObjectInfo::HELD, object_info.status)
     assert_equal(hold_token.hold_token, object_info.hold_token)
   end
@@ -71,7 +71,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, 'mystatus', order_id: 'anOrder')
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[0]
     assert_equal('anOrder', object_info.order_id)
   end
 
@@ -101,7 +101,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.hold_best_available(event.key, 1, hold_token.hold_token)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[0]
     assert_equal(Seatsio::EventObjectInfo::HELD, object_info.status)
     assert_equal(hold_token.hold_token, object_info.hold_token)
   end
@@ -111,7 +111,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', extra_data: [{ "name" => 'John Doe'}])
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[0]
     assert_equal({ "name" => 'John Doe'}, object_info.extra_data)
   end
 
@@ -121,9 +121,9 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 2, 'someStatus', ticket_types: ['adult', 'child'])
 
-    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[0]
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[0]
     assert_equal('adult', object_info1.ticket_type)
-    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: best_available_objects.objects[1]
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[1]
     assert_equal('child', object_info2.ticket_type)
   end
 
@@ -135,7 +135,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', keep_extra_data: true)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(extra_data, object_info.extra_data)
   end
 
@@ -147,7 +147,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus', keep_extra_data: false)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_nil(nil, object_info.extra_data)
   end
 
@@ -159,7 +159,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     @seatsio.events.change_best_available_object_status(event.key, 1, 'someStatus')
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_nil(nil, object_info.extra_data)
   end
 

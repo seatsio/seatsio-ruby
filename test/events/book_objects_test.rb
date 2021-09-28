@@ -7,15 +7,15 @@ class BookObjectsTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
-    a1_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-1').status
-    a2_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-2').status
-    a3_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-3').status
+    a1_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'A-1').status
+    a2_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'A-2').status
+    a3_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'A-3').status
 
     res = @seatsio.events.book(event.key, %w(A-1 A-2))
 
-    a1_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-1').status
-    a2_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-2').status
-    a3_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'A-3').status
+    a1_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'A-1').status
+    a2_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'A-2').status
+    a3_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'A-3').status
 
     assert_equal(Seatsio::EventObjectInfo::BOOKED, a1_status)
     assert_equal(Seatsio::EventObjectInfo::BOOKED, a2_status)
@@ -30,9 +30,9 @@ class BookObjectsTest < SeatsioTestClient
 
     res = @seatsio.events.book(event.key, ['Section A-A-1', 'Section A-A-2'])
 
-    a1_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'Section A-A-1').status
-    a2_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'Section A-A-2').status
-    a3_status = @seatsio.events.retrieve_object_info(key: event.key, object_key: 'Section A-A-3').status
+    a1_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'Section A-A-1').status
+    a2_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'Section A-A-2').status
+    a3_status = @seatsio.events.retrieve_object_info(key: event.key, label: 'Section A-A-3').status
 
     assert_equal(Seatsio::EventObjectInfo::BOOKED, a1_status)
     assert_equal(Seatsio::EventObjectInfo::BOOKED, a2_status)
@@ -59,11 +59,11 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, %w(A-1 A-2), hold_token: hold_token.hold_token)
 
-    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(Seatsio::EventObjectInfo::BOOKED, object_info1.status)
     assert_nil(object_info1.hold_token)
 
-    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-2'
     assert_equal(Seatsio::EventObjectInfo::BOOKED, object_info2.status)
     assert_nil(object_info2.hold_token)
   end
@@ -74,10 +74,10 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, %w(A-1 A-2), order_id: 'order1')
 
-    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal('order1', object_info1.order_id)
 
-    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-2'
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-2'
     assert_equal('order1', object_info2.order_id)
   end
 
@@ -92,8 +92,8 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, objects)
 
-    object_info1 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-5'
-    object_info2 = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-6'
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-5'
+    object_info2 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-6'
     assert_equal('booked', object_info1.status)
     assert_equal('booked', object_info2.status)
   end
@@ -106,7 +106,7 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, 'A-1', keep_extra_data: true)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(extra_data, object_info.extra_data)
   end
 
@@ -122,7 +122,7 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, 'A-1', channel_keys: ["channelKey1"])
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(Seatsio::EventObjectInfo::BOOKED, object_info.status)
   end
 
@@ -138,7 +138,7 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, 'A-1', ignore_channels: true)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(Seatsio::EventObjectInfo::BOOKED, object_info.status)
   end
 
@@ -156,7 +156,7 @@ class BookObjectsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, 'A-1', ignore_social_distancing: true)
 
-    object_info = @seatsio.events.retrieve_object_info key: event.key, object_key: 'A-1'
+    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
     assert_equal(Seatsio::EventObjectInfo::BOOKED, object_info.status)
   end
 end
