@@ -89,7 +89,8 @@ Each page is Enumerable, and it has `next_page_starts_after` and `previous_page_
 
 ```ruby
 # ... user initially opens the screen ...
-
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 firstPage = client.charts.list.first_page()
 firstPage.each do |chart|
   puts chart.key
@@ -98,7 +99,8 @@ end
 
 ```ruby
 # ... user clicks on 'next page' button ...
-
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 nextPage = client.charts.list.page_after(firstPage.next_page_starts_after)
 nextPage.each do |chart|
   puts chart.key
@@ -107,7 +109,8 @@ end
 
 ```ruby
 # ... user clicks on 'previous page' button ...
-
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 previousPage = client.charts.list.page_before(nextPage.previous_page_ends_before)
 previousPage.each do |chart|
   puts chart.key
@@ -118,8 +121,19 @@ end
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new(Seatsio::Region.EU(), "my-company-admin-key")
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-company-admin-key") # can be found on https://app.seats.io/company-settings
 client.workspaces.create name: "a workspace"
+```
+
+### Creating a chart and an event with the company admin key
+
+```ruby
+require('seatsio')
+# company admin key can be found on https://app.seats.io/company-settings
+# workspace public key can be found on https://app.seats.io/workspace-settings
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-company-admin-key", "my-workspace-public-key")
+chart = client.charts.create
+event = client.events.create chart_key: chart.key
 ```
 
 # Error handling
