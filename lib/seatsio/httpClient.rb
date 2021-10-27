@@ -31,7 +31,6 @@ module Seatsio
           end
         end
 
-
         request_options = { method: args[0], url: url, headers: headers }
 
         if args[0] == :post
@@ -49,7 +48,11 @@ module Seatsio
       rescue RestClient::NotFound => e
         raise Exception::NotFoundException.new(e.response)
       rescue RestClient::ExceptionWithResponse => e
-        raise Exception::SeatsioException.new(e.response)
+        if e.response.code == 429
+          raise Exception::RateLimitExceededException.new(e.response)
+        else
+          raise Exception::SeatsioException.new(e.response)
+        end
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")
       rescue SocketError
