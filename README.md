@@ -9,6 +9,10 @@ This is the official Ruby client library for the [Seats.io V2 REST API](https://
 
 seatsio-ruby follows semver since v23.3.0.
 
+## API reference
+
+You can find a full API reference at https://www.rubydoc.info/gems/seatsio/
+
 ## Examples
 
 ### Creating a chart and an event
