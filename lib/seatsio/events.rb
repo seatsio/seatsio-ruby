@@ -67,7 +67,7 @@ module Seatsio
       request[:params] = {
           :expand => 'objects'
       }
-      response = @http_client.post("seasons/actions/change-object-status", request)
+      response = @http_client.post("events/groups/actions/change-object-status", request)
       ChangeObjectStatusResult.new(response)
     end
 
