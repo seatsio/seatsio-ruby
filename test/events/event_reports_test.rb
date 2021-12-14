@@ -56,7 +56,7 @@ class EventReportsTest < SeatsioTestClient
     assert_nil(report_item.displayed_object_type)
     assert_nil(report_item.left_neighbour)
     assert_equal('A-2', report_item.right_neighbour)
-    assert_false(report_item.is_selectable)
+    assert_false(report_item.is_available)
     assert_false(report_item.is_disabled_by_social_distancing)
     assert_equal('channelKey1', report_item.channel)
     assert_not_nil(report_item.distance_to_focal_point)
@@ -259,22 +259,22 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(34, report.items.length)
   end
 
-  def test_by_selectability
+  def test_by_availability
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.book(event.key, %w(A-1 A-2))
 
-    report = @seatsio.event_reports.by_selectability(event.key)
+    report = @seatsio.event_reports.by_availability(event.key)
 
-    assert_equal(32, report.items['selectable'].length)
-    assert_equal(2, report.items['not_selectable'].length)
+    assert_equal(32, report.items['available'].length)
+    assert_equal(2, report.items['not_available'].length)
   end
 
-  def test_by_specific_selectability
+  def test_by_specific_availability
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
-    report = @seatsio.event_reports.by_selectability(event.key, 'selectable')
+    report = @seatsio.event_reports.by_availability(event.key, 'available')
 
     assert_equal(34, report.items.length)
   end

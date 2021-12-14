@@ -14,7 +14,7 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
 
     assert_equal(1, report['booked']['count'])
     assert_equal(1, report['booked']['bySection']['NO_SECTION']['count'])
-    assert_equal(1, report['booked']['bySection']['NO_SECTION']['bySelectability']['not_selectable'])
+    assert_equal(1, report['booked']['bySection']['NO_SECTION']['byAvailability']['not_available'])
   end
 
   def test_deep_summary_by_object_type
@@ -25,7 +25,7 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
 
     assert_equal(32, report['seat']['count'])
     assert_equal(32, report['seat']['bySection']['NO_SECTION']['count'])
-    assert_equal(32, report['seat']['bySection']['NO_SECTION']['bySelectability']['selectable'])
+    assert_equal(32, report['seat']['bySection']['NO_SECTION']['byAvailability']['available'])
   end
 
   def test_deep_summary_by_category_key
@@ -38,7 +38,7 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
 
     assert_equal(116, report['9']['count'])
     assert_equal(116, report['9']['bySection']['NO_SECTION']['count'])
-    assert_equal(1, report['9']['bySection']['NO_SECTION']['bySelectability']['not_selectable'])
+    assert_equal(1, report['9']['bySection']['NO_SECTION']['byAvailability']['not_available'])
   end
 
   def test_deep_summary_by_category_label
@@ -51,7 +51,7 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
 
     assert_equal(116, report['Cat1']['count'])
     assert_equal(116, report['Cat1']['bySection']['NO_SECTION']['count'])
-    assert_equal(1, report['Cat1']['bySection']['NO_SECTION']['bySelectability']['not_selectable'])
+    assert_equal(1, report['Cat1']['bySection']['NO_SECTION']['byAvailability']['not_available'])
   end
 
   def test_deep_summary_by_section
@@ -64,20 +64,20 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
 
     assert_equal(232, report['NO_SECTION']['count'])
     assert_equal(116, report['NO_SECTION']['byCategoryLabel']['Cat1']['count'])
-    assert_equal(1, report['NO_SECTION']['byCategoryLabel']['Cat1']['bySelectability']['not_selectable'])
+    assert_equal(1, report['NO_SECTION']['byCategoryLabel']['Cat1']['byAvailability']['not_available'])
   end
 
-  def test_deep_summary_by_selectability
+  def test_deep_summary_by_availability
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book(event.key, ['A-1'])
 
-    report = @seatsio.event_reports.deep_summary_by_selectability(event.key)
+    report = @seatsio.event_reports.deep_summary_by_availability(event.key)
 
-    assert_equal(1, report['not_selectable']['count'])
-    assert_equal(1, report['not_selectable']['byCategoryLabel']['Cat1']['count'])
-    assert_equal(1, report['not_selectable']['byCategoryLabel']['Cat1']['bySection']['NO_SECTION'])
+    assert_equal(1, report['not_available']['count'])
+    assert_equal(1, report['not_available']['byCategoryLabel']['Cat1']['count'])
+    assert_equal(1, report['not_available']['byCategoryLabel']['Cat1']['bySection']['NO_SECTION'])
   end
 
   def test_deep_summary_by_channel

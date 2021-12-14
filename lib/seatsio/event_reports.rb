@@ -71,16 +71,16 @@ module Seatsio
       fetch_deep_summary_report('bySection', event_key)
     end
 
-    def by_selectability(event_key, selectability = nil)
-      fetch_report('bySelectability', event_key, selectability)
+    def by_availability(event_key, availability = nil)
+      fetch_report('byAvailability', event_key, availability)
     end
 
-    def summary_by_selectability(event_key)
-      fetch_summary_report('bySelectability', event_key)
+    def summary_by_availability(event_key)
+      fetch_summary_report('byAvailability', event_key)
     end
 
-    def deep_summary_by_selectability(event_key)
-      fetch_deep_summary_report('bySelectability', event_key)
+    def deep_summary_by_availability(event_key)
+      fetch_deep_summary_report('byAvailability', event_key)
     end
 
     def by_channel(event_key, channelKey = nil)

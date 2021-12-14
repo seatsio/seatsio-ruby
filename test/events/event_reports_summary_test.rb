@@ -110,24 +110,24 @@ class EventReportsSummaryTest < SeatsioTestClient
     assert_equal(232, report['NO_SECTION']['byChannel']['NO_CHANNEL'])
   end
 
-  def test_summary_by_selectability
+  def test_summary_by_availability
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
 
     @seatsio.events.book(event.key, ['A-1'])
 
-    report = @seatsio.event_reports.summary_by_selectability(event.key)
+    report = @seatsio.event_reports.summary_by_availability(event.key)
 
-    assert_equal(231, report['selectable']['count'])
-    assert_equal(231, report['selectable']['bySection']['NO_SECTION'])
-    assert_equal(231, report['selectable']['byStatus']['free'])
-    assert_equal(231, report['selectable']['byChannel']['NO_CHANNEL'])
+    assert_equal(231, report['available']['count'])
+    assert_equal(231, report['available']['bySection']['NO_SECTION'])
+    assert_equal(231, report['available']['byStatus']['free'])
+    assert_equal(231, report['available']['byChannel']['NO_CHANNEL'])
 
 
-    assert_equal(1, report['not_selectable']['count'])
-    assert_equal(1, report['not_selectable']['bySection']['NO_SECTION'])
-    assert_equal(1, report['not_selectable']['byStatus']['booked'])
-    assert_equal(1, report['not_selectable']['byChannel']['NO_CHANNEL'])
+    assert_equal(1, report['not_available']['count'])
+    assert_equal(1, report['not_available']['bySection']['NO_SECTION'])
+    assert_equal(1, report['not_available']['byStatus']['booked'])
+    assert_equal(1, report['not_available']['byChannel']['NO_CHANNEL'])
   end
 
   def test_summary_by_channel
@@ -143,11 +143,11 @@ class EventReportsSummaryTest < SeatsioTestClient
     assert_equal(230, report['NO_CHANNEL']['count'])
     assert_equal(230, report['NO_CHANNEL']['bySection']['NO_SECTION'])
     assert_equal(230, report['NO_CHANNEL']['byStatus']['free'])
-    assert_equal(230, report['NO_CHANNEL']['bySelectability']['selectable'])
+    assert_equal(230, report['NO_CHANNEL']['byAvailability']['available'])
 
     assert_equal(2, report['channelKey1']['count'])
     assert_equal(2, report['channelKey1']['bySection']['NO_SECTION'])
     assert_equal(2, report['channelKey1']['byStatus']['free'])
-    assert_equal(2, report['channelKey1']['bySelectability']['selectable'])
+    assert_equal(2, report['channelKey1']['byAvailability']['available'])
   end
 end
