@@ -10,7 +10,7 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     chart_key2 = create_test_chart
     event2 = @seatsio.events.create chart_key: chart_key2
 
-    res = @seatsio.events.change_object_status_in_batch([{ :event => event1.key, :objects => ['A-1'], :status => 'foo'}, { :event => event2.key, :objects => ['A-2'], :status => 'fa'}])
+    res = @seatsio.events.change_object_status_in_batch([{ :event => event1.key, :objects => ['A-1'], :status => 'foo' }, { :event => event2.key, :objects => ['A-2'], :status => 'fa' }])
 
     assert_equal('foo', res[0].objects['A-1'].status)
     assert_equal('foo', @seatsio.events.retrieve_object_info(key: event1.key, label: 'A-1').status)
@@ -23,13 +23,13 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.update_channels key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
+      "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 }
     }
     @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
-        "channelKey1" => ["A-1"]
+      "channelKey1" => ["A-1"]
     }
 
-    res = @seatsio.events.change_object_status_in_batch([{ :event => event.key, :objects => ['A-1'], :status => 'foo', :channelKeys => ['channelKey1']}])
+    res = @seatsio.events.change_object_status_in_batch([{ :event => event.key, :objects => ['A-1'], :status => 'foo', :channelKeys => ['channelKey1'] }])
 
     assert_equal('foo', res[0].objects['A-1'].status)
   end
@@ -38,14 +38,54 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.update_channels key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
+      "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 }
     }
     @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
-        "channelKey1" => ["A-1"]
+      "channelKey1" => ["A-1"]
     }
 
-    res = @seatsio.events.change_object_status_in_batch([{ :event => event.key, :objects => ['A-1'], :status => 'foo', :ignoreChannels => true}])
+    res = @seatsio.events.change_object_status_in_batch([{ :event => event.key, :objects => ['A-1'], :status => 'foo', :ignoreChannels => true }])
 
     assert_equal('foo', res[0].objects['A-1'].status)
+  end
+
+  def test_allowed_previous_statuses
+    begin
+      chart_key = create_test_chart
+      event = @seatsio.events.create chart_key: chart_key
+
+      @seatsio.events.change_object_status_in_batch([{
+                                                       :event => event.key,
+                                                       :objects => ['A-1'],
+                                                       :status => 'foo',
+                                                       :ignoreChannels => true,
+                                                       :allowedPreviousStatuses => ['someOtherStatus']
+                                                     }])
+      raise "Should have failed: expected SeatsioException"
+    rescue Seatsio::Exception::SeatsioException => e
+      assert_equal(400, e.message.code)
+      assert_match /ILLEGAL_STATUS_CHANGE/, e.message.body
+      assert_match /free is not in the list of allowed previous statuses/, e.message.body
+    end
+  end
+
+  def test_rejected_previous_statuses
+    begin
+      chart_key = create_test_chart
+      event = @seatsio.events.create chart_key: chart_key
+
+      @seatsio.events.change_object_status_in_batch([{
+                                                       :event => event.key,
+                                                       :objects => ['A-1'],
+                                                       :status => 'foo',
+                                                       :ignoreChannels => true,
+                                                       :rejectedPreviousStatuses => ['free']
+                                                     }])
+      raise "Should have failed: expected SeatsioException"
+    rescue Seatsio::Exception::SeatsioException => e
+      assert_equal(400, e.message.code)
+      assert_match /ILLEGAL_STATUS_CHANGE/, e.message.body
+      assert_match /free is in the list of rejected previous statuses/, e.message.body
+    end
   end
 end
