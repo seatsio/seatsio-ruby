@@ -80,6 +80,19 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
     assert_equal(1, report['not_available']['byCategoryLabel']['Cat1']['bySection']['NO_SECTION'])
   end
 
+  def test_deep_summary_by_availability_reason
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.book(event.key, ['A-1'])
+
+    report = @seatsio.event_reports.deep_summary_by_availability_reason(event.key)
+
+    assert_equal(1, report['booked']['count'])
+    assert_equal(1, report['booked']['byCategoryLabel']['Cat1']['count'])
+    assert_equal(1, report['booked']['byCategoryLabel']['Cat1']['bySection']['NO_SECTION'])
+  end
+
   def test_deep_summary_by_channel
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key

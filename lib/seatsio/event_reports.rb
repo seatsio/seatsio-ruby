@@ -83,6 +83,18 @@ module Seatsio
       fetch_deep_summary_report('byAvailability', event_key)
     end
 
+    def by_availability_reason(event_key, availability_reason = nil)
+      fetch_report('byAvailabilityReason', event_key, availability_reason)
+    end
+
+    def summary_by_availability_reason(event_key)
+      fetch_summary_report('byAvailabilityReason', event_key)
+    end
+
+    def deep_summary_by_availability_reason(event_key)
+      fetch_deep_summary_report('byAvailabilityReason', event_key)
+    end
+
     def by_channel(event_key, channelKey = nil)
       fetch_report('byChannel', event_key, channelKey)
     end

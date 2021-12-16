@@ -7,9 +7,9 @@ class EventReportsTest < SeatsioTestClient
   def test_report_instances
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    extra_data = {'foo' => 'bar'}
+    extra_data = { 'foo' => 'bar' }
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], order_id: 'order1')
+    @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1')
 
     report = @seatsio.event_reports.by_label(event.key)
     report_item = report.items['A-1'][0]
@@ -21,14 +21,14 @@ class EventReportsTest < SeatsioTestClient
   def test_report_item_properties
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    extra_data = {'foo' => 'bar'}
+    extra_data = { 'foo' => 'bar' }
 
-    @seatsio.events.book(event.key, [{:objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data}], order_id: 'order1')
+    @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1')
 
     @seatsio.events.update_channels key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+      "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1"]}
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1"] }
 
     report = @seatsio.event_reports.by_label(event.key)
 
@@ -36,8 +36,8 @@ class EventReportsTest < SeatsioTestClient
 
     assert_equal('booked', report_item.status)
     assert_equal('A-1', report_item.label)
-    assert_equal({'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, report_item.labels)
-    assert_equal({'own' => '1', 'parent' => 'A'}, report_item.ids)
+    assert_equal({ 'own' => { 'label' => '1', 'type' => 'seat' }, 'parent' => { 'label' => 'A', 'type' => 'row' } }, report_item.labels)
+    assert_equal({ 'own' => '1', 'parent' => 'A' }, report_item.ids)
     assert_equal('Cat1', report_item.category_label)
     assert_equal('9', report_item.category_key)
     assert_equal('tt1', report_item.ticket_type)
@@ -78,9 +78,9 @@ class EventReportsTest < SeatsioTestClient
   def test_report_item_properties_for_GA
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.book(event.key, [{:objectId => 'GA1', :quantity => 5}])
+    @seatsio.events.book(event.key, [{ :objectId => 'GA1', :quantity => 5 }])
     holdToken = @seatsio.hold_tokens.create
-    @seatsio.events.hold(event.key, [{:objectId => 'GA1', :quantity => 3}], holdToken.hold_token)
+    @seatsio.events.hold(event.key, [{ :objectId => 'GA1', :quantity => 3 }], holdToken.hold_token)
 
     report = @seatsio.event_reports.by_label(event.key)
 
@@ -279,13 +279,33 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(34, report.items.length)
   end
 
+  def test_by_availability_reason
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.book(event.key, %w(A-1 A-2))
+
+    report = @seatsio.event_reports.by_availability_reason(event.key)
+
+    assert_equal(32, report.items['available'].length)
+    assert_equal(2, report.items['booked'].length)
+  end
+
+  def test_by_specific_availability_reason
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.by_availability_reason(event.key, 'available')
+
+    assert_equal(34, report.items.length)
+  end
+
   def test_by_channel
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.update_channels key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+      "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1", "A-2"]}
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
 
     report = @seatsio.event_reports.by_channel(event.key)
 
@@ -297,9 +317,9 @@ class EventReportsTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.update_channels key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+      "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1", "A-2"]}
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
 
     report = @seatsio.event_reports.by_channel(event.key, 'channelKey1')
 

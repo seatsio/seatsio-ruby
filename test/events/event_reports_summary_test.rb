@@ -123,20 +123,38 @@ class EventReportsSummaryTest < SeatsioTestClient
     assert_equal(231, report['available']['byStatus']['free'])
     assert_equal(231, report['available']['byChannel']['NO_CHANNEL'])
 
-
     assert_equal(1, report['not_available']['count'])
     assert_equal(1, report['not_available']['bySection']['NO_SECTION'])
     assert_equal(1, report['not_available']['byStatus']['booked'])
     assert_equal(1, report['not_available']['byChannel']['NO_CHANNEL'])
   end
 
+  def test_summary_by_availability_reason
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.book(event.key, ['A-1'])
+
+    report = @seatsio.event_reports.summary_by_availability_reason(event.key)
+
+    assert_equal(231, report['available']['count'])
+    assert_equal(231, report['available']['bySection']['NO_SECTION'])
+    assert_equal(231, report['available']['byStatus']['free'])
+    assert_equal(231, report['available']['byChannel']['NO_CHANNEL'])
+
+    assert_equal(1, report['booked']['count'])
+    assert_equal(1, report['booked']['bySection']['NO_SECTION'])
+    assert_equal(1, report['booked']['byStatus']['booked'])
+    assert_equal(1, report['booked']['byChannel']['NO_CHANNEL'])
+  end
+
   def test_summary_by_channel
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.update_channels key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
+      "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {"channelKey1" => ["A-1", "A-2"]}
+    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
 
     report = @seatsio.event_reports.summary_by_channel(event.key)
 
