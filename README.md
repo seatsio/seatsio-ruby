@@ -13,13 +13,34 @@ seatsio-ruby follows semver since v23.3.0.
 
 You can find a full API reference at https://www.rubydoc.info/gems/seatsio/
 
-## Examples
+## Usage
+
+### General instructions
+
+To use this library, you'll need to create a `SeatsioClient`:
+
+```ruby
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
+...
+```
+
+You can find your _workspace secret key_ in the [settings section of the workspace](https://app.seats.io/workspace-settings).
+
+The region should correspond to the region of your account:
+
+- `Seatsio::Region.EU()`: Europe
+- `Seatsio::Region.NA()`: North-America
+- `Seatsio::Region.SA()`: South-America
+- `Seatsio::Region.OC()`: Oceania
+
+If you're unsure about your region, have a look at your [company settings page](https://app.seats.io/company-settings).
 
 ### Creating a chart and an event
 
 ```ruby
 require('seatsio')
-client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key") # can be found on https://app.seats.io/workspace-settings
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
 chart = client.charts.create
 event = client.events.create chart_key: chart.key
 ```
