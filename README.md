@@ -17,7 +17,7 @@ You can find a full API reference at https://www.rubydoc.info/gems/seatsio/
 
 ### General instructions
 
-To use this library, you'll need to create a `SeatsioClient`:
+To use this library, you'll need to create a `Seatsio::Client`:
 
 ```ruby
 require('seatsio')
