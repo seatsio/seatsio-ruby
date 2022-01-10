@@ -19,7 +19,7 @@ module Seatsio
         @first_page = false
       end
 
-      def each(start = 0)
+      def each(start = 0, &block)
         return to_enum(:each, start) unless block_given?
 
         Array(@collection[start..-1]).each do |element|
@@ -30,7 +30,7 @@ module Seatsio
 
         start = [@collection.size, start].max
         fetch_next_page
-        each(start, &Proc.new)
+        each(start, &block)
       end
 
       def set_query_param(key, value)
