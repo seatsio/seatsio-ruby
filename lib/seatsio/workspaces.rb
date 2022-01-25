@@ -4,7 +4,6 @@ require "seatsio/httpClient"
 require "seatsio/domain"
 require "json"
 require "cgi"
-require "seatsio/domain"
 
 module Seatsio
   class WorkspacesClient

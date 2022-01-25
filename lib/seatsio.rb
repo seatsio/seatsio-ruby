@@ -3,6 +3,7 @@ require 'seatsio/charts'
 require 'seatsio/subaccounts'
 require 'seatsio/workspaces'
 require 'seatsio/events'
+require 'seatsio/seasons'
 require 'seatsio/hold_tokens'
 require 'seatsio/chart_reports'
 require 'seatsio/event_reports'
@@ -10,7 +11,7 @@ require 'seatsio/usage_reports'
 
 module Seatsio
   class Client
-    attr_reader :charts, :subaccounts, :workspaces, :events,
+    attr_reader :charts, :subaccounts, :workspaces, :events, :seasons,
                 :hold_tokens, :chart_reports, :event_reports, :usage_reports
 
     def initialize(region, secret_key, workspace_key = nil, max_retries = 5)
@@ -20,14 +21,13 @@ module Seatsio
       @subaccounts = SubaccountsClient.new(@http_client)
       @workspaces = WorkspacesClient.new(@http_client)
       @events = EventsClient.new(@http_client)
+      @seasons = SeasonsClient.new(@http_client)
       @hold_tokens = HoldTokensClient.new(@http_client)
       @chart_reports = ChartReportsClient.new(@http_client)
       @event_reports = EventReportsClient.new(@http_client)
       @usage_reports = UsageReportsClient.new(@http_client)
     end
-
   end
-
 
   class Region
     attr_reader :url

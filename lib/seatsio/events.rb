@@ -4,7 +4,6 @@ require "seatsio/httpClient"
 require "seatsio/domain"
 require "json"
 require "cgi"
-require "seatsio/domain"
 require "seatsio/events/change_object_status_request"
 require "seatsio/events/change_best_available_object_status_request"
 
