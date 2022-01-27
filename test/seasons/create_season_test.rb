@@ -5,6 +5,7 @@ require 'seatsio/domain'
 class CreateSeasonTest < SeatsioTestClient
   def test_chart_key_is_required
     chart_key = create_test_chart
+
     season = @seatsio.seasons.create chart_key: chart_key
 
     assert_not_equal(0, season.id)
@@ -25,6 +26,7 @@ class CreateSeasonTest < SeatsioTestClient
     chart = @seatsio.charts.create
 
     season = @seatsio.seasons.create chart_key: chart.key, key: 'aSeason'
+
     assert_equal('aSeason', season.key)
   end
 
@@ -32,6 +34,7 @@ class CreateSeasonTest < SeatsioTestClient
     chart = @seatsio.charts.create
 
     season = @seatsio.seasons.create chart_key: chart.key, number_of_events: 2
+
     assert_equal(2, season.events.length)
   end
 
@@ -39,14 +42,16 @@ class CreateSeasonTest < SeatsioTestClient
     chart = @seatsio.charts.create
 
     season = @seatsio.seasons.create chart_key: chart.key, event_keys: ['event1', 'event2']
+
     assert_equal(['event1', 'event2'], season.events.map { |e| e.key })
   end
 
   def test_table_booking_config_can_be_passed_in
     chart_key = create_test_chart_with_tables
-    table_booking_config = Seatsio::TableBookingConfig::custom({'T1' => 'BY_TABLE', 'T2' => 'BY_SEAT'})
+    table_booking_config = Seatsio::TableBookingConfig::custom({ 'T1' => 'BY_TABLE', 'T2' => 'BY_SEAT' })
 
     season = @seatsio.seasons.create chart_key: chart_key, table_booking_config: table_booking_config
+
     assert_equal(table_booking_config.mode, season.season_event.table_booking_config.mode)
     assert_equal(table_booking_config.tables, season.season_event.table_booking_config.tables)
   end
@@ -54,7 +59,7 @@ class CreateSeasonTest < SeatsioTestClient
   def test_social_distancing_ruleset_key_is_optional
     chart_key = create_test_chart
     @seatsio.charts.save_social_distancing_rulesets(chart_key, {
-        "ruleset1" => {"name" => "My first ruleset"}
+      "ruleset1" => { "name" => "My first ruleset" }
     })
 
     season = @seatsio.seasons.create chart_key: chart_key, social_distancing_ruleset_key: "ruleset1"
