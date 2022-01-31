@@ -19,7 +19,7 @@ class ListStatusChangesTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
     object_properties = {:objectId => 'A-1', :extraData => {'foo': 'bar'}}
-    @seatsio.events.change_object_status(event.key, object_properties, 'status1', hold_token: hold_token.hold_token, order_id: 'order1')
+    @seatsio.events.hold(event.key, object_properties, hold_token.hold_token, order_id: 'order1')
 
     status_changes =  @seatsio.events.list_status_changes(event.key).to_a
     status_change = status_changes[0]
@@ -27,7 +27,7 @@ class ListStatusChangesTest < SeatsioTestClient
     assert_operator(status_change.id, :!=, 0)
 
     #TODO: assert_that(status_change.date).is_between_now_minus_and_plus_minutes(now, 1)
-    assert_equal('status1', status_change.status)
+    assert_equal('reservedByToken', status_change.status)
     assert_equal('A-1', status_change.object_label)
     assert_equal(event.id, status_change.event_id)
     assert_equal({'foo' => 'bar'}, status_change.extra_data)

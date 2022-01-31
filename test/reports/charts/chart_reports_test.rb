@@ -94,32 +94,45 @@ class ChartReportsTest < SeatsioTestClient
   def test_by_object_type
     chart_key = create_test_chart
     report = @seatsio.chart_reports.by_object_type(chart_key)
-    assert_equal(2, report.items.length)
-    assert_equal(32, report.items["seat"].length)
-    assert_equal(2, report.items["generalAdmission"].length)
+    assert_equal(4, report.items.length)
+    assert_equal(32, report.items['seat'].length)
+    assert_equal(2, report.items['generalAdmission'].length)
+    assert_equal(0, report.items['booth'].length)
+    assert_equal(0, report.items['table'].length)
   end
 
   def test_by_category_key
     chart_key = create_test_chart
     report = @seatsio.chart_reports.by_category_key(chart_key)
-    assert_equal(2, report.items.length)
-    assert_equal(17, report.items["9"].length)
-    assert_equal(17, report.items["10"].length)
+    assert_equal(3, report.items.length)
+    assert_equal(17, report.items['9'].length)
+    assert_equal(17, report.items['10'].length)
+    assert_equal(0, report.items['NO_CATEGORY'].length)
   end
 
   def test_by_category_label
     chart_key = create_test_chart
     report = @seatsio.chart_reports.by_category_label(chart_key)
-    assert_equal(2, report.items.length)
-    assert_equal(17, report.items["Cat1"].length)
-    assert_equal(17, report.items["Cat2"].length)
+    assert_equal(3, report.items.length)
+    assert_equal(17, report.items['Cat1'].length)
+    assert_equal(17, report.items['Cat2'].length)
+    assert_equal(0, report.items['NO_CATEGORY'].length)
+  end
+
+  def test_by_section
+    chart_key = create_test_chart_with_sections
+    report = @seatsio.chart_reports.by_section(chart_key)
+    assert_equal(3, report.items.length)
+    assert_equal(36, report.items['Section A'].length)
+    assert_equal(35, report.items['Section B'].length)
+    assert_equal(0, report.items['NO_SECTION'].length)
   end
 
   def test_with_extra_data
     chart_key = create_test_chart
     event1 = @seatsio.events.create chart_key: chart_key
     event2 = @seatsio.events.create chart_key: chart_key
-    extra_data = {"foo" => "bar"}
+    extra_data = {'foo' => 'bar'}
 
     @seatsio.events.update_extra_data key: event1.key, object: 'A-1', extra_data: extra_data
     @seatsio.events.update_extra_data key: event2.key, object: 'A-1', extra_data: extra_data
