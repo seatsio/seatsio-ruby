@@ -22,19 +22,19 @@ module Seatsio
       @archived = data['archived']
       @validation = data['validation']
       @social_distancing_rulesets = data['socialDistancingRulesets'].map {
-          |key, r| [key, SocialDistancingRuleset.new(r['name'],
-                                                     number_of_disabled_seats_to_the_sides: r['numberOfDisabledSeatsToTheSides'],
-                                                     disable_seats_in_front_and_behind: r['disableSeatsInFrontAndBehind'],
-                                                     disable_diagonal_seats_in_front_and_behind: r['disableDiagonalSeatsInFrontAndBehind'],
-                                                     number_of_disabled_aisle_seats: r['numberOfDisabledAisleSeats'],
-                                                     max_group_size: r['maxGroupSize'],
-                                                     max_occupancy_absolute: r['maxOccupancyAbsolute'],
-                                                     max_occupancy_percentage: r['maxOccupancyPercentage'],
-                                                     one_group_per_table: r['oneGroupPerTable'],
-                                                     fixed_group_layout: r['fixedGroupLayout'],
-                                                     disabled_seats: r['disabledSeats'],
-                                                     enabled_seats: r['enabledSeats'],
-                                                     index: r['index'])]
+        |key, r| [key, SocialDistancingRuleset.new(r['name'],
+                                                   number_of_disabled_seats_to_the_sides: r['numberOfDisabledSeatsToTheSides'],
+                                                   disable_seats_in_front_and_behind: r['disableSeatsInFrontAndBehind'],
+                                                   disable_diagonal_seats_in_front_and_behind: r['disableDiagonalSeatsInFrontAndBehind'],
+                                                   number_of_disabled_aisle_seats: r['numberOfDisabledAisleSeats'],
+                                                   max_group_size: r['maxGroupSize'],
+                                                   max_occupancy_absolute: r['maxOccupancyAbsolute'],
+                                                   max_occupancy_percentage: r['maxOccupancyPercentage'],
+                                                   one_group_per_table: r['oneGroupPerTable'],
+                                                   fixed_group_layout: r['fixedGroupLayout'],
+                                                   disabled_seats: r['disabledSeats'],
+                                                   enabled_seats: r['enabledSeats'],
+                                                   index: r['index'])]
       }.to_h
     end
   end
@@ -115,10 +115,10 @@ module Seatsio
 
     def == (other)
       self.key == other.key &&
-          self.name == other.name &&
-          self.color == other.color &&
-          self.index == other.index &&
-          self.objects == other.objects
+        self.name == other.name &&
+        self.color == other.color &&
+        self.index == other.index &&
+        self.objects == other.objects
     end
 
   end
@@ -139,9 +139,32 @@ module Seatsio
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
       @channels = data['channels'].map {
-          |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
+        |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
       } if data['channels']
       @social_distancing_ruleset_key = data['socialDistancingRulesetKey']
+    end
+
+    def self.create_list(list = [])
+      result = []
+
+      list.each do |item|
+        result << Event.new(item)
+      end
+
+      return result
+    end
+  end
+
+  class Season
+
+    attr_accessor :id, :key, :season_event, :partial_season_keys, :events
+
+    def initialize(data)
+      @id = data['id']
+      @key = data['key']
+      @season_event = Event.new(data['seasonEvent'])
+      @partial_season_keys = data['partialSeasonKeys']
+      @events = Event.create_list(data['events'])
     end
 
     def self.create_list(list = [])
@@ -544,18 +567,18 @@ module Seatsio
 
     def == (other)
       self.name == other.name &&
-          self.number_of_disabled_seats_to_the_sides == other.number_of_disabled_seats_to_the_sides &&
-          self.disable_seats_in_front_and_behind == other.disable_seats_in_front_and_behind &&
-          self.disable_diagonal_seats_in_front_and_behind == other.disable_diagonal_seats_in_front_and_behind &&
-          self.number_of_disabled_aisle_seats == other.number_of_disabled_aisle_seats &&
-          self.max_group_size == other.max_group_size &&
-          self.max_occupancy_absolute == other.max_occupancy_absolute &&
-          self.max_occupancy_percentage == other.max_occupancy_percentage &&
-          self.one_group_per_table == other.one_group_per_table &&
-          self.fixed_group_layout == other.fixed_group_layout &&
-          self.disabled_seats == other.disabled_seats &&
-          self.enabled_seats == other.enabled_seats &&
-          self.index == other.index
+        self.number_of_disabled_seats_to_the_sides == other.number_of_disabled_seats_to_the_sides &&
+        self.disable_seats_in_front_and_behind == other.disable_seats_in_front_and_behind &&
+        self.disable_diagonal_seats_in_front_and_behind == other.disable_diagonal_seats_in_front_and_behind &&
+        self.number_of_disabled_aisle_seats == other.number_of_disabled_aisle_seats &&
+        self.max_group_size == other.max_group_size &&
+        self.max_occupancy_absolute == other.max_occupancy_absolute &&
+        self.max_occupancy_percentage == other.max_occupancy_percentage &&
+        self.one_group_per_table == other.one_group_per_table &&
+        self.fixed_group_layout == other.fixed_group_layout &&
+        self.disabled_seats == other.disabled_seats &&
+        self.enabled_seats == other.enabled_seats &&
+        self.index == other.index
     end
   end
 
