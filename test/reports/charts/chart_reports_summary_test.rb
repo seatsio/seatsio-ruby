@@ -24,6 +24,15 @@ class ChartReportsSummaryTest < SeatsioTestClient
     assert_equal(100, report['generalAdmission']['byCategoryLabel']['Cat2'])
   end
 
+  def test_summary_by_object_type_book_whole_tables_true
+    chart_key = create_test_chart_with_tables
+
+    report = @seatsio.chart_reports.summary_by_object_type(chart_key, 'true')
+
+    assert_equal(2, report['table']['count'])
+    assert_equal(0, report['seat']['count'])
+  end
+
   def test_summary_by_category_key
     chart_key = create_test_chart
 
