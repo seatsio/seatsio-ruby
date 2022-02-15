@@ -144,37 +144,41 @@ module Seatsio
       @social_distancing_ruleset_key = data['socialDistancingRulesetKey']
     end
 
+    def is_season
+      false
+    end
+
+    def self.from_json(data)
+      if data['isSeason']
+        Season.new(data)
+      else
+        Event.new(data)
+      end
+    end
+
     def self.create_list(list = [])
       result = []
 
       list.each do |item|
-        result << Event.new(item)
+        result << Event.from_json(item)
       end
 
-      return result
+      result
     end
   end
 
-  class Season
+  class Season < Event
 
-    attr_accessor :id, :key, :season_event, :partial_season_keys, :events
+    attr_accessor :partial_season_keys, :events
 
     def initialize(data)
-      @id = data['id']
-      @key = data['key']
-      @season_event = Event.new(data['seasonEvent'])
+      super(data)
       @partial_season_keys = data['partialSeasonKeys']
-      @events = Event.create_list(data['events'])
+      @events = data['events'] ? Event.create_list(data['events']) : nil
     end
 
-    def self.create_list(list = [])
-      result = []
-
-      list.each do |item|
-        result << Event.new(item)
-      end
-
-      return result
+    def is_season
+      true
     end
   end
 
@@ -544,25 +548,25 @@ module Seatsio
     end
 
     def self.fixed(name, disabled_seats: [], index: 0)
-      return SocialDistancingRuleset.new(name, index: index, disabled_seats: disabled_seats, fixed_group_layout: true)
+      SocialDistancingRuleset.new(name, index: index, disabled_seats: disabled_seats, fixed_group_layout: true)
     end
 
     def self.rule_based(name, number_of_disabled_seats_to_the_sides: 0, disable_seats_in_front_and_behind: false, disable_diagonal_seats_in_front_and_behind: false,
                         number_of_disabled_aisle_seats: 0, max_group_size: 0, max_occupancy_absolute: 0, max_occupancy_percentage: 0, one_group_per_table: false,
                         disabled_seats: [], enabled_seats: [], index: 0)
-      return SocialDistancingRuleset.new(name,
-                                         number_of_disabled_seats_to_the_sides: number_of_disabled_seats_to_the_sides,
-                                         disable_seats_in_front_and_behind: disable_seats_in_front_and_behind,
-                                         disable_diagonal_seats_in_front_and_behind: disable_diagonal_seats_in_front_and_behind,
-                                         number_of_disabled_aisle_seats: number_of_disabled_aisle_seats,
-                                         max_group_size: max_group_size,
-                                         max_occupancy_absolute: max_occupancy_absolute,
-                                         max_occupancy_percentage: max_occupancy_percentage,
-                                         one_group_per_table: one_group_per_table,
-                                         fixed_group_layout: false,
-                                         disabled_seats: disabled_seats,
-                                         enabled_seats: enabled_seats,
-                                         index: index)
+      SocialDistancingRuleset.new(name,
+                                  number_of_disabled_seats_to_the_sides: number_of_disabled_seats_to_the_sides,
+                                  disable_seats_in_front_and_behind: disable_seats_in_front_and_behind,
+                                  disable_diagonal_seats_in_front_and_behind: disable_diagonal_seats_in_front_and_behind,
+                                  number_of_disabled_aisle_seats: number_of_disabled_aisle_seats,
+                                  max_group_size: max_group_size,
+                                  max_occupancy_absolute: max_occupancy_absolute,
+                                  max_occupancy_percentage: max_occupancy_percentage,
+                                  one_group_per_table: one_group_per_table,
+                                  fixed_group_layout: false,
+                                  disabled_seats: disabled_seats,
+                                  enabled_seats: enabled_seats,
+                                  index: index)
     end
 
     def == (other)

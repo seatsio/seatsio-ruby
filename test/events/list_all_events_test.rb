@@ -14,4 +14,15 @@ class ListAllEventsTest < SeatsioTestClient
     assert_equal([event3.key, event2.key, event1.key], events_keys)
   end
 
+  def test_list_all_seasons
+    chart = @seatsio.charts.create
+    season1 = @seatsio.seasons.create chart_key: chart.key
+    season2 = @seatsio.seasons.create chart_key: chart.key
+    season3 = @seatsio.seasons.create chart_key: chart.key
+
+    seasons = @seatsio.events.list
+
+    are_seasons = seasons.collect {|season| season.is_season}
+    assert_equal([true, true, true], are_seasons)
+  end
 end

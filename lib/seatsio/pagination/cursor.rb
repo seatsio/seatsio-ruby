@@ -85,7 +85,7 @@ module Seatsio
         items = response['items']
         parsed_items = []
 
-        items.each {|item| parsed_items << @cls.new(item)}
+        items.each {|item| parsed_items << (@cls.respond_to?(:from_json) ? @cls.from_json(item) : @cls.new(item))}
 
         @collection += parsed_items
         set_query_param(:start_after_id, items.last['id']) unless last?

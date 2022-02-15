@@ -107,7 +107,7 @@ module Seatsio
 
     def retrieve(key:)
       response = @http_client.get("events/#{key}")
-      Event.new(response)
+      Event.from_json(response)
     end
 
     def list

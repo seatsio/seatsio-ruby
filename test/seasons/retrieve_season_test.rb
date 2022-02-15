@@ -13,13 +13,9 @@ class RetrieveSeasonTest < SeatsioTestClient
     assert_not_nil(retrieved_season.key)
     assert_equal([], retrieved_season.partial_season_keys)
     assert_equal([], retrieved_season.events)
-
-    season_event = retrieved_season.season_event
-    assert_operator(season_event.id, :!=, 0)
-    assert_operator(season_event.key, :!=, nil)
-    assert_equal(chart_key, season_event.chart_key)
-    assert_equal(season_event.table_booking_config.mode, 'INHERIT')
-    assert_nil(season_event.for_sale_config)
-    assert_nil(season_event.updated_on)
+    assert_equal(chart_key, season.chart_key)
+    assert_equal(season.table_booking_config.mode, 'INHERIT')
+    assert_nil(season.for_sale_config)
+    assert_nil(season.updated_on)
   end
 end

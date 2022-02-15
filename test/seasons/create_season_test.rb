@@ -12,14 +12,10 @@ class CreateSeasonTest < SeatsioTestClient
     assert_not_nil(season.key)
     assert_equal([], season.partial_season_keys)
     assert_equal([], season.events)
-
-    season_event = season.season_event
-    assert_not_equal(0, season_event.id)
-    assert_not_nil(season_event.key)
-    assert_equal(chart_key, season_event.chart_key)
-    assert_equal(season_event.table_booking_config.mode, 'INHERIT')
-    assert_nil(season_event.for_sale_config)
-    assert_nil(season_event.updated_on)
+    assert_equal(chart_key, season.chart_key)
+    assert_equal(season.table_booking_config.mode, 'INHERIT')
+    assert_nil(season.for_sale_config)
+    assert_nil(season.updated_on)
   end
 
   def test_key_is_optional
@@ -52,8 +48,8 @@ class CreateSeasonTest < SeatsioTestClient
 
     season = @seatsio.seasons.create chart_key: chart_key, table_booking_config: table_booking_config
 
-    assert_equal(table_booking_config.mode, season.season_event.table_booking_config.mode)
-    assert_equal(table_booking_config.tables, season.season_event.table_booking_config.tables)
+    assert_equal(table_booking_config.mode, season.table_booking_config.mode)
+    assert_equal(table_booking_config.tables, season.table_booking_config.tables)
   end
 
   def test_social_distancing_ruleset_key_is_optional
@@ -64,6 +60,6 @@ class CreateSeasonTest < SeatsioTestClient
 
     season = @seatsio.seasons.create chart_key: chart_key, social_distancing_ruleset_key: "ruleset1"
 
-    assert_equal("ruleset1", season.season_event.social_distancing_ruleset_key)
+    assert_equal("ruleset1", season.social_distancing_ruleset_key)
   end
 end

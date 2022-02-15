@@ -8,8 +8,9 @@ require 'cgi'
 module Seatsio
 
   class SeasonsClient
-    def initialize(http_client)
+    def initialize(http_client, seatsio_client)
       @http_client = http_client
+      @seatsio_client = seatsio_client
     end
 
     def create(chart_key:, key: nil, number_of_events: nil, event_keys: nil,
@@ -28,26 +29,8 @@ module Seatsio
       Season.new(response)
     end
 
-    def delete(key:)
-      @http_client.delete("/seasons/#{key}")
-    end
-
-    def delete_partial_season(top_level_season_key:, partial_season_key:)
-      @http_client.delete("seasons/#{top_level_season_key}/partial-seasons/#{partial_season_key}")
-    end
-
     def retrieve(key:)
-      response = @http_client.get("seasons/#{key}")
-      Season.new(response)
-    end
-
-    def retrieve_partial_season(top_level_season_key:, partial_season_key:)
-      response = @http_client.get("seasons/#{top_level_season_key}/partial-seasons/#{partial_season_key}")
-      Season.new(response)
-    end
-
-    def list
-      Pagination::Cursor.new(Season, 'seasons', @http_client)
+      @seatsio_client.events.retrieve(key: key)
     end
 
     def create_events(key:, number_of_events: nil, event_keys: nil)

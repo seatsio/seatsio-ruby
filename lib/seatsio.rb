@@ -21,7 +21,7 @@ module Seatsio
       @subaccounts = SubaccountsClient.new(@http_client)
       @workspaces = WorkspacesClient.new(@http_client)
       @events = EventsClient.new(@http_client)
-      @seasons = SeasonsClient.new(@http_client)
+      @seasons = SeasonsClient.new(@http_client, self)
       @hold_tokens = HoldTokensClient.new(@http_client)
       @chart_reports = ChartReportsClient.new(@http_client)
       @event_reports = EventReportsClient.new(@http_client)
