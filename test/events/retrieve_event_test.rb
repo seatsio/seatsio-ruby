@@ -16,4 +16,20 @@ class RetrieveEventTest < SeatsioTestClient
     assert_nil(retrieved_event.updated_on)
     # TODO: assert_that(retrieved_event.created_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
+
+  def test_retrieve_season
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key
+
+    retrieved_season = @seatsio.events.retrieve key: season.key
+
+    assert_not_equal(0, retrieved_season.id)
+    assert_not_nil(retrieved_season.key)
+    assert_equal([], retrieved_season.partial_season_keys)
+    assert_equal([], retrieved_season.events)
+    assert_equal(chart_key, season.chart_key)
+    assert_equal(season.table_booking_config.mode, 'INHERIT')
+    assert_nil(season.for_sale_config)
+    assert_nil(season.updated_on)
+  end
 end
