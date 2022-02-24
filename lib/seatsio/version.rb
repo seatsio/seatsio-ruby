@@ -1,3 +1,3 @@
 module Seatsio
-  VERSION = "36.0.0"
+  VERSION = "36.1.0"
 end

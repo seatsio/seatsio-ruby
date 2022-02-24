@@ -8,6 +8,7 @@ class RetrieveEventTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_operator(retrieved_event.id, :!=, 0)
+    assert_false(retrieved_event.is_event_in_season)
     assert_operator(retrieved_event.key, :!=, nil)
     assert_equal(chart_key, retrieved_event.chart_key)
     assert_equal('INHERIT', retrieved_event.table_booking_config.mode)
@@ -25,6 +26,7 @@ class RetrieveEventTest < SeatsioTestClient
 
     assert_not_equal(0, retrieved_season.id)
     assert_not_nil(retrieved_season.key)
+    assert_true(retrieved_season.is_top_level_season)
     assert_equal([], retrieved_season.partial_season_keys)
     assert_equal([], retrieved_season.events)
     assert_equal(chart_key, season.chart_key)
