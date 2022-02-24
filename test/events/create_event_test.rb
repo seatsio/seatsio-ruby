@@ -53,4 +53,12 @@ class CreateEventTest < SeatsioTestClient
 
     assert_equal("ruleset1", event.social_distancing_ruleset_key)
   end
+
+  def test_object_categories
+    chart_key = create_test_chart
+
+    event = @seatsio.events.create chart_key: chart_key, object_categories: {'A-1' => 10}
+
+    assert_equal({'A-1' => 10}, event.object_categories)
+  end
 end

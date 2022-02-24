@@ -42,8 +42,8 @@ class UpdateEventTest < SeatsioTestClient
   def test_update_social_distancing_ruleset_key
     chart_key = create_test_chart
     @seatsio.charts.save_social_distancing_rulesets(chart_key, {
-        "ruleset1" => {"name" => "My first ruleset"},
-        "ruleset2" => {"name" => "My second ruleset"}
+      "ruleset1" => {"name" => "My first ruleset"},
+      "ruleset2" => {"name" => "My second ruleset"}
     })
     event = @seatsio.events.create chart_key: chart_key, social_distancing_ruleset_key: 'ruleset1'
 
@@ -56,7 +56,7 @@ class UpdateEventTest < SeatsioTestClient
   def test_remove_social_distancing_ruleset_key
     chart_key = create_test_chart
     @seatsio.charts.save_social_distancing_rulesets(chart_key, {
-        "ruleset1" => {"name" => "My first ruleset"}
+      "ruleset1" => {"name" => "My first ruleset"}
     })
     event = @seatsio.events.create chart_key: chart_key, social_distancing_ruleset_key: 'ruleset1'
 
@@ -64,5 +64,25 @@ class UpdateEventTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_nil(retrieved_event.social_distancing_ruleset_key)
+  end
+
+  def test_update_object_categories
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key, object_categories: {'A-1' => 10}
+
+    @seatsio.events.update key: event.key, object_categories: {'A-2' => 9}
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_equal({'A-2' => 9}, retrieved_event.object_categories)
+  end
+
+  def test_remove_object_categories
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key, object_categories: {'A-1' => 10}
+
+    @seatsio.events.update key: event.key, object_categories: { }
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_nil(retrieved_event.object_categories)
   end
 end

@@ -14,9 +14,11 @@ module Seatsio
       @http_client = http_client
     end
 
-    def create(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil)
+    def create(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil)
       payload = build_event_request(chart_key: chart_key, event_key: event_key,
-                                    table_booking_config: table_booking_config, social_distancing_ruleset_key: social_distancing_ruleset_key)
+                                    table_booking_config: table_booking_config,
+                                    social_distancing_ruleset_key: social_distancing_ruleset_key,
+                                    object_categories: object_categories)
       response = @http_client.post("events", payload)
       Event.new(response)
     end
@@ -27,8 +29,8 @@ module Seatsio
       Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil)
-      payload = build_event_request(chart_key: chart_key, event_key: event_key, table_booking_config: table_booking_config, social_distancing_ruleset_key: social_distancing_ruleset_key)
+    def update(key:, chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil)
+      payload = build_event_request(chart_key: chart_key, event_key: event_key, table_booking_config: table_booking_config, social_distancing_ruleset_key: social_distancing_ruleset_key, object_categories: object_categories)
       @http_client.post("/events/#{key}", payload)
     end
 
@@ -163,12 +165,13 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil)
+    def build_event_request(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
       result["tableBookingConfig"] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
       result["socialDistancingRulesetKey"] = social_distancing_ruleset_key if social_distancing_ruleset_key != nil
+      result["objectCategories"] = object_categories if object_categories != nil
       result
     end
 
