@@ -498,7 +498,8 @@ module Seatsio
   end
 
   class StatusChange
-    attr_reader :extra_data, :object_label, :date, :id, :status, :event_id, :origin, :order_id, :quantity, :hold_token
+    attr_reader :extra_data, :object_label, :date, :id, :status, :event_id, :origin, :order_id, :quantity, :hold_token,
+                :is_present_on_chart, :not_present_on_chart_reason
 
     def initialize(data)
       @id = data['id']
@@ -511,6 +512,8 @@ module Seatsio
       @order_id = data['orderId']
       @quantity = data['quantity']
       @hold_token = data['holdToken']
+      @is_present_on_chart = data['isPresentOnChart']
+      @not_present_on_chart_reason = data['notPresentOnChartReason']
     end
   end
 
