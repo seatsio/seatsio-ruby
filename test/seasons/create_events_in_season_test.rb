@@ -12,6 +12,8 @@ class CreateEventsInSeasonTest < SeatsioTestClient
                                                     event_keys: %w[event1 event2]
 
     assert_equal(%w[event1 event2], updated_season.events.map { |e| e.key })
+    assert_true(updated_season.events[0].is_event_in_season)
+    assert_equal(season.key, updated_season.events[0].top_level_season_key)
   end
 
   def test_number_of_events

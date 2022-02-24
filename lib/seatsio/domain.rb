@@ -127,6 +127,8 @@ module Seatsio
 
     attr_accessor :id, :key, :chart_key, :supports_best_available,
                   :table_booking_config, :for_sale_config, :created_on, :updated_on, :channels,
+                  :social_distancing_ruleset_key, :is_top_level_season, :is_partial_season,
+                  :is_event_in_season, :top_level_season_key,
                   :social_distancing_ruleset_key, :object_categories
 
     def initialize(data)
@@ -142,6 +144,10 @@ module Seatsio
         |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
       } if data['channels']
       @social_distancing_ruleset_key = data['socialDistancingRulesetKey']
+      @is_top_level_season = data['isTopLevelSeason']
+      @is_partial_season = data['isPartialSeason']
+      @is_event_in_season = data['isEventInSeason']
+      @top_level_season_key = data['topLevelSeasonKey']
       @object_categories = data['objectCategories']
     end
 

@@ -10,6 +10,8 @@ class CreateSeasonTest < SeatsioTestClient
 
     assert_not_equal(0, season.id)
     assert_not_nil(season.key)
+    assert_true(season.is_top_level_season)
+    assert_nil(season.top_level_season_key)
     assert_equal([], season.partial_season_keys)
     assert_equal([], season.events)
     assert_equal(chart_key, season.chart_key)
