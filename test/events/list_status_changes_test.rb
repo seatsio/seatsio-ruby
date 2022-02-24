@@ -35,6 +35,21 @@ class ListStatusChangesTest < SeatsioTestClient
     assert_equal('order1', status_change.order_id)
     assert_equal(hold_token.hold_token, status_change.hold_token)
     assert_not_nil(status_change.origin.ip)
+    assert_true(status_change.is_present_on_chart)
+    assert_nil(status_change.not_present_on_chart_reason)
+  end
+
+  def test_not_present_on_chart_anymore
+    chart_key = create_test_chart_with_tables
+    event = @seatsio.events.create chart_key: chart_key, table_booking_config: Seatsio::TableBookingConfig::all_by_table()
+    @seatsio.events.book(event.key, ['T1'])
+    @seatsio.events.update key: event.key, table_booking_config: Seatsio::TableBookingConfig::all_by_seat()
+
+    status_changes =  @seatsio.events.list_status_changes(event.key).to_a
+    status_change = status_changes[0]
+
+    assert_false(status_change.is_present_on_chart)
+    assert_equal('SWITCHED_TO_BOOK_BY_SEAT', status_change.not_present_on_chart_reason)
   end
 
 end
