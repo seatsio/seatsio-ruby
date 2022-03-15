@@ -129,7 +129,7 @@ module Seatsio
                   :table_booking_config, :for_sale_config, :created_on, :updated_on, :channels,
                   :social_distancing_ruleset_key, :is_top_level_season, :is_partial_season,
                   :is_event_in_season, :top_level_season_key,
-                  :social_distancing_ruleset_key, :object_categories
+                  :social_distancing_ruleset_key, :object_categories, :categories
 
     def initialize(data)
       @id = data['id']
@@ -149,6 +149,7 @@ module Seatsio
       @is_event_in_season = data['isEventInSeason']
       @top_level_season_key = data['topLevelSeasonKey']
       @object_categories = data['objectCategories']
+      @categories = data['categories']
     end
 
     def is_season
