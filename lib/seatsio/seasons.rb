@@ -38,7 +38,7 @@ module Seatsio
       request['eventKeys'] = event_keys if event_keys
       request['numberOfEvents'] = number_of_events if number_of_events
       response = @http_client.post("/seasons/#{key}/actions/create-events", request)
-      Season.new(response)
+      Events.new(response).events
     end
 
     def add_events_to_partial_season(top_level_season_key:, partial_season_key:, event_keys:)
