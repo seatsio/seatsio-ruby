@@ -38,6 +38,14 @@ module Seatsio
       @http_client.post("charts/#{key}", payload)
     end
 
+    def add_category(key, category)
+      @http_client.post("charts/#{key}/categories", category)
+    end
+
+    def remove_category(key, category_key)
+      @http_client.delete("charts/#{key}/categories/#{category_key}")
+    end
+
     def add_tag(key, tag)
       @http_client.post("charts/#{key}/tags/#{CGI::escape(tag)}")
     end
