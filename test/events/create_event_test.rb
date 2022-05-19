@@ -14,6 +14,7 @@ class CreateEventTest < SeatsioTestClient
     assert_equal(event.table_booking_config.mode, 'INHERIT')
     assert_nil(event.for_sale_config)
     assert_nil(event.updated_on)
+    assert_equal(TEST_CHART_CATEGORIES, event.categories)
 
     # TODO: assert_that(event.created_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
