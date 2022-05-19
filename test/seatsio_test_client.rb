@@ -1,6 +1,7 @@
 require "securerandom"
 
 class SeatsioTestClient < Minitest::Test
+
   def setup
     company = create_test_user
     @user = company['admin']

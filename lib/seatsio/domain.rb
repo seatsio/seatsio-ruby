@@ -70,6 +70,41 @@ module Seatsio
     end
   end
 
+  class Category
+
+    attr_reader :key, :label, :color, :accessible
+
+    def initialize(key, label, color, accessible)
+      @key = key
+      @label = label
+      @color = color
+      @accessible = accessible
+    end
+
+    def self.from_json(data)
+      if data
+        Category.new(data['key'], data['label'], data['color'], data['accessible'])
+      end
+    end
+
+    def self.create_list(list = [])
+      result = []
+
+      list.each do |item|
+        result << Category.from_json(item)
+      end
+
+      result
+    end
+
+    def == (other)
+      key == other.key &&
+        label == other.label &&
+        color == other.color &&
+        accessible == other.accessible
+    end
+  end
+
   class TableBookingConfig
 
     attr_reader :mode, :tables
@@ -114,11 +149,11 @@ module Seatsio
     end
 
     def == (other)
-      self.key == other.key &&
-        self.name == other.name &&
-        self.color == other.color &&
-        self.index == other.index &&
-        self.objects == other.objects
+      key == other.key &&
+        name == other.name &&
+        color == other.color &&
+        index == other.index &&
+        objects == other.objects
     end
 
   end
@@ -149,7 +184,7 @@ module Seatsio
       @is_event_in_season = data['isEventInSeason']
       @top_level_season_key = data['topLevelSeasonKey']
       @object_categories = data['objectCategories']
-      @categories = data['categories']
+      @categories = Category.create_list(data['categories']) if data['categories']
     end
 
     def is_season
@@ -581,19 +616,19 @@ module Seatsio
     end
 
     def == (other)
-      self.name == other.name &&
-        self.number_of_disabled_seats_to_the_sides == other.number_of_disabled_seats_to_the_sides &&
-        self.disable_seats_in_front_and_behind == other.disable_seats_in_front_and_behind &&
-        self.disable_diagonal_seats_in_front_and_behind == other.disable_diagonal_seats_in_front_and_behind &&
-        self.number_of_disabled_aisle_seats == other.number_of_disabled_aisle_seats &&
-        self.max_group_size == other.max_group_size &&
-        self.max_occupancy_absolute == other.max_occupancy_absolute &&
-        self.max_occupancy_percentage == other.max_occupancy_percentage &&
-        self.one_group_per_table == other.one_group_per_table &&
-        self.fixed_group_layout == other.fixed_group_layout &&
-        self.disabled_seats == other.disabled_seats &&
-        self.enabled_seats == other.enabled_seats &&
-        self.index == other.index
+      name == other.name &&
+        number_of_disabled_seats_to_the_sides == other.number_of_disabled_seats_to_the_sides &&
+        disable_seats_in_front_and_behind == other.disable_seats_in_front_and_behind &&
+        disable_diagonal_seats_in_front_and_behind == other.disable_diagonal_seats_in_front_and_behind &&
+        number_of_disabled_aisle_seats == other.number_of_disabled_aisle_seats &&
+        max_group_size == other.max_group_size &&
+        max_occupancy_absolute == other.max_occupancy_absolute &&
+        max_occupancy_percentage == other.max_occupancy_percentage &&
+        one_group_per_table == other.one_group_per_table &&
+        fixed_group_layout == other.fixed_group_layout &&
+        disabled_seats == other.disabled_seats &&
+        enabled_seats == other.enabled_seats &&
+        index == other.index
     end
   end
 

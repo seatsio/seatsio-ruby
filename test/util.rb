@@ -4,6 +4,12 @@ require 'seatsio/exception'
 
 BASE_URL = "https://api-staging-eu.seatsio.net"
 
+TEST_CHART_CATEGORIES = [
+  Seatsio::Category.new(9, 'Cat1', '#87A9CD', false),
+  Seatsio::Category.new(10, 'Cat2', '#5E42ED', false),
+  Seatsio::Category.new('string11', 'Cat3', '#5E42BB', false)
+]
+
 def test_client(secretKey, workspaceKey)
   Seatsio::Client.new(Seatsio::Region.new(BASE_URL), secretKey, workspaceKey)
 end
