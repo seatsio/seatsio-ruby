@@ -12,7 +12,7 @@ class ListStatusChangesTest < SeatsioTestClient
         { :event => event.key, :objects => ['A-1'], :status => 'status3' }
       ]
     )
-    wait_for_status_changes(event)
+    wait_for_status_changes(event, 3)
 
     status_changes = @seatsio.events.list_status_changes(event.key)
     assert_equal(%w(status3 status2 status1), status_changes.collect { |changes| changes.status })
@@ -25,7 +25,7 @@ class ListStatusChangesTest < SeatsioTestClient
     hold_token = @seatsio.hold_tokens.create
     object_properties = { :objectId => 'A-1', :extraData => { 'foo': 'bar' } }
     @seatsio.events.hold(event.key, object_properties, hold_token.hold_token, order_id: 'order1')
-    wait_for_status_changes(event)
+    wait_for_status_changes(event, 1)
 
     status_changes = @seatsio.events.list_status_changes(event.key).to_a
     status_change = status_changes[0]
@@ -50,7 +50,7 @@ class ListStatusChangesTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key, table_booking_config: Seatsio::TableBookingConfig::all_by_table()
     @seatsio.events.book(event.key, ['T1'])
     @seatsio.events.update key: event.key, table_booking_config: Seatsio::TableBookingConfig::all_by_seat()
-    wait_for_status_changes(event)
+    wait_for_status_changes(event, 1)
 
     status_changes = @seatsio.events.list_status_changes(event.key).to_a
     status_change = status_changes[0]

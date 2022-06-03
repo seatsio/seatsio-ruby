@@ -13,11 +13,11 @@ class SeatsioTestClient < Minitest::Test
     "#{SecureRandom.hex 20}@mailinator.com"
   end
 
-  def wait_for_status_changes(event)
+  def wait_for_status_changes(event, num_status_changes)
     start = Time.now
     while true do
       status_changes = @seatsio.events.list_status_changes(event.key).to_a
-      if status_changes.empty?
+      if status_changes.length != num_status_changes
         if Time.now - start > 10
           raise "No status changes for event #{event.key}"
         else

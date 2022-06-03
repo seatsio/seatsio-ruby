@@ -13,7 +13,7 @@ class ListStatusChangesForObjectTest < SeatsioTestClient
         { :event => event.key, :objects => ['A-1'], :status => 'status4' }
       ]
     )
-    wait_for_status_changes(event)
+    wait_for_status_changes(event, 4)
 
 
     status_changes = @seatsio.events.list_status_changes(event.key, 'A-1')
