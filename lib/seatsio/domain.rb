@@ -476,16 +476,12 @@ module Seatsio
 
   class UsageByEvent
 
-    attr_reader :event, :num_used_objects, :num_first_bookings, :num_first_bookings_or_selections,
-                :num_ga_selections_without_booking, :num_non_ga_selections_without_booking, :num_object_selections
+    attr_reader :event, :num_used_objects, :num_first_bookings, :num_object_selections
 
     def initialize(data)
       @event = UsageEvent.new(data['event'])
       @num_used_objects = data['numUsedObjects']
       @num_first_bookings = data['numFirstBookings']
-      @num_first_bookings_or_selections = data['numFirstBookingsOrSelections']
-      @num_ga_selections_without_booking = data['numGASelectionsWithoutBooking']
-      @num_non_ga_selections_without_booking = data['numNonGASelectionsWithoutBooking']
       @num_object_selections = data['numObjectSelections']
     end
   end
