@@ -33,7 +33,7 @@ module Seatsio
 
         request_options = { method: args[0], url: url, headers: headers }
 
-        if args[0] == :post
+        if args[0] == :post || args[0] == :delete
           args[2].delete :params
           request_options[:payload] = args[2].to_json
         end
@@ -90,8 +90,8 @@ module Seatsio
       execute(:post, endpoint, payload)
     end
 
-    def delete(endpoint)
-      execute(:delete, endpoint, {})
+    def delete(endpoint, payload = {})
+      execute(:delete, endpoint, payload)
     end
   end
 end
