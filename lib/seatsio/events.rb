@@ -6,12 +6,16 @@ require "json"
 require "cgi"
 require "seatsio/events/change_object_status_request"
 require "seatsio/events/change_best_available_object_status_request"
+require 'seatsio/channels'
 
 module Seatsio
 
   class EventsClient
+    attr_reader :channels
+
     def initialize(http_client)
       @http_client = http_client
+      @channels = ChannelsClient.new(@http_client)
     end
 
     def create(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil)
@@ -140,14 +144,6 @@ module Seatsio
     def mark_as_for_sale(key:, objects: nil, categories: nil)
       request = build_parameters_for_mark_as_sale objects: objects, categories: categories
       @http_client.post("events/#{key}/actions/mark-as-for-sale", request)
-    end
-
-    def update_channels(key:, channels:)
-      @http_client.post("events/#{key}/channels/update", channels: channels)
-    end
-
-    def assign_objects_to_channels(key:, channelConfig:)
-      @http_client.post("events/#{key}/channels/assign-objects", channelConfig: channelConfig)
     end
 
     private

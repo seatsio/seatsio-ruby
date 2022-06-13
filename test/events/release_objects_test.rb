@@ -59,10 +59,10 @@ class ReleaseObjectsTest < SeatsioTestClient
   def test_channel_keys
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
         "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
         "channelKey1" => ["A-1", "A-2"]
     }
     @seatsio.events.book(event.key, 'A-1', channel_keys: ["channelKey1"])
@@ -76,10 +76,10 @@ class ReleaseObjectsTest < SeatsioTestClient
   def test_ignore_channels
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
         "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
         "channelKey1" => ["A-1", "A-2"]
     }
     @seatsio.events.book(event.key, 'A-1', channel_keys: ["channelKey1"])

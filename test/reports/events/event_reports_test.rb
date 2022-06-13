@@ -25,10 +25,10 @@ class EventReportsTest < SeatsioTestClient
 
     @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1')
 
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
       "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1"] }
+    @seatsio.events.channels.set_objects key: event.key, channelConfig: { "channelKey1" => ["A-1"] }
 
     report = @seatsio.event_reports.by_label(event.key)
 
@@ -302,10 +302,10 @@ class EventReportsTest < SeatsioTestClient
   def test_by_channel
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
       "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
+    @seatsio.events.channels.set_objects key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
 
     report = @seatsio.event_reports.by_channel(event.key)
 
@@ -316,10 +316,10 @@ class EventReportsTest < SeatsioTestClient
   def test_by_specific_channel
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
       "channelKey1" => { "name" => "channel 1", "color" => "#FF0000", "index" => 1 },
     }
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
+    @seatsio.events.channels.set_objects key: event.key, channelConfig: { "channelKey1" => ["A-1", "A-2"] }
 
     report = @seatsio.event_reports.by_channel(event.key, 'channelKey1')
 
