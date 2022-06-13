@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'util'
 
-class AssignObjectsToChannelsTest < SeatsioTestClient
+class SetObjectsForChannelsTest < SeatsioTestClient
 
   def test_assign_objects_to_channels
     chart_key = create_test_chart

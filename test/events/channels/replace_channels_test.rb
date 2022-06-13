@@ -1,9 +1,9 @@
 require 'test_helper'
 require 'util'
 
-class UpdateEventTest < SeatsioTestClient
+class ReplaceChannelsTest < SeatsioTestClient
 
-  def test_update_channels
+  def test_replace_channels
     chart = @seatsio.charts.create
     event = @seatsio.events.create chart_key: chart.key
 
