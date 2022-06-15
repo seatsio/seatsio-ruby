@@ -1,13 +1,13 @@
 require 'test_helper'
 require 'util'
 
-class UpdateEventTest < SeatsioTestClient
+class ReplaceChannelsTest < SeatsioTestClient
 
-  def test_update_channels
+  def test_replace_channels
     chart = @seatsio.charts.create
     event = @seatsio.events.create chart_key: chart.key
 
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
         "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
         "channelKey2" => {"name" => "channel 2", "color" => "#0000FF", "index" => 2}
     }

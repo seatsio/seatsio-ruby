@@ -1,17 +1,17 @@
 require 'test_helper'
 require 'util'
 
-class AssignObjectsToChannelsTest < SeatsioTestClient
+class SetObjectsForChannelsTest < SeatsioTestClient
 
-  def test_assign_objects_to_channels
+  def test_set_objects
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.update_channels key: event.key, channels: {
+    @seatsio.events.channels.replace key: event.key, channels: {
         "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1},
         "channelKey2" => {"name" => "channel 2", "color" => "#0000FF", "index" => 2}
     }
 
-    @seatsio.events.assign_objects_to_channels key: event.key, channelConfig: {
+    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
         "channelKey1" => ["A-1", "A-2"],
         "channelKey2" => ["A-3"]
     }
