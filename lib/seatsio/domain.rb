@@ -315,7 +315,7 @@ module Seatsio
   class ChartObjectInfo
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
-                :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point
+                :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats
 
     def initialize(data)
       @label = data['label']
@@ -331,6 +331,7 @@ module Seatsio
       @right_neighbour = data['rightNeighbour']
       @book_as_a_whole = data['bookAsAWhole']
       @distance_to_focal_point = data['distanceToFocalPoint']
+      @num_seats = data['numSeats']
     end
   end
 
@@ -386,7 +387,7 @@ module Seatsio
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_available, :is_disabled_by_social_distancing, :channel,
-                :book_as_a_whole, :distance_to_focal_point, :holds
+                :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats
 
     def initialize(data)
       @status = data['status']
@@ -419,6 +420,7 @@ module Seatsio
       @book_as_a_whole = data['bookAsAWhole']
       @distance_to_focal_point = data['distanceToFocalPoint']
       @holds = data['holds']
+      @num_seats = data['numSeats']
     end
   end
 

@@ -106,6 +106,17 @@ class EventReportsTest < SeatsioTestClient
     assert_nil(report_item.displayed_object_type)
   end
 
+  def test_report_item_properties_for_table
+    chart_key = create_test_chart_with_tables
+    event = @seatsio.events.create chart_key: chart_key, table_booking_config: Seatsio::TableBookingConfig::all_by_table()
+
+    report = @seatsio.event_reports.by_label(event.key)
+
+    report_item = report.items['T1'][0]
+    assert_equal(6, report_item.num_seats)
+    assert_false(report_item.book_as_a_whole)
+  end
+
   def test_by_status
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
