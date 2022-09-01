@@ -6,8 +6,8 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     crack (0.4.5)
       rexml
     domain_name (0.5.20190701)
@@ -23,7 +23,7 @@ GEM
     minitest-parallel_fork (1.3.0)
       minitest (>= 5.15.0)
     netrc (0.11.0)
-    public_suffix (4.0.6)
+    public_suffix (5.0.0)
     rake (13.0.6)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
@@ -34,7 +34,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    webmock (3.14.0)
+    webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
