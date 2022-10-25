@@ -55,7 +55,7 @@ module Seatsio
 
     def retrieve_object_infos(key:, labels:)
       url = "events/#{key}/objects"
-      query_params = URI.encode_www_form(labels.map { |label| ['label', label]})
+      query_params = URI.encode_www_form(labels.map { |label| ['label', label] })
       response = @http_client.get(url, query_params)
       response.each do |key, value|
         response[key] = EventObjectInfo.new(value)
@@ -70,7 +70,7 @@ module Seatsio
     def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil, allowed_previous_statuses: nil, rejected_previous_statuses: nil)
       request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, ignore_social_distancing, allowed_previous_statuses, rejected_previous_statuses)
       request[:params] = {
-          :expand => 'objects'
+        :expand => 'objects'
       }
       response = @http_client.post("events/groups/actions/change-object-status", request)
       ChangeObjectStatusResult.new(response)
@@ -78,8 +78,8 @@ module Seatsio
 
     def change_object_status_in_batch(status_change_requests)
       request = {
-          :statusChanges => status_change_requests,
-          :params => {:expand => 'objects'}
+        :statusChanges => status_change_requests,
+        :params => { :expand => 'objects' }
       }
       response = @http_client.post("events/actions/change-object-status", request)
       ChangeObjectStatusInBatchResult.new(response).results
@@ -132,8 +132,8 @@ module Seatsio
       Pagination::Cursor.new(StatusChange, "/events/#{key}/objects/#{object_id}/status-changes", @http_client)
     end
 
-    def mark_as_not_for_sale(key:, objects: nil, categories: nil)
-      request = build_parameters_for_mark_as_sale objects: objects, categories: categories
+    def mark_as_not_for_sale(key:, objects: nil, area_places: nil, categories: nil)
+      request = build_parameters_for_mark_as_sale objects, area_places, categories
       @http_client.post("events/#{key}/actions/mark-as-not-for-sale", request)
     end
 
@@ -141,16 +141,17 @@ module Seatsio
       @http_client.post("events/#{key}/actions/mark-everything-as-for-sale")
     end
 
-    def mark_as_for_sale(key:, objects: nil, categories: nil)
-      request = build_parameters_for_mark_as_sale objects: objects, categories: categories
+    def mark_as_for_sale(key:, objects: nil, area_places: nil, categories: nil)
+      request = build_parameters_for_mark_as_sale objects, area_places, categories
       @http_client.post("events/#{key}/actions/mark-as-for-sale", request)
     end
 
     private
 
-    def build_parameters_for_mark_as_sale(objects: nil, categories: nil)
+    def build_parameters_for_mark_as_sale(objects, area_places, categories)
       request = {}
       request[:objects] = objects if objects
+      request[:areaPlaces] = area_places if area_places
       request[:categories] = categories if categories
       request
     end

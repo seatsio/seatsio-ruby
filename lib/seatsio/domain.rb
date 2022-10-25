@@ -59,12 +59,13 @@ module Seatsio
 
   class ForSaleConfig
 
-    attr_reader :for_sale, :objects, :categories
+    attr_reader :for_sale, :objects, :area_places, :categories
 
     def initialize(data)
       if data
         @for_sale = data['forSale']
         @objects = data['objects']
+        @area_places = data['areaPlaces']
         @categories = data['categories']
       end
     end
