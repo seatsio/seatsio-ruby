@@ -25,7 +25,7 @@ class ChartReportsTest < SeatsioTestClient
     assert_not_nil(event.key)
     assert_equal(chart_key, event.chart_key)
     assert_equal('INHERIT', event.table_booking_config.mode)
-    assert_nil(event.supports_best_available)
+    assert_equal(true, event.supports_best_available)
     assert_nil(event.for_sale_config)
     assert_not_nil(event.created_on)
     assert_nil(event.updated_on)
