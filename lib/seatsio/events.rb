@@ -33,8 +33,14 @@ module Seatsio
       Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil)
-      payload = build_event_request(chart_key: chart_key, event_key: event_key, table_booking_config: table_booking_config, social_distancing_ruleset_key: social_distancing_ruleset_key, object_categories: object_categories)
+    def update(key:, chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+      payload = build_event_request(
+        chart_key: chart_key,
+        event_key: event_key,
+        table_booking_config: table_booking_config,
+        social_distancing_ruleset_key: social_distancing_ruleset_key,
+        object_categories: object_categories,
+        categories: categories)
       @http_client.post("/events/#{key}", payload)
     end
 
