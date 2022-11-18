@@ -185,6 +185,8 @@ module Seatsio
         r = {}
         r["eventKey"] = param[:event_key] if param[:event_key] != nil
         r["tableBookingConfig"] = table_booking_config_to_request(param[:table_booking_config]) if param[:table_booking_config] != nil
+        r["socialDistancingRulesetKey"] = param[:social_distancing_ruleset_key] if param[:social_distancing_ruleset_key] != nil
+        r["objectCategories"] = param[:object_categories] if param[:object_categories] != nil
         result.push(r)
       end
       result
