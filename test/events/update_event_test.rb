@@ -85,4 +85,29 @@ class UpdateEventTest < SeatsioTestClient
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_nil(retrieved_event.object_categories)
   end
+
+  def test_update_categories
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.update key: event.key, categories: [Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB')]
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_equal(TEST_CHART_CATEGORIES.size + 1, retrieved_event.categories.size)
+    assert_equal(TEST_CHART_CATEGORIES[0], retrieved_event.categories[0])
+    assert_equal(TEST_CHART_CATEGORIES[1], retrieved_event.categories[1])
+    assert_equal(TEST_CHART_CATEGORIES[2], retrieved_event.categories[2])
+    assert_equal(Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB'), retrieved_event.categories[3])
+  end
+
+  def test_remove_categories
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key, categories: [Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB')]
+
+    @seatsio.events.update key: event.key, categories: []
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_equal(TEST_CHART_CATEGORIES.size, retrieved_event.categories.size)
+
+  end
 end

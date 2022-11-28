@@ -75,7 +75,7 @@ module Seatsio
 
     attr_reader :key, :label, :color, :accessible
 
-    def initialize(key, label, color, accessible)
+    def initialize(key, label, color, accessible = false)
       @key = key
       @label = label
       @color = color
