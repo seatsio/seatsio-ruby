@@ -76,14 +76,6 @@ module Seatsio
       Chart.new(response)
     end
 
-    def retrieve_published_version(key)
-      @http_client.get("charts/#{key}/version/published")
-    end
-
-    def retrieve_draft_version(key)
-      @http_client.get("charts/#{key}/version/draft")
-    end
-
     def retrieve_draft_version_thumbnail(key)
       @http_client.get_raw("charts/#{key}/version/draft/thumbnail")
     end
