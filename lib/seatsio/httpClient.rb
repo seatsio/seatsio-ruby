@@ -16,6 +16,7 @@ module Seatsio
     def execute(*args)
       begin
         headers = { :Authorization => "Basic #{@secret_key}" }
+        headers[:'X-Client-Lib'] = "ruby"
         unless @workspace_key.nil?
           headers[:'X-Workspace-Key'] = @workspace_key
         end
