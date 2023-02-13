@@ -16,6 +16,10 @@ module Seatsio
       @http_client.post("events/#{event_key}/channels", payload)
     end
 
+    def add_multiple(event_key:, channel_creation_properties:)
+      @http_client.post("events/#{event_key}/channels", channel_creation_properties)
+    end
+
     def remove(event_key:, channel_key:)
       @http_client.delete("events/#{event_key}/channels/#{channel_key}")
     end
@@ -43,6 +47,8 @@ module Seatsio
     def set_objects(key:, channelConfig:)
       @http_client.post("events/#{key}/channels/assign-objects", channelConfig: channelConfig)
     end
+
+    private
 
   end
 end
