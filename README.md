@@ -93,6 +93,23 @@ puts object_infos['A-2'].category_label
 puts object_infos['A-2'].status
 ```
 
+### Listing a chart's categories
+
+```ruby
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key")
+categories = [
+  { 'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false },
+  { 'key' => 'cat2', 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true }
+]
+chart = client.charts.create categories: categories
+
+category_list = client.charts.list_categories(chart.key)
+category_list.each_with_index do |category, index|
+  puts category.key
+end
+```
+
 ### Listing all charts
 
 ```ruby
