@@ -35,4 +35,17 @@ class ManageCategoriesTest < SeatsioTestClient
     ]
     assert_equal(expected_categories, drawing['categories']['list'])
   end
+
+  def test_list_categories
+    categories = [
+      { 'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false },
+      { 'key' => 'cat2', 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true }
+    ]
+    chart = @seatsio.charts.create categories: categories
+
+    category_list = @seatsio.charts.list_categories(chart.key)
+    category_list.each_with_index do |category, index|
+      assert_equal(categories[index]['key'], category.key)
+    end
+  end
 end

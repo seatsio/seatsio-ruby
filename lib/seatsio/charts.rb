@@ -46,6 +46,11 @@ module Seatsio
       @http_client.delete("charts/#{key}/categories/#{category_key}")
     end
 
+    def list_categories(chart_key)
+      response = @http_client.get("charts/#{chart_key}/categories")
+      Category.create_list(response['categories'])
+    end
+
     def add_tag(key, tag)
       @http_client.post("charts/#{key}/tags/#{CGI::escape(tag)}")
     end
