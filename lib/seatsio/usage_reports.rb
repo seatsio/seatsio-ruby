@@ -13,7 +13,7 @@ module Seatsio
     def summary_for_all_months
       url = "reports/usage"
       body = @http_client.get(url)
-      UsageSummaryForAllMoths.new(body)
+      UsageSummaryForAllMonths.new(body)
     end
 
     def details_for_month(month)
@@ -25,7 +25,11 @@ module Seatsio
     def details_for_event_in_month(eventId, month)
       url = "reports/usage/month/" + month.serialize + "/event/" + eventId.to_s
       body = @http_client.get(url)
-      body.map { |item| UsageForObject.new(item) }
+      if body.empty? or !body[0].key?('usageByReason')
+        body.map { |item| UsageForObjectV1.new(item) }
+      else
+        body.map { |item| UsageForObjectV2.new(item) }
+      end
     end
   end
 end
