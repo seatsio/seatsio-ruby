@@ -425,7 +425,7 @@ module Seatsio
     end
   end
 
-  class UsageSummaryForAllMoths
+  class UsageSummaryForAllMonths
     attr_reader :items
 
     def initialize(data)
@@ -441,9 +441,6 @@ module Seatsio
     def initialize(data)
       @month = Month.from_json(data['month'])
       @num_used_objects = data['numUsedObjects']
-      @num_first_bookings = data['numFirstBookings']
-      @num_first_bookings_by_status = data['numFirstBookingsByStatus']
-      @num_first_bookings_or_selections = data['numFirstBookingsOrSelections']
     end
   end
 
@@ -484,8 +481,6 @@ module Seatsio
     def initialize(data)
       @event = UsageEvent.new(data['event'])
       @num_used_objects = data['numUsedObjects']
-      @num_first_bookings = data['numFirstBookings']
-      @num_object_selections = data['numObjectSelections']
     end
   end
 
@@ -499,7 +494,7 @@ module Seatsio
     end
   end
 
-  class UsageForObject
+  class UsageForObjectV1
 
     attr_reader :object, :num_first_bookings, :first_booking_date, :num_first_bookings, :num_first_bookings_or_selections
 
@@ -509,6 +504,17 @@ module Seatsio
       @first_booking_date = data['firstBookingDate'] ? DateTime.iso8601(data['firstBookingDate']) : nil
       @num_first_selections = data['numFirstSelections']
       @num_first_bookings_or_selections = data['numFirstBookingsOrSelections']
+    end
+  end
+
+  class UsageForObjectV2
+
+    attr_reader :object, :num_used_objects, :usage_by_reason
+
+    def initialize(data)
+      @object = data['object']
+      @num_used_objects = data['numUsedObjects']
+      @usage_by_reason = data['usageByReason']
     end
   end
 
