@@ -32,11 +32,6 @@ jobs:
         env:
           VERSION_TO_BUMP: ${{ inputs.versionToBump }}
           GH_TOKEN: ${{ github.token }}
-  publish:
-    needs: [release]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
       - run: |
           mkdir -p $HOME/.gem
           touch $HOME/.gem/credentials
@@ -46,3 +41,4 @@ jobs:
           gem push *.gem
         env:
           GEM_HOST_API_KEY: "${{secrets.RUBYGEMS_API_KEY}}"
+
