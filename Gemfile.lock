@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     seatsio (43.1.0)
+      rest-client (~> 2.0, >= 2.0.2)
 
 GEM
   remote: https://rubygems.org/
@@ -47,7 +48,6 @@ DEPENDENCIES
   minitest (~> 5.0)
   minitest-parallel_fork (~> 1.3)
   rake (~> 13.0)
-  rest-client (~> 2.0, >= 2.0.2)
   seatsio!
   webmock (~> 3.4, >= 3.4.2)
 
