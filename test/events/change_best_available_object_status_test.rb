@@ -8,7 +8,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     result = @seatsio.events.change_best_available_object_status(event.key, 3, 'myStatus')
     assert_equal(true, result.next_to_each_other)
-    assert_equal(%w(B-4 B-5 B-6), result.objects)
+    assert_equal(%w(A-4 A-5 A-6), result.objects)
   end
 
   def test_object_details
@@ -17,11 +17,11 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     result = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus')
 
-    b5 = result.object_details['B-5']
+    b5 = result.object_details['A-5']
     assert_equal('myStatus', b5.status)
-    assert_equal('B-5', b5.label)
-    assert_equal({'own' => {'label' => '5', 'type' => 'seat'}, 'parent' => {'label' => 'B', 'type' => 'row'}}, b5.labels)
-    assert_equal({'own' => '5', 'parent' => 'B'}, b5.ids)
+    assert_equal('A-5', b5.label)
+    assert_equal({'own' => {'label' => '5', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}}, b5.labels)
+    assert_equal({'own' => '5', 'parent' => 'A'}, b5.ids)
     assert_equal('Cat1', b5.category_label)
     assert_equal('9', b5.category_key)
     assert_nil(b5.ticket_type)
@@ -32,8 +32,8 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_nil(b5.entrance)
     assert_nil(b5.num_booked)
     assert_nil(b5.capacity)
-    assert_equal('B-4', b5.left_neighbour)
-    assert_equal('B-6', b5.right_neighbour)
+    assert_equal('A-4', b5.left_neighbour)
+    assert_equal('A-6', b5.right_neighbour)
   end
 
   def test_categories
@@ -50,9 +50,9 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     d2 = {'key2' => 'value2'}
     extra_data = [d1, d2]
     result = @seatsio.events.change_best_available_object_status(event.key, 2, 'mystatus', extra_data: extra_data)
-    assert_equal(%w(B-4 B-5), result.objects)
-    assert_equal(d1, @seatsio.events.retrieve_object_info(key: event.key, label: 'B-4').extra_data)
-    assert_equal(d2, @seatsio.events.retrieve_object_info(key: event.key, label: 'B-5').extra_data)
+    assert_equal(%w(A-4 A-5), result.objects)
+    assert_equal(d1, @seatsio.events.retrieve_object_info(key: event.key, label: 'A-4').extra_data)
+    assert_equal(d2, @seatsio.events.retrieve_object_info(key: event.key, label: 'A-5').extra_data)
   end
 
   def test_hold_token
@@ -81,7 +81,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.book_best_available(event.key, 3)
     assert_equal(true, best_available_objects.next_to_each_other)
-    assert_equal(%w(B-4 B-5 B-6), best_available_objects.objects)
+    assert_equal(%w(A-4 A-5 A-6), best_available_objects.objects)
   end
 
   def test_book_best_available_with_extra_data
@@ -91,7 +91,7 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     best_available_objects = @seatsio.events.book_best_available(event.key, 3, extra_data: extra_data)
     assert_equal(true, best_available_objects.next_to_each_other)
-    assert_equal(%w(B-4 B-5 B-6), best_available_objects.objects)
+    assert_equal(%w(A-4 A-5 A-6), best_available_objects.objects)
   end
 
   def test_hold_best_available
@@ -113,6 +113,16 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     object_info = @seatsio.events.retrieve_object_info key: event.key, label: best_available_objects.objects[0]
     assert_equal({ "name" => 'John Doe'}, object_info.extra_data)
+  end
+
+  def test_do_not_try_to_prevent_orphan_seats
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.book(event.key, %w[A-4 A-5])
+
+    best_available_objects = @seatsio.events.change_best_available_object_status(event.key, 2, 'someStatus', try_to_prevent_orphan_seats: false)
+
+    assert_equal(%w(A-2 A-3), best_available_objects.objects)
   end
 
   def test_ticket_types
@@ -170,12 +180,12 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
         "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
     }
     @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["B-6"]
+        "channelKey1" => ["A-6"]
     }
 
     result = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', channel_keys: ["channelKey1"])
 
-    assert_equal(%w(B-6), result.objects)
+    assert_equal(%w(A-6), result.objects)
   end
 
   def test_ignore_channels
@@ -185,11 +195,11 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
         "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
     }
     @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["B-5"]
+        "channelKey1" => ["A-5"]
     }
 
     result = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', ignore_channels: true)
 
-    assert_equal(%w(B-5), result.objects)
+    assert_equal(%w(A-5), result.objects)
   end
 end
