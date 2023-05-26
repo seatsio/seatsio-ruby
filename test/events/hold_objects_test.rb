@@ -51,12 +51,9 @@ class HoldObjectsTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
-    @seatsio.events.channels.replace key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
-    }
-    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["A-1", "A-2"]
-    }
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    ]
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, channel_keys: ["channelKey1"])
 
@@ -68,12 +65,9 @@ class HoldObjectsTest < SeatsioTestClient
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
     hold_token = @seatsio.hold_tokens.create
-    @seatsio.events.channels.replace key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
-    }
-    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["A-1", "A-2"]
-    }
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    ]
 
     @seatsio.events.hold(event.key, 'A-1', hold_token.hold_token, ignore_channels: true)
 

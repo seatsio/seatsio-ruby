@@ -42,11 +42,11 @@ class BookObjectsTest < SeatsioTestClient
     assert_equal("Section A", seat_a1.section)
     assert_equal("Entrance 1", seat_a1.entrance)
     assert_equal(
-      {'own' => {'label' => '1', 'type' => 'seat'}, 'parent' => {'label' => 'A', 'type' => 'row'}, 'section' => 'Section A', 'entrance' => {'label' => 'Entrance 1'}},
+      { 'own' => { 'label' => '1', 'type' => 'seat' }, 'parent' => { 'label' => 'A', 'type' => 'row' }, 'section' => 'Section A', 'entrance' => { 'label' => 'Entrance 1' } },
       seat_a1.labels
     )
     assert_equal(
-      {'own' => '1', 'parent' => 'A', 'section' => 'Section A'},
+      { 'own' => '1', 'parent' => 'A', 'section' => 'Section A' },
       seat_a1.ids
     )
   end
@@ -86,8 +86,8 @@ class BookObjectsTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
 
     objects = [
-      {:objectId => 'A-5', :extraData => {'name' => 'John Doe'}},
-      {:objectId => 'A-6', :extraData => {'name' => 'John Doe'}}
+      { :objectId => 'A-5', :extraData => { 'name' => 'John Doe' } },
+      { :objectId => 'A-6', :extraData => { 'name' => 'John Doe' } }
     ]
 
     @seatsio.events.book(event.key, objects)
@@ -101,7 +101,7 @@ class BookObjectsTest < SeatsioTestClient
   def test_keep_extra_data_true
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    extra_data = {'name' => 'John Doe'}
+    extra_data = { 'name' => 'John Doe' }
     @seatsio.events.update_extra_data key: event.key, object: 'A-1', extra_data: extra_data
 
     @seatsio.events.book(event.key, 'A-1', keep_extra_data: true)
@@ -113,12 +113,9 @@ class BookObjectsTest < SeatsioTestClient
   def test_channel_keys
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
-    }
-    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["A-1", "A-2"]
-    }
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    ]
 
     @seatsio.events.book(event.key, 'A-1', channel_keys: ["channelKey1"])
 
@@ -129,12 +126,9 @@ class BookObjectsTest < SeatsioTestClient
   def test_ignore_channels
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
-    }
-    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["A-1", "A-2"]
-    }
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    ]
 
     @seatsio.events.book(event.key, 'A-1', ignore_channels: true)
 
@@ -145,11 +139,11 @@ class BookObjectsTest < SeatsioTestClient
   def test_ignore_social_distancing
     chart_key = create_test_chart
     rulesets = {
-        "ruleset" => {
-            "name" => "ruleset",
-            "fixedGroupLayout" => true,
-            "disabledSeats" => ["A-1"]
-        }
+      "ruleset" => {
+        "name" => "ruleset",
+        "fixedGroupLayout" => true,
+        "disabledSeats" => ["A-1"]
+      }
     }
     @seatsio.charts.save_social_distancing_rulesets(chart_key, rulesets)
     event = @seatsio.events.create chart_key: chart_key, social_distancing_ruleset_key: "ruleset"
