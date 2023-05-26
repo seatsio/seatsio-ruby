@@ -176,12 +176,9 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
   def test_channel_keys
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
-    }
-    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["A-6"]
-    }
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-6] }
+    ]
 
     result = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', channel_keys: ["channelKey1"])
 
@@ -191,12 +188,9 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
   def test_ignore_channels
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: {
-        "channelKey1" => {"name" => "channel 1", "color" => "#FF0000", "index" => 1}
-    }
-    @seatsio.events.channels.set_objects key: event.key, channelConfig: {
-        "channelKey1" => ["A-5"]
-    }
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-5] }
+    ]
 
     result = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', ignore_channels: true)
 
