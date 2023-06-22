@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    seatsio (44.0.0)
+    seatsio (44.1.0)
       rest-client (~> 2.0, >= 2.0.2)
 
 GEM
