@@ -316,7 +316,8 @@ module Seatsio
   class ChartObjectInfo
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
-                :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats
+                :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats, :is_accessible,
+                :is_companion_seat, :has_restricted_view
 
     def initialize(data)
       @label = data['label']
@@ -333,6 +334,9 @@ module Seatsio
       @book_as_a_whole = data['bookAsAWhole']
       @distance_to_focal_point = data['distanceToFocalPoint']
       @num_seats = data['numSeats']
+      @is_accessible = data['isAccessible']
+      @is_companion_seat = data['isCompanionSeat']
+      @has_restricted_view = data['hasRestrictedView']
     end
   end
 
