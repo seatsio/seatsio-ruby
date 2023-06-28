@@ -12,8 +12,6 @@ class UpdateEventTest < SeatsioTestClient
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal(event.key, retrieved_event.key)
     assert_equal(chart2.key, retrieved_event.chart_key)
-
-    # TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
 
   def test_update_event_key
@@ -25,7 +23,6 @@ class UpdateEventTest < SeatsioTestClient
     retrieved_event = @seatsio.events.retrieve key: 'newKey'
     assert_equal('newKey', retrieved_event.key)
     assert_equal(event.id, retrieved_event.id)
-    # TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
 
   def test_update_table_booking_config
@@ -36,7 +33,6 @@ class UpdateEventTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal({'T1' => 'BY_SEAT'}, retrieved_event.table_booking_config.tables)
-    #TODO: assert_that(retrieved_event.updated_on).is_between_now_minus_and_plus_minutes(datetime.utcnow(), 1)
   end
 
   def test_update_social_distancing_ruleset_key
@@ -108,6 +104,25 @@ class UpdateEventTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal(TEST_CHART_CATEGORIES.size, retrieved_event.categories.size)
+  end
 
+  def test_update_name
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key, name: 'An event'
+
+    @seatsio.events.update key: event.key, name: 'Another event'
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_equal('Another event', retrieved_event.name)
+  end
+
+  def test_update_date
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key, date: Date.iso8601('2022-01-05')
+
+    @seatsio.events.update key: event.key, date: Date.iso8601('2023-01-05')
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_equal(Date.iso8601('2023-01-05'), retrieved_event.date)
   end
 end

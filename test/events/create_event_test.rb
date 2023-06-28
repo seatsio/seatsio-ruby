@@ -74,4 +74,20 @@ class CreateEventTest < SeatsioTestClient
     assert_equal(TEST_CHART_CATEGORIES[2], event.categories[2])
     assert_equal(Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB'), event.categories[3])
   end
+
+  def test_name
+    chart = @seatsio.charts.create
+
+    event = @seatsio.events.create chart_key: chart.key, name: 'My event'
+
+    assert_equal('My event', event.name)
+  end
+
+  def test_date
+    chart = @seatsio.charts.create
+
+    event = @seatsio.events.create chart_key: chart.key, date: Date.iso8601('2022-01-05')
+
+    assert_equal(Date.iso8601('2022-01-05'), event.date)
+  end
 end

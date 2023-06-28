@@ -161,7 +161,7 @@ module Seatsio
 
   class Event
 
-    attr_accessor :id, :key, :chart_key, :supports_best_available,
+    attr_accessor :id, :key, :chart_key, :name, :date, :supports_best_available,
                   :table_booking_config, :for_sale_config, :created_on, :updated_on, :channels,
                   :social_distancing_ruleset_key, :is_top_level_season, :is_partial_season,
                   :is_event_in_season, :top_level_season_key,
@@ -171,6 +171,8 @@ module Seatsio
       @id = data['id']
       @key = data['key']
       @chart_key = data['chartKey']
+      @name = data['name']
+      @date = Date.iso8601(data['date']) if data['date']
       @supports_best_available = data['supportsBestAvailable']
       @table_booking_config = TableBookingConfig::from_json(data['tableBookingConfig'])
       @for_sale_config = ForSaleConfig.new(data['forSaleConfig']) if data['forSaleConfig']
