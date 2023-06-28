@@ -105,4 +105,30 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB'), event.categories[3])
   end
 
+  def test_name_can_be_passed_in
+    chart_key = create_test_chart
+    event_creation_params = [
+      {:name => 'My event'}
+    ]
+
+    events = @seatsio.events.create_multiple(key: chart_key, event_creation_params: event_creation_params)
+
+    assert_equal(1, events.length)
+    event = events[0]
+    assert_equal('My event', event.name)
+  end
+
+  def test_date_can_be_passed_in
+    chart_key = create_test_chart
+    event_creation_params = [
+      {:date => Date.iso8601('2022-01-05')}
+    ]
+
+    events = @seatsio.events.create_multiple(key: chart_key, event_creation_params: event_creation_params)
+
+    assert_equal(1, events.length)
+    event = events[0]
+    assert_equal(Date.iso8601('2022-01-05'), event.date)
+  end
+
 end

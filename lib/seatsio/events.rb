@@ -18,8 +18,9 @@ module Seatsio
       @channels = ChannelsClient.new(@http_client)
     end
 
-    def create(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
       payload = build_event_request(chart_key: chart_key, event_key: event_key,
+                                    name: name, date: date,
                                     table_booking_config: table_booking_config,
                                     social_distancing_ruleset_key: social_distancing_ruleset_key,
                                     object_categories: object_categories, categories: categories)
@@ -33,10 +34,12 @@ module Seatsio
       Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+    def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
       payload = build_event_request(
         chart_key: chart_key,
         event_key: event_key,
+        name: name,
+        date: date,
         table_booking_config: table_booking_config,
         social_distancing_ruleset_key: social_distancing_ruleset_key,
         object_categories: object_categories,
@@ -168,10 +171,12 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key: nil, event_key: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+    def build_event_request(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
+      result["name"] = name if name
+      result["date"] = date.iso8601 if date
       result["tableBookingConfig"] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
       result["socialDistancingRulesetKey"] = social_distancing_ruleset_key if social_distancing_ruleset_key != nil
       result["objectCategories"] = object_categories if object_categories != nil
@@ -191,6 +196,8 @@ module Seatsio
       params.each do |param|
         r = {}
         r["eventKey"] = param[:event_key] if param[:event_key] != nil
+        r["name"] = param[:name] if param[:name]
+        r["date"] = param[:date].iso8601 if param[:date]
         r["tableBookingConfig"] = table_booking_config_to_request(param[:table_booking_config]) if param[:table_booking_config] != nil
         r["socialDistancingRulesetKey"] = param[:social_distancing_ruleset_key] if param[:social_distancing_ruleset_key] != nil
         r["objectCategories"] = param[:object_categories] if param[:object_categories] != nil
