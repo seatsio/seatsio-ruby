@@ -164,24 +164,6 @@ class ChangeObjectStatusTest < SeatsioTestClient
     assert_equal("someStatus", object_info.status)
   end
 
-  def test_ignore_social_distancing
-    chart_key = create_test_chart
-    rulesets = {
-      "ruleset" => {
-        "name" => "ruleset",
-        "fixedGroupLayout" => true,
-        "disabledSeats" => ["A-1"]
-      }
-    }
-    @seatsio.charts.save_social_distancing_rulesets(chart_key, rulesets)
-    event = @seatsio.events.create chart_key: chart_key, social_distancing_ruleset_key: "ruleset"
-
-    @seatsio.events.change_object_status(event.key, 'A-1', "someStatus", ignore_social_distancing: true)
-
-    object_info = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
-    assert_equal("someStatus", object_info.status)
-  end
-
   def test_allowed_previous_statuses
     begin
       chart_key = create_test_chart

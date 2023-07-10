@@ -14,9 +14,9 @@ module Seatsio
     end
 
     def create(chart_key:, key: nil, number_of_events: nil, event_keys: nil,
-               table_booking_config: nil, social_distancing_ruleset_key: nil)
+               table_booking_config: nil)
       request = build_create_season_request(chart_key: chart_key, key: key, number_of_events: number_of_events, event_keys: event_keys,
-                                            table_booking_config: table_booking_config, social_distancing_ruleset_key: social_distancing_ruleset_key)
+                                            table_booking_config: table_booking_config)
       response = @http_client.post('seasons', request)
       Season.new(response)
     end
@@ -55,14 +55,13 @@ module Seatsio
 
     private
 
-    def build_create_season_request(chart_key: nil, key: nil, number_of_events: nil, event_keys: nil, table_booking_config: nil, social_distancing_ruleset_key: nil)
+    def build_create_season_request(chart_key: nil, key: nil, number_of_events: nil, event_keys: nil, table_booking_config: nil)
       request = {}
       request['chartKey'] = chart_key if chart_key
       request['key'] = key if key
       request['numberOfEvents'] = number_of_events if number_of_events
       request['eventKeys'] = event_keys if event_keys
       request['tableBookingConfig'] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
-      request['socialDistancingRulesetKey'] = social_distancing_ruleset_key if social_distancing_ruleset_key != nil
       request
     end
 

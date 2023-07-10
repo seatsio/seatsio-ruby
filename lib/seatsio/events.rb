@@ -18,11 +18,10 @@ module Seatsio
       @channels = ChannelsClient.new(@http_client)
     end
 
-    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
       payload = build_event_request(chart_key: chart_key, event_key: event_key,
                                     name: name, date: date,
                                     table_booking_config: table_booking_config,
-                                    social_distancing_ruleset_key: social_distancing_ruleset_key,
                                     object_categories: object_categories, categories: categories)
       response = @http_client.post("events", payload)
       Event.new(response)
@@ -34,14 +33,13 @@ module Seatsio
       Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+    def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
       payload = build_event_request(
         chart_key: chart_key,
         event_key: event_key,
         name: name,
         date: date,
         table_booking_config: table_booking_config,
-        social_distancing_ruleset_key: social_distancing_ruleset_key,
         object_categories: object_categories,
         categories: categories)
       @http_client.post("/events/#{key}", payload)
@@ -72,12 +70,12 @@ module Seatsio
       response
     end
 
-    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil)
-      self.change_object_status(event_key_or_keys, object_or_objects, Seatsio::EventObjectInfo::BOOKED, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys, ignore_social_distancing: ignore_social_distancing)
+    def book(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      self.change_object_status(event_key_or_keys, object_or_objects, Seatsio::EventObjectInfo::BOOKED, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil, allowed_previous_statuses: nil, rejected_previous_statuses: nil)
-      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, ignore_social_distancing, allowed_previous_statuses, rejected_previous_statuses)
+    def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, allowed_previous_statuses: nil, rejected_previous_statuses: nil)
+      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, allowed_previous_statuses, rejected_previous_statuses)
       request[:params] = {
         :expand => 'objects'
       }
@@ -94,8 +92,8 @@ module Seatsio
       ChangeObjectStatusInBatchResult.new(response).results
     end
 
-    def hold(event_key_or_keys, object_or_objects, hold_token, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, ignore_social_distancing: nil)
-      change_object_status(event_key_or_keys, object_or_objects, Seatsio::EventObjectInfo::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys, ignore_social_distancing: ignore_social_distancing)
+    def hold(event_key_or_keys, object_or_objects, hold_token, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
+      change_object_status(event_key_or_keys, object_or_objects, Seatsio::EventObjectInfo::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
     def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, ticket_types: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil)
@@ -171,14 +169,13 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, social_distancing_ruleset_key: nil, object_categories: nil, categories: nil)
+    def build_event_request(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
       result["name"] = name if name
       result["date"] = date.iso8601 if date
       result["tableBookingConfig"] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
-      result["socialDistancingRulesetKey"] = social_distancing_ruleset_key if social_distancing_ruleset_key != nil
       result["objectCategories"] = object_categories if object_categories != nil
       result["categories"] = categories_to_request(categories) if categories != nil
       result
@@ -199,7 +196,6 @@ module Seatsio
         r["name"] = param[:name] if param[:name]
         r["date"] = param[:date].iso8601 if param[:date]
         r["tableBookingConfig"] = table_booking_config_to_request(param[:table_booking_config]) if param[:table_booking_config] != nil
-        r["socialDistancingRulesetKey"] = param[:social_distancing_ruleset_key] if param[:social_distancing_ruleset_key] != nil
         r["objectCategories"] = param[:object_categories] if param[:object_categories] != nil
         r["categories"] = categories_to_request(param[:categories]) if param[:categories] != nil
         result.push(r)
