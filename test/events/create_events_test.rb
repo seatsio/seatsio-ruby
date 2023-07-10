@@ -58,24 +58,6 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal({'T1' => 'BY_SEAT', 'T2' => 'BY_TABLE'}, events[1].table_booking_config.tables)
   end
 
-  def test_social_distancing_ruleset_key_can_be_passed_in
-    chart_key = create_test_chart
-    @seatsio.charts.save_social_distancing_rulesets(chart_key, {
-        "ruleset1" => {"name" => "My first ruleset"},
-        "ruleset2" => {"name" => "My second ruleset"}
-    })
-    event_creation_params = [
-        {:social_distancing_ruleset_key => "ruleset1"},
-        {:social_distancing_ruleset_key => "ruleset2"}
-    ]
-
-    events = @seatsio.events.create_multiple(key: chart_key, event_creation_params: event_creation_params)
-
-    assert_equal(2, events.length)
-    assert_equal("ruleset1", events[0].social_distancing_ruleset_key)
-    assert_equal("ruleset2", events[1].social_distancing_ruleset_key)
-  end
-
   def test_object_categories_can_be_passed_in
     chart_key = create_test_chart
     event_creation_params = [

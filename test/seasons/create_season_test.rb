@@ -53,15 +53,4 @@ class CreateSeasonTest < SeatsioTestClient
     assert_equal(table_booking_config.mode, season.table_booking_config.mode)
     assert_equal(table_booking_config.tables, season.table_booking_config.tables)
   end
-
-  def test_social_distancing_ruleset_key_is_optional
-    chart_key = create_test_chart
-    @seatsio.charts.save_social_distancing_rulesets(chart_key, {
-      "ruleset1" => { "name" => "My first ruleset" }
-    })
-
-    season = @seatsio.seasons.create chart_key: chart_key, social_distancing_ruleset_key: "ruleset1"
-
-    assert_equal("ruleset1", season.social_distancing_ruleset_key)
-  end
 end
