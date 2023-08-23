@@ -58,6 +58,11 @@ class EventReportsTest < SeatsioTestClient
     assert_false(report_item.is_available)
     assert_equal('channelKey1', report_item.channel)
     assert_not_nil(report_item.distance_to_focal_point)
+
+    ga_item = report.items['GA1'][0]
+    assert_true(ga_item.variable_occupancy)
+    assert_equal(1, ga_item.min_occupancy)
+    assert_equal(100, ga_item.max_occupancy)
   end
 
   def test_hold_token
