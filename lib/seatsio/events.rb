@@ -18,11 +18,8 @@ module Seatsio
       @channels = ChannelsClient.new(@http_client)
     end
 
-    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
-      payload = build_event_request(chart_key: chart_key, event_key: event_key,
-                                    name: name, date: date,
-                                    table_booking_config: table_booking_config,
-                                    object_categories: object_categories, categories: categories)
+    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, channels: nil)
+      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: channels)
       response = @http_client.post("events", payload)
       Event.new(response)
     end
@@ -34,14 +31,7 @@ module Seatsio
     end
 
     def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
-      payload = build_event_request(
-        chart_key: chart_key,
-        event_key: event_key,
-        name: name,
-        date: date,
-        table_booking_config: table_booking_config,
-        object_categories: object_categories,
-        categories: categories)
+      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories)
       @http_client.post("/events/#{key}", payload)
     end
 
@@ -169,7 +159,7 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
+    def build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
@@ -178,17 +168,18 @@ module Seatsio
       result["tableBookingConfig"] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
       result["objectCategories"] = object_categories if object_categories != nil
       result["categories"] = categories_to_request(categories) if categories != nil
+      result["channels"] = ChannelsClient::channels_to_request(channels) if channels != nil
       result
     end
 
     def build_events_request(chart_key: nil, event_creation_params: nil)
       result = {}
       result["chartKey"] = chart_key
-      result["events"] = event_creation_params_to_request(params: event_creation_params)
+      result["events"] = event_creation_params_to_request(event_creation_params)
       result
     end
 
-    def event_creation_params_to_request(params: nil)
+    def event_creation_params_to_request(params)
       result = []
       params.each do |param|
         r = {}
@@ -198,6 +189,7 @@ module Seatsio
         r["tableBookingConfig"] = table_booking_config_to_request(param[:table_booking_config]) if param[:table_booking_config] != nil
         r["objectCategories"] = param[:object_categories] if param[:object_categories] != nil
         r["categories"] = categories_to_request(param[:categories]) if param[:categories] != nil
+        r["channels"] = ChannelsClient::channels_to_request(param[:channels]) if param[:channels] != nil
         result.push(r)
       end
       result

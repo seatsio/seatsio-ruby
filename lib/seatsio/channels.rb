@@ -41,7 +41,21 @@ module Seatsio
     end
 
     def replace(key:, channels:)
-      @http_client.post("events/#{key}/channels/replace", { channels: channels })
+      @http_client.post("events/#{key}/channels/replace", { channels: ChannelsClient::channels_to_request(channels) })
+    end
+
+    def self.channels_to_request(channels)
+      result = []
+      channels.each do |channel|
+        r = {}
+        r["key"] = channel.key
+        r["name"] = channel.name
+        r["color"] = channel.color
+        r["index"] = channel.index if channel.index != nil
+        r["objects"] = channel.objects if channel.objects != nil
+        result.push(r)
+      end
+      result
     end
 
     private

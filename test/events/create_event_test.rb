@@ -28,7 +28,7 @@ class CreateEventTest < SeatsioTestClient
 
   def test_table_booking_config_custom_can_be_used
     chart_key = create_test_chart_with_tables
-    table_booking_config = Seatsio::TableBookingConfig::custom({'T1' => 'BY_TABLE', 'T2' => 'BY_SEAT'})
+    table_booking_config = Seatsio::TableBookingConfig::custom({ 'T1' => 'BY_TABLE', 'T2' => 'BY_SEAT' })
 
     event = @seatsio.events.create chart_key: chart_key, table_booking_config: table_booking_config
     assert_operator(event.key, :!=, '')
@@ -47,9 +47,9 @@ class CreateEventTest < SeatsioTestClient
   def test_object_categories
     chart_key = create_test_chart
 
-    event = @seatsio.events.create chart_key: chart_key, object_categories: {'A-1' => 10}
+    event = @seatsio.events.create chart_key: chart_key, object_categories: { 'A-1' => 10 }
 
-    assert_equal({'A-1' => 10}, event.object_categories)
+    assert_equal({ 'A-1' => 10 }, event.object_categories)
   end
 
   def test_categories
@@ -78,5 +78,17 @@ class CreateEventTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart.key, date: Date.iso8601('2022-01-05')
 
     assert_equal(Date.iso8601('2022-01-05'), event.date)
+  end
+
+  def test_channels
+    chart_key = create_test_chart
+    channels = [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2]),
+      Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
+    ]
+
+    event = @seatsio.events.create chart_key: chart_key, channels: channels
+
+    assert_equal(channels, event.channels)
   end
 end

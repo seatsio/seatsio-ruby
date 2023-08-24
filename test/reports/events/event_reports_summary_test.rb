@@ -150,9 +150,8 @@ class EventReportsSummaryTest < SeatsioTestClient
 
   def test_summary_by_channel
     chart_key = create_test_chart
-    event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: [
-      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    event = @seatsio.events.create chart_key: chart_key, channels: [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2])
     ]
 
     report = @seatsio.event_reports.summary_by_channel(event.key)

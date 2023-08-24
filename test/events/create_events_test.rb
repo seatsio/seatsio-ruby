@@ -113,4 +113,21 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(Date.iso8601('2022-01-05'), event.date)
   end
 
+  def test_channels_can_be_passed_in
+    chart_key = create_test_chart
+    channels = [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2]),
+      Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
+    ]
+    event_creation_params = [
+      {:channels => channels}
+    ]
+
+    events = @seatsio.events.create_multiple(key: chart_key, event_creation_params: event_creation_params)
+
+    assert_equal(1, events.length)
+    event = events[0]
+    assert_equal(channels, event.channels)
+  end
+
 end

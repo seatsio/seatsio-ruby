@@ -14,9 +14,8 @@ module Seatsio
     end
 
     def create(chart_key:, key: nil, number_of_events: nil, event_keys: nil,
-               table_booking_config: nil)
-      request = build_create_season_request(chart_key: chart_key, key: key, number_of_events: number_of_events, event_keys: event_keys,
-                                            table_booking_config: table_booking_config)
+               table_booking_config: nil, channels: nil)
+      request = build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels)
       response = @http_client.post('seasons', request)
       Season.new(response)
     end
@@ -55,13 +54,14 @@ module Seatsio
 
     private
 
-    def build_create_season_request(chart_key: nil, key: nil, number_of_events: nil, event_keys: nil, table_booking_config: nil)
+    def build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels)
       request = {}
       request['chartKey'] = chart_key if chart_key
       request['key'] = key if key
       request['numberOfEvents'] = number_of_events if number_of_events
       request['eventKeys'] = event_keys if event_keys
       request['tableBookingConfig'] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
+      request['channels'] = ChannelsClient::channels_to_request(channels) if channels != nil
       request
     end
 
