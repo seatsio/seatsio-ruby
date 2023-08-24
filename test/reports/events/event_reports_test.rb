@@ -24,7 +24,7 @@ class EventReportsTest < SeatsioTestClient
       Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1])
     ]
     extra_data = { 'foo' => 'bar' }
-    @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1')
+    @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1', ignore_channels: true)
 
     report = @seatsio.event_reports.by_label(event.key)
 
