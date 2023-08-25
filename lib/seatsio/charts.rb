@@ -28,13 +28,13 @@ module Seatsio
     end
 
     def create(name: nil, venue_type: nil, categories: nil)
-      payload = build_chart_request name: name, venue_type: venue_type, categories: categories
+      payload = build_chart_request name, venue_type, categories
       response = @http_client.post('charts', payload)
       Chart.new(response)
     end
 
     def update(key:, new_name: nil, categories: nil)
-      payload = build_chart_request name: new_name, categories: categories
+      payload = build_chart_request new_name, nil, categories
       @http_client.post("charts/#{key}", payload)
     end
 
@@ -141,7 +141,7 @@ module Seatsio
 
     private
 
-    def build_chart_request(name: nil, venue_type: nil, categories: nil)
+    def build_chart_request(name, venue_type, categories)
       result = {}
       result['name'] = name if name
       result['venueType'] = venue_type if venue_type

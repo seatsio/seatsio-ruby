@@ -53,4 +53,16 @@ class CreateSeasonTest < SeatsioTestClient
     assert_equal(table_booking_config.mode, season.table_booking_config.mode)
     assert_equal(table_booking_config.tables, season.table_booking_config.tables)
   end
+
+  def test_channels_can_be_passed_in
+    chart_key = create_test_chart
+    channels = [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2]),
+      Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
+    ]
+
+    season = @seatsio.seasons.create chart_key: chart_key, channels: channels
+
+    assert_equal(channels, season.channels)
+  end
 end

@@ -20,14 +20,11 @@ class EventReportsTest < SeatsioTestClient
 
   def test_report_item_properties
     chart_key = create_test_chart
-    event = @seatsio.events.create chart_key: chart_key
-    extra_data = { 'foo' => 'bar' }
-
-    @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1')
-
-    @seatsio.events.channels.replace key: event.key, channels: [
-      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1] }
+    event = @seatsio.events.create chart_key: chart_key, channels: [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1])
     ]
+    extra_data = { 'foo' => 'bar' }
+    @seatsio.events.book(event.key, [{ :objectId => 'A-1', :ticketType => 'tt1', :extraData => extra_data }], order_id: 'order1', ignore_channels: true)
 
     report = @seatsio.event_reports.by_label(event.key)
 
@@ -315,9 +312,8 @@ class EventReportsTest < SeatsioTestClient
 
   def test_by_channel
     chart_key = create_test_chart
-    event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: [
-      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    event = @seatsio.events.create chart_key: chart_key, channels: [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2])
     ]
 
     report = @seatsio.event_reports.by_channel(event.key)
@@ -328,9 +324,8 @@ class EventReportsTest < SeatsioTestClient
 
   def test_by_specific_channel
     chart_key = create_test_chart
-    event = @seatsio.events.create chart_key: chart_key
-    @seatsio.events.channels.replace key: event.key, channels: [
-      { "key" => "channelKey1", "name" => "channel 1", "color" => "#FF0000", "index" => 1, "objects" => %w[A-1 A-2] }
+    event = @seatsio.events.create chart_key: chart_key, channels: [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2])
     ]
 
     report = @seatsio.event_reports.by_channel(event.key, 'channelKey1')
