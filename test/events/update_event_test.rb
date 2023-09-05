@@ -98,4 +98,17 @@ class UpdateEventTest < SeatsioTestClient
     retrieved_event = @seatsio.events.retrieve key: event.key
     assert_equal(Date.iso8601('2023-01-05'), retrieved_event.date)
   end
+
+  def test_update_is_in_the_past
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key, name: 'An event'
+
+    @seatsio.events.update key: event.key, is_in_the_past: true
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_true(retrieved_event.is_in_the_past)
+
+    @seatsio.events.update key: event.key, is_in_the_past: false
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    assert_false(retrieved_event.is_in_the_past)
+  end
 end
