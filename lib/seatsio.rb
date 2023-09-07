@@ -1,6 +1,5 @@
 require 'seatsio/version'
 require 'seatsio/charts'
-require 'seatsio/subaccounts'
 require 'seatsio/workspaces'
 require 'seatsio/events'
 require 'seatsio/seasons'
@@ -11,14 +10,13 @@ require 'seatsio/usage_reports'
 
 module Seatsio
   class Client
-    attr_reader :charts, :subaccounts, :workspaces, :events, :seasons,
+    attr_reader :charts, :workspaces, :events, :seasons,
                 :hold_tokens, :chart_reports, :event_reports, :usage_reports
 
     def initialize(region, secret_key, workspace_key = nil, max_retries = 5)
       base_url = region.url
       @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url, max_retries)
       @charts = ChartsClient.new(@http_client)
-      @subaccounts = SubaccountsClient.new(@http_client)
       @workspaces = WorkspacesClient.new(@http_client)
       @events = EventsClient.new(@http_client)
       @seasons = SeasonsClient.new(@http_client, self)
