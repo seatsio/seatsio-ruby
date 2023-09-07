@@ -3,11 +3,11 @@ require 'util'
 
 class WorkspaceKeyAuthenticationTest < SeatsioTestClient
   def test_client_takes_optional_workspace_key
-    subaccount = @seatsio.subaccounts.create
+    workspace = @seatsio.workspaces.create name: 'some workspace'
 
-    subaccount_client = test_client(@user['secretKey'], subaccount.public_key)
-    hold_token = subaccount_client.hold_tokens.create
+    workspace_client = test_client(@user['secretKey'], workspace.key)
+    hold_token = workspace_client.hold_tokens.create
 
-    assert_equal(subaccount.public_key, hold_token.workspace_key)
+    assert_equal(workspace.key, hold_token.workspace_key)
   end
 end

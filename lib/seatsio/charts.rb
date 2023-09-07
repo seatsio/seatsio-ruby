@@ -64,12 +64,6 @@ module Seatsio
       Chart.new(response)
     end
 
-    def copy_to_subaccount(chart_key, subaccount_id)
-      url = "charts/#{chart_key}/version/published/actions/copy-to/#{subaccount_id}"
-      response = @http_client.post url
-      Chart.new(response)
-    end
-
     def copy_to_workspace(chart_key, to_workspace_key)
       url = "charts/#{chart_key}/version/published/actions/copy-to-workspace/#{to_workspace_key}"
       response = @http_client.post url

@@ -231,19 +231,6 @@ module Seatsio
     end
   end
 
-  class Subaccount
-    attr_reader :id, :secret_key, :designer_key, :public_key, :name, :active
-
-    def initialize(data)
-      @id = data['id']
-      @public_key = data['publicKey']
-      @secret_key = data['secretKey']
-      @designer_key = data['designerKey']
-      @name = data['name']
-      @active = data['active']
-    end
-  end
-
   class Workspace
     attr_reader :id, :name, :key, :secret_key, :is_test, :is_active, :is_default
 
