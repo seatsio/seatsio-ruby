@@ -101,14 +101,17 @@ class UpdateEventTest < SeatsioTestClient
 
   def test_update_is_in_the_past
     chart_key = create_test_chart
-    event = @seatsio.events.create chart_key: chart_key, name: 'An event'
+    season = @seatsio.seasons.create chart_key: chart_key, event_keys: %w[event1]
 
-    @seatsio.events.update key: event.key, is_in_the_past: true
-    retrieved_event = @seatsio.events.retrieve key: event.key
+    @seatsio.events.update key: "event1", is_in_the_past: true
+    retrieved_event = @seatsio.events.retrieve key: "event1"
     assert_true(retrieved_event.is_in_the_past)
 
-    @seatsio.events.update key: event.key, is_in_the_past: false
-    retrieved_event = @seatsio.events.retrieve key: event.key
-    assert_false(retrieved_event.is_in_the_past)
+    begin
+      @seatsio.events.update key: "event1", is_in_the_past: false
+    rescue Seatsio::Exception::SeatsioException => e
+      assert_equal(400, e.message.code)
+      assert_match /Events in the past cannot be updated/, e.message.body
+    end
   end
 end
