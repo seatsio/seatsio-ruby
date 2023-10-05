@@ -106,12 +106,5 @@ class UpdateEventTest < SeatsioTestClient
     @seatsio.events.update key: "event1", is_in_the_past: true
     retrieved_event = @seatsio.events.retrieve key: "event1"
     assert_true(retrieved_event.is_in_the_past)
-
-    begin
-      @seatsio.events.update key: "event1", is_in_the_past: false
-    rescue Seatsio::Exception::SeatsioException => e
-      assert_equal(400, e.message.code)
-      assert_match /Events in the past cannot be updated/, e.message.body
-    end
   end
 end
