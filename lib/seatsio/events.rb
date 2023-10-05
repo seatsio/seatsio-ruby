@@ -19,7 +19,7 @@ module Seatsio
     end
 
     def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, channels: nil)
-      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: channels)
+      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: channels, is_in_the_past: nil)
       response = @http_client.post("events", payload)
       Event.new(response)
     end
@@ -30,8 +30,8 @@ module Seatsio
       Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil)
-      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories)
+    def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, is_in_the_past: nil)
+      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: is_in_the_past)
       @http_client.post("/events/#{key}", payload)
     end
 
@@ -159,7 +159,7 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil)
+    def build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
@@ -169,6 +169,7 @@ module Seatsio
       result["objectCategories"] = object_categories if object_categories != nil
       result["categories"] = categories_to_request(categories) if categories != nil
       result["channels"] = ChannelsClient::channels_to_request(channels) if channels != nil
+      result["isInThePast"] = is_in_the_past if is_in_the_past != nil
       result
     end
 
