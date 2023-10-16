@@ -70,6 +70,12 @@ module Seatsio
       Chart.new(response)
     end
 
+    def copy_from_workspace_to(chart_key, from_workspace_key, to_workspace_key)
+      url = "charts/#{chart_key}/version/published/actions/copy/from/#{from_workspace_key}/to/#{to_workspace_key}"
+      response = @http_client.post url
+      Chart.new(response)
+    end
+
     def copy_draft_version(key)
       response = @http_client.post("charts/#{key}/version/draft/actions/copy")
       Chart.new(response)
