@@ -46,13 +46,25 @@ module Seatsio
 
     attr_reader :for_sale, :objects, :area_places, :categories
 
-    def initialize(data)
+    def initialize(for_sale, objects = nil, area_places = nil, categories = nil)
+      @for_sale = for_sale
+      @objects = objects
+      @area_places = area_places
+      @categories = categories
+    end
+
+    def self.from_json(data)
       if data
-        @for_sale = data['forSale']
-        @objects = data['objects']
-        @area_places = data['areaPlaces']
-        @categories = data['categories']
+        ForSaleConfig.new(data['forSale'], data['objects'], data['areaPlaces'], data['categories'])
       end
+    end
+
+    def == (other)
+      other != nil &&
+        for_sale == other.for_sale &&
+        objects == other.objects &&
+        area_places == other.area_places &&
+        categories == other.categories
     end
   end
 
@@ -160,7 +172,7 @@ module Seatsio
       @date = Date.iso8601(data['date']) if data['date']
       @supports_best_available = data['supportsBestAvailable']
       @table_booking_config = TableBookingConfig::from_json(data['tableBookingConfig'])
-      @for_sale_config = ForSaleConfig.new(data['forSaleConfig']) if data['forSaleConfig']
+      @for_sale_config = ForSaleConfig::from_json(data['forSaleConfig']) if data['forSaleConfig']
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
       @channels = data['channels'].map {

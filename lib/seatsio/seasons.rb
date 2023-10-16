@@ -14,8 +14,8 @@ module Seatsio
     end
 
     def create(chart_key:, key: nil, number_of_events: nil, event_keys: nil,
-               table_booking_config: nil, channels: nil)
-      request = build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels)
+               table_booking_config: nil, channels: nil, for_sale_config: nil)
+      request = build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
       response = @http_client.post('seasons', request)
       Season.new(response)
     end
@@ -54,7 +54,7 @@ module Seatsio
 
     private
 
-    def build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels)
+    def build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
       request = {}
       request['chartKey'] = chart_key if chart_key
       request['key'] = key if key
@@ -62,6 +62,7 @@ module Seatsio
       request['eventKeys'] = event_keys if event_keys
       request['tableBookingConfig'] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
       request['channels'] = ChannelsClient::channels_to_request(channels) if channels != nil
+      request['forSaleConfig'] = for_sale_config_to_request(for_sale_config) if for_sale_config != nil
       request
     end
 
@@ -70,6 +71,15 @@ module Seatsio
       request['mode'] = table_booking_config.mode
       request['tables'] = table_booking_config.tables if table_booking_config.tables != nil
       request
+    end
+
+    def for_sale_config_to_request(for_sale_config)
+      result = {}
+      result["forSale"] = for_sale_config.for_sale
+      result["objects"] = for_sale_config.objects if for_sale_config.objects != nil
+      result["areaPlaces"] = for_sale_config.area_places if for_sale_config.area_places != nil
+      result["categories"] = for_sale_config.categories if for_sale_config.categories != nil
+      result
     end
 
   end
