@@ -130,4 +130,20 @@ class ChartReportsTest < SeatsioTestClient
     assert_equal(channels, event.channels)
   end
 
+  def test_for_sale_config_can_be_passed_in
+    chart_key = create_test_chart
+    for_sale_config_1 = Seatsio::ForSaleConfig.new(false, ["A-1"], {"GA1" => 3}, ["Cat1"])
+    for_sale_config_2 = Seatsio::ForSaleConfig.new(false, ["A-2"], {"GA1" => 7}, ["Cat1"])
+    event_creation_params = [
+      {:for_sale_config => for_sale_config_1},
+      {:for_sale_config => for_sale_config_2}
+    ]
+
+    events = @seatsio.events.create_multiple(key: chart_key, event_creation_params: event_creation_params)
+
+    assert_equal(2, events.length)
+    assert_equal(for_sale_config_1, events[0].for_sale_config)
+    assert_equal(for_sale_config_2, events[1].for_sale_config)
+  end
+
 end

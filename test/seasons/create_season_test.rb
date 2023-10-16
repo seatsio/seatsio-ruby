@@ -65,4 +65,13 @@ class CreateSeasonTest < SeatsioTestClient
 
     assert_equal(channels, season.channels)
   end
+
+  def test_for_sale_config_can_be_passed_in
+    chart_key = create_test_chart
+    for_sale_config = Seatsio::ForSaleConfig.new(false, ["A-1"], {"GA1" => 3}, ["Cat1"])
+
+    season = @seatsio.seasons.create chart_key: chart_key, for_sale_config: for_sale_config
+
+    assert_equal(for_sale_config, season.for_sale_config)
+  end
 end

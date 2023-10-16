@@ -18,8 +18,8 @@ module Seatsio
       @channels = ChannelsClient.new(@http_client)
     end
 
-    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, channels: nil)
-      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: channels, is_in_the_past: nil)
+    def create(chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, channels: nil, for_sale_config: nil)
+      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: channels, is_in_the_past: nil, for_sale_config: for_sale_config)
       response = @http_client.post("events", payload)
       Event.new(response)
     end
@@ -159,7 +159,7 @@ module Seatsio
       payload
     end
 
-    def build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: nil)
+    def build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: nil, for_sale_config: nil)
       result = {}
       result["chartKey"] = chart_key if chart_key
       result["eventKey"] = event_key if event_key
@@ -170,6 +170,7 @@ module Seatsio
       result["categories"] = categories_to_request(categories) if categories != nil
       result["channels"] = ChannelsClient::channels_to_request(channels) if channels != nil
       result["isInThePast"] = is_in_the_past if is_in_the_past != nil
+      result["forSaleConfig"] = for_sale_config_to_request(for_sale_config) if for_sale_config != nil
       result
     end
 
@@ -191,6 +192,7 @@ module Seatsio
         r["objectCategories"] = param[:object_categories] if param[:object_categories] != nil
         r["categories"] = categories_to_request(param[:categories]) if param[:categories] != nil
         r["channels"] = ChannelsClient::channels_to_request(param[:channels]) if param[:channels] != nil
+        r["forSaleConfig"] = for_sale_config_to_request(param[:for_sale_config]) if param[:for_sale_config] != nil
         result.push(r)
       end
       result
@@ -213,6 +215,15 @@ module Seatsio
         r["accessible"] = category.accessible if category.accessible != nil
         result.push(r)
       end
+      result
+    end
+
+    def for_sale_config_to_request(for_sale_config)
+      result = {}
+      result["forSale"] = for_sale_config.for_sale
+      result["objects"] = for_sale_config.objects if for_sale_config.objects != nil
+      result["areaPlaces"] = for_sale_config.area_places if for_sale_config.area_places != nil
+      result["categories"] = for_sale_config.categories if for_sale_config.categories != nil
       result
     end
 

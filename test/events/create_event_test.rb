@@ -91,4 +91,13 @@ class CreateEventTest < SeatsioTestClient
 
     assert_equal(channels, event.channels)
   end
+
+  def test_for_sale_config
+    chart_key = create_test_chart
+    for_sale_config = Seatsio::ForSaleConfig.new(false, ["A-1"], {"GA1" => 3}, ["Cat1"])
+
+    event = @seatsio.events.create chart_key: chart_key, for_sale_config: for_sale_config
+
+    assert_equal(for_sale_config, event.for_sale_config)
+  end
 end
