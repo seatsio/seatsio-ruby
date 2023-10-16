@@ -5,6 +5,7 @@ class SeatsioTestClient < Minitest::Test
   def setup
     company = create_test_user
     @user = company['admin']
+    @workspace = Seatsio::Workspace.new(company['workspace'])
     @seatsio = test_client(@user['secretKey'], nil)
   end
 
