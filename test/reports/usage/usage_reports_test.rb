@@ -3,7 +3,7 @@ require 'util'
 require 'seatsio/domain'
 require 'seatsio/exception'
 
-class UsageReportsSummaryTest < SeatsioTestClient
+class UsageReportsTest < SeatsioTestClient
   def test_usage_report_for_all_months
     assert_demo_company_secret_key_set
     client = test_client(demo_company_secret_key, nil)
