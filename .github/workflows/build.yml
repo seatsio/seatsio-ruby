@@ -24,3 +24,5 @@ jobs:
       with:
         timezone: Europe/Brussels
     - run: bundle exec rake
+      env:
+        DEMO_COMPANY_SECRET_KEY: ${{ secrets.DEMO_COMPANY_SECRET_KEY }}
