@@ -11,7 +11,7 @@ module Seatsio
     end
 
     def summary_for_all_months
-      url = "reports/usage"
+      url = "reports/usage?version=2"
       body = @http_client.get(url)
       UsageSummaryForAllMonths.new(body)
     end

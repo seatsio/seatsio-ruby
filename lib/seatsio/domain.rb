@@ -419,18 +419,22 @@ module Seatsio
   end
 
   class UsageSummaryForAllMonths
-    attr_reader :items
+    attr_reader :usage_cutoff_date, :usage
 
     def initialize(data)
-      items = []
-      data.each do |item|
-        items << UsageSummaryForMonth.new(item)
+      usage = []
+      data['usage'].each do |item|
+        usage << UsageSummaryForMonth.new(item)
       end
-      @items = items
+      @usage = usage
+      @usage_cutoff_date =  DateTime.iso8601(data['usageCutoffDate'])
     end
   end
 
   class UsageSummaryForMonth
+
+    attr_reader :month, :num_used_objects
+
     def initialize(data)
       @month = Month.from_json(data['month'])
       @num_used_objects = data['numUsedObjects']
@@ -489,7 +493,7 @@ module Seatsio
 
   class UsageForObjectV1
 
-    attr_reader :object, :num_first_bookings, :first_booking_date, :num_first_bookings, :num_first_bookings_or_selections
+    attr_reader :object, :num_first_bookings, :first_booking_date, :num_first_selections, :num_first_bookings_or_selections
 
     def initialize(data)
       @object = data['object']
@@ -516,9 +520,7 @@ module Seatsio
     attr_reader :year, :month
 
     def self.from_json(data)
-      @year = data['year']
-      @month = data['month']
-      self
+      return Month.new(data['year'], data['month'])
     end
 
     def initialize(year, month)
