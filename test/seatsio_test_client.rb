@@ -28,4 +28,14 @@ class SeatsioTestClient < Minitest::Test
       end
     end
   end
+
+  def demo_company_secret_key
+    ENV["DEMO_COMPANY_SECRET_KEY"]
+  end
+
+  def assert_demo_company_secret_key_set
+    if demo_company_secret_key.nil?
+      skip "DEMO_COMPANY_SECRET_KEY environment variable not set, skipping test"
+    end
+  end
 end
