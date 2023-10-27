@@ -35,6 +35,18 @@ module Seatsio
       @http_client.post("/events/#{key}", payload)
     end
 
+    def override_season_object_status(key:, objects:)
+      request = {}
+      request[:objects] = objects
+      @http_client.post("events/#{key}/actions/override-season-status", request)
+    end
+
+    def use_season_object_status(key:, objects:)
+      request = {}
+      request[:objects] = objects
+      @http_client.post("events/#{key}/actions/use-season-status", request)
+    end
+
     def update_extra_data(key:, object:, extra_data: nil)
       payload = build_extra_data_request(extra_data)
       @http_client.post("events/#{key}/objects/#{object}/actions/update-extra-data", payload)
