@@ -22,5 +22,6 @@ class CreatePartialSeasonTest < SeatsioTestClient
     partial_season = @seatsio.seasons.create_partial_season top_level_season_key: season.key, event_keys: ['event1', 'event2']
 
     assert_equal(%w[event1 event2], partial_season.events.map { |e| e.key })
+    assert_equal(%w[partial_season.key], partial_season.events[0].partial_season_keys_for_event)
   end
 end

@@ -14,5 +14,6 @@ class AddEventsToPartialSeasonTest < SeatsioTestClient
                                                                    event_keys: %w[event1 event2]
 
     assert_equal(%w[event1 event2], updated_season.events.map { |e| e.key })
+    assert_equal(%w[updated_season.key], updated_season.events[0].partial_season_keys_for_event)
   end
 end
