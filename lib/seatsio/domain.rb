@@ -162,7 +162,7 @@ module Seatsio
                   :table_booking_config, :for_sale_config, :created_on, :updated_on, :channels,
                   :is_top_level_season, :is_partial_season,
                   :is_event_in_season, :top_level_season_key,
-                  :object_categories, :categories, :is_in_the_past
+                  :object_categories, :categories, :is_in_the_past, :partial_season_keys_for_event
 
     def initialize(data)
       @id = data['id']
@@ -185,6 +185,7 @@ module Seatsio
       @object_categories = data['objectCategories']
       @categories = Category.create_list(data['categories']) if data['categories']
       @is_in_the_past = data['isInThePast']
+      @partial_season_keys_for_event = data['partialSeasonKeysForEvent']
     end
 
     def is_season
