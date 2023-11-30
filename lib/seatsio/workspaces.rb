@@ -63,7 +63,7 @@ module Seatsio
     end
 
     def retrieve(key:)
-      response = @http_client.get("/workspaces/#{key}")
+      response = @http_client.get("workspaces/#{key}")
       Workspace.new(response)
     end
 

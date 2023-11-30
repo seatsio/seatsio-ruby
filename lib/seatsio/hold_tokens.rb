@@ -25,13 +25,13 @@ module Seatsio
     end
 
     def retrieve(hold_token)
-      response = @http_client.get("/hold-tokens/#{hold_token}")
+      response = @http_client.get("hold-tokens/#{hold_token}")
       HoldToken.new(response)
     end
 
     def expire_in_minutes(hold_token, expires_in_minutes = nil)
       body = {"expiresInMinutes": expires_in_minutes}
-      response = @http_client.post("/hold-tokens/#{hold_token}", body)
+      response = @http_client.post("hold-tokens/#{hold_token}", body)
       HoldToken.new(response)
     end
   end
