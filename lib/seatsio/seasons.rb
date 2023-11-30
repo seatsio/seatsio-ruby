@@ -24,7 +24,7 @@ module Seatsio
       request = {}
       request['key'] = partial_season_key if partial_season_key
       request['eventKeys'] = event_keys if event_keys
-      response = @http_client.post("/seasons/#{top_level_season_key}/partial-seasons", request)
+      response = @http_client.post("seasons/#{top_level_season_key}/partial-seasons", request)
       Season.new(response)
     end
 
@@ -36,19 +36,19 @@ module Seatsio
       request = {}
       request['eventKeys'] = event_keys if event_keys
       request['numberOfEvents'] = number_of_events if number_of_events
-      response = @http_client.post("/seasons/#{key}/actions/create-events", request)
+      response = @http_client.post("seasons/#{key}/actions/create-events", request)
       Events.new(response).events
     end
 
     def add_events_to_partial_season(top_level_season_key:, partial_season_key:, event_keys:)
       request = {}
       request['eventKeys'] = event_keys
-      response = @http_client.post("/seasons/#{top_level_season_key}/partial-seasons/#{partial_season_key}/actions/add-events", request)
+      response = @http_client.post("seasons/#{top_level_season_key}/partial-seasons/#{partial_season_key}/actions/add-events", request)
       Season.new(response)
     end
 
     def remove_event_from_partial_season(top_level_season_key:, partial_season_key:, event_key:)
-      response = @http_client.delete("/seasons/#{top_level_season_key}/partial-seasons/#{partial_season_key}/events/#{event_key}")
+      response = @http_client.delete("seasons/#{top_level_season_key}/partial-seasons/#{partial_season_key}/events/#{event_key}")
       Season.new(response)
     end
 

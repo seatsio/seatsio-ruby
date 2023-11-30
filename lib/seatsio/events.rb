@@ -32,7 +32,7 @@ module Seatsio
 
     def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, is_in_the_past: nil)
       payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: is_in_the_past)
-      @http_client.post("/events/#{key}", payload)
+      @http_client.post("events/#{key}", payload)
     end
 
     def override_season_object_status(key:, objects:)
@@ -117,7 +117,7 @@ module Seatsio
     end
 
     def delete(key:)
-      @http_client.delete("/events/#{key}")
+      @http_client.delete("events/#{key}")
     end
 
     def retrieve(key:)
@@ -133,12 +133,12 @@ module Seatsio
       if object_id != nil
         status_changes_for_object key: key, object_id: object_id
       else
-        Pagination::Cursor.new(StatusChange, "/events/#{key}/status-changes", @http_client)
+        Pagination::Cursor.new(StatusChange, "events/#{key}/status-changes", @http_client)
       end
     end
 
     def status_changes_for_object(key:, object_id:)
-      Pagination::Cursor.new(StatusChange, "/events/#{key}/objects/#{object_id}/status-changes", @http_client)
+      Pagination::Cursor.new(StatusChange, "events/#{key}/objects/#{object_id}/status-changes", @http_client)
     end
 
     def mark_as_not_for_sale(key:, objects: nil, area_places: nil, categories: nil)
