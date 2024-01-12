@@ -1,4 +1,4 @@
-# seatsio-ruby, the official Seats.io Ruby client library
+# seatsio-ruby, the official Seats.io Ruby SDK
 
 [![Build](https://github.com/seatsio/seatsio-ruby/workflows/Build/badge.svg)](https://github.com/seatsio/seatsio-ruby/actions/workflows/build.yml)
 [![Gem Version](https://badge.fury.io/rb/seatsio.svg)](https://badge.fury.io/rb/seatsio)
