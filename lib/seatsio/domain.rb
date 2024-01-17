@@ -259,6 +259,18 @@ module Seatsio
     end
   end
 
+  class EventLogItem
+    attr_reader :id, :workspace_key, :type, :date, :data
+
+    def initialize(data)
+      @id = data['id']
+      @workspace_key = data['workspaceKey']
+      @type = data['type']
+      @date = DateTime.iso8601(data['date'])
+      @data = data['data']
+    end
+  end
+
   class ChangeObjectStatusResult
 
     attr_reader :objects

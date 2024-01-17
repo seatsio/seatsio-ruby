@@ -7,11 +7,12 @@ require 'seatsio/hold_tokens'
 require 'seatsio/chart_reports'
 require 'seatsio/event_reports'
 require 'seatsio/usage_reports'
+require 'seatsio/event_log'
 
 module Seatsio
   class Client
     attr_reader :charts, :workspaces, :events, :seasons,
-                :hold_tokens, :chart_reports, :event_reports, :usage_reports
+                :hold_tokens, :chart_reports, :event_reports, :usage_reports, :event_log
 
     def initialize(region, secret_key, workspace_key = nil, max_retries = 5)
       base_url = region.url
@@ -24,6 +25,7 @@ module Seatsio
       @chart_reports = ChartReportsClient.new(@http_client)
       @event_reports = EventReportsClient.new(@http_client)
       @usage_reports = UsageReportsClient.new(@http_client)
+      @event_log = EventLogClient.new(@http_client)
     end
   end
 
