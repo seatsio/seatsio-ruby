@@ -24,9 +24,8 @@ class ListEventLogItemsTest < SeatsioTestClient
 
     assert_equal('chart.created', event_log_item.type)
     assert_true(event_log_item.id > 0)
-    assert_not_nil(event_log_item.date)
-    assert_equal(@workspace.key, event_log_item.workspace_key)
-    assert_equal({ "key" => chart.key }, event_log_item.data)
+    assert_not_nil(event_log_item.timestamp)
+    assert_equal({ "key" => chart.key, "workspaceKey" => @workspace.key }, event_log_item.data)
   end
 
 end

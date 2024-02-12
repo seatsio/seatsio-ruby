@@ -260,13 +260,12 @@ module Seatsio
   end
 
   class EventLogItem
-    attr_reader :id, :workspace_key, :type, :date, :data
+    attr_reader :id, :type, :timestamp, :data
 
     def initialize(data)
       @id = data['id']
-      @workspace_key = data['workspaceKey']
       @type = data['type']
-      @date = DateTime.iso8601(data['date'])
+      @timestamp = DateTime.iso8601(data['timestamp'])
       @data = data['data']
     end
   end
