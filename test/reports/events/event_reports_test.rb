@@ -55,6 +55,7 @@ class EventReportsTest < SeatsioTestClient
     assert_false(report_item.is_available)
     assert_equal('channelKey1', report_item.channel)
     assert_not_nil(report_item.distance_to_focal_point)
+    assert_equal(0, report_item.season_status_overridden_quantity)
 
     ga_item = report.items['GA1'][0]
     assert_true(ga_item.variable_occupancy)
@@ -73,6 +74,18 @@ class EventReportsTest < SeatsioTestClient
 
     report_item = report.items['A-1'][0]
     assert_equal(hold_token.hold_token, report_item.hold_token)
+  end
+
+  def test_season_status_overridden_quantity
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, number_of_events: 1
+    event = season.events[0]
+    @seatsio.events.override_season_object_status(key: event.key, objects: %w(A-1))
+
+    report = @seatsio.event_reports.by_label(event.key)
+
+    report_item = report.items['A-1'][0]
+    assert_equal(1, report_item.season_status_overridden_quantity)
   end
 
   def test_report_item_properties_for_GA

@@ -391,7 +391,7 @@ module Seatsio
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_available, :channel,
                 :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats,
-                :variable_occupancy, :min_occupancy, :max_occupancy
+                :variable_occupancy, :min_occupancy, :max_occupancy, :season_status_overridden_quantity
 
     def initialize(data)
       @status = data['status']
@@ -427,6 +427,7 @@ module Seatsio
       @variable_occupancy = data['variableOccupancy']
       @min_occupancy = data['minOccupancy']
       @max_occupancy = data['maxOccupancy']
+      @season_status_overridden_quantity = data['seasonStatusOverriddenQuantity']
     end
   end
 
