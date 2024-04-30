@@ -51,6 +51,14 @@ module Seatsio
       Category.create_list(response['categories'])
     end
 
+    def update_category(chart_key:, category_key:, label: nil, color: nil, accessible: nil)
+      payload = {}
+      payload['label'] = label if label != nil
+      payload['color'] = color if color != nil
+      payload['accessible'] = accessible if accessible != nil
+      @http_client.post("/charts/#{chart_key}/categories/#{category_key}", payload)
+    end
+
     def add_tag(key, tag)
       @http_client.post("charts/#{key}/tags/#{CGI::escape(tag)}")
     end

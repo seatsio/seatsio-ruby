@@ -110,6 +110,15 @@ category_list.each_with_index do |category, index|
 end
 ```
 
+### Updating a category
+
+```ruby
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-company-admin-key", "my-workspace-public-key")
+@seatsio.charts.update_category(chart_key: '<the chart key>', category_key: '<the category key>', label: "New label", color: "#bbbbbb", accessible: true)
+```
+
+
 ### Listing all charts
 
 ```ruby
