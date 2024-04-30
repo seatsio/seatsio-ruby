@@ -48,4 +48,18 @@ class ManageCategoriesTest < SeatsioTestClient
       assert_equal(categories[index]['key'], category.key)
     end
   end
+
+  def test_update_category
+    categories = [
+      { 'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false }
+    ]
+    chart = @seatsio.charts.create categories: categories
+
+    @seatsio.charts.update_category(chart_key: chart.key, category_key: 1, label: "New label", color: "#bbbbbb", accessible: true)
+
+    category_list = @seatsio.charts.list_categories(chart.key)
+    assert_equal(category_list[0].label, "New label")
+    assert_equal(category_list[0].color, "#bbbbbb")
+    assert_equal(category_list[0].accessible, true)
+  end
 end
