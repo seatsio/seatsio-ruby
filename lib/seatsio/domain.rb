@@ -8,7 +8,7 @@ module Seatsio
 
     attr_reader :id, :key, :status, :name, :published_version_thumbnail_url,
                 :draft_version_thumbnail_url, :events, :tags, :archived,
-                :categories, :validation
+                :categories, :validation, :venue_type
 
     def initialize(data)
       @id = data['id']
@@ -21,6 +21,7 @@ module Seatsio
       @tags = data['tags']
       @archived = data['archived']
       @validation = data['validation']
+      @venue_type = data['venueType']
     end
   end
 
