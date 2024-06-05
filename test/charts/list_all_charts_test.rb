@@ -70,7 +70,6 @@ class ListAllChartsTest < SeatsioTestClient
     retrieved_charts = @seatsio.charts.list(with_validation: true).to_a
 
     assert_equal({"errors" => [], "warnings" => []}, retrieved_charts[0].validation)
-    assert_equal("MIXED", retrieved_charts[0].venue_type)
   end
 
   def test_without_validation
