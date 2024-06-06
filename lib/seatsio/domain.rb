@@ -391,8 +391,8 @@ module Seatsio
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_available, :channel,
-                :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats,
-                :variable_occupancy, :min_occupancy, :max_occupancy, :season_status_overridden_quantity
+                :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats, :variable_occupancy,
+                :min_occupancy, :max_occupancy, :season_status_overridden_quantity, :num_not_for_sale
 
     def initialize(data)
       @status = data['status']
@@ -429,6 +429,7 @@ module Seatsio
       @min_occupancy = data['minOccupancy']
       @max_occupancy = data['maxOccupancy']
       @season_status_overridden_quantity = data['seasonStatusOverriddenQuantity']
+      @num_not_for_sale = data['numNotForSale']
     end
   end
 
