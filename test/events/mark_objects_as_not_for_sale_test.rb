@@ -38,4 +38,14 @@ class MarkObjectsAsNotForSaleTest < SeatsioTestClient
     assert_equal([], retrieved_event.for_sale_config.objects)
     assert_equal(["cat1", "cat2"], retrieved_event.for_sale_config.categories)
   end
+
+  def test_num_not_for_sale_is_correctly_exposed
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.mark_as_not_for_sale key: event.key, area_places: { 'GA1' => 3 }
+
+    ga1_info = @seatsio.events.retrieve_object_info(key: event.key, label: 'GA1')
+    assert_equal(3, ga1_info.num_not_for_sale)
+  end
 end
