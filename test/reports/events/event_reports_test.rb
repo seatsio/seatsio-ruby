@@ -283,6 +283,25 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(34, report.items.length)
   end
 
+  def test_by_zone
+    chart_key = create_test_chart_with_zones
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.by_zone(event.key)
+
+    assert_equal(6032, report.items['midtrack'].length)
+    assert_equal('midtrack', report.items['midtrack'][0].zone)
+  end
+
+  def test_by_specific_zone
+    chart_key = create_test_chart_with_zones
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.by_zone(event.key, 'midtrack')
+
+    assert_equal(6032, report.items.length)
+  end
+
   def test_by_availability
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key

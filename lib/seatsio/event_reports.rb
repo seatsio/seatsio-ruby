@@ -71,6 +71,18 @@ module Seatsio
       fetch_deep_summary_report('bySection', event_key)
     end
 
+    def by_zone(event_key, zone = nil)
+      fetch_report('byZone', event_key, zone)
+    end
+
+    def summary_by_zone(event_key)
+      fetch_summary_report('byZone', event_key)
+    end
+
+    def deep_summary_by_zone(event_key)
+      fetch_deep_summary_report('byZone', event_key)
+    end
+
     def by_availability(event_key, availability = nil)
       fetch_report('byAvailability', event_key, availability)
     end

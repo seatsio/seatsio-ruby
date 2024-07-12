@@ -316,7 +316,7 @@ module Seatsio
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
                 :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats, :is_accessible,
-                :is_companion_seat, :has_restricted_view
+                :is_companion_seat, :has_restricted_view, :zone
 
     def initialize(data)
       @label = data['label']
@@ -336,6 +336,7 @@ module Seatsio
       @is_accessible = data['isAccessible']
       @is_companion_seat = data['isCompanionSeat']
       @has_restricted_view = data['hasRestrictedView']
+      @zone = data['zone']
     end
   end
 
@@ -392,7 +393,8 @@ module Seatsio
                 :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_available, :channel,
                 :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats, :variable_occupancy,
-                :min_occupancy, :max_occupancy, :season_status_overridden_quantity, :num_not_for_sale
+                :min_occupancy, :max_occupancy, :season_status_overridden_quantity, :num_not_for_sale,
+                :zone
 
     def initialize(data)
       @status = data['status']
@@ -430,6 +432,7 @@ module Seatsio
       @max_occupancy = data['maxOccupancy']
       @season_status_overridden_quantity = data['seasonStatusOverriddenQuantity']
       @num_not_for_sale = data['numNotForSale']
+      @zone = data['zone']
     end
   end
 
