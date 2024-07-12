@@ -230,6 +230,7 @@ class ChartReportsTest < SeatsioTestClient
       report = get_report.(chart_key)
       assert_equal(3, report.items.length)
       assert_equal(6032, report.items['midtrack'].length)
+      assert_equal('midtrack', report.items['midtrack'][0].zone)
       assert_equal(2865, report.items['finishline'].length)
       assert_equal(0, report.items['NO_ZONE'].length)
     end

@@ -290,6 +290,7 @@ class EventReportsTest < SeatsioTestClient
     report = @seatsio.event_reports.by_zone(event.key)
 
     assert_equal(6032, report.items['midtrack'].length)
+    assert_equal('midtrack', report.items['midtrack'][0].zone)
   end
 
   def test_by_specific_zone
