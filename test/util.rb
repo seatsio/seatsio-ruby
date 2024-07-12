@@ -42,6 +42,10 @@ end
 
 def create_test_chart_with_sections
   create_test_chart_from_file('sampleChartWithSections.json')
+  end
+
+def create_test_chart_with_zones
+  create_test_chart_from_file('sampleChartWithZones.json')
 end
 
 def create_test_chart_with_tables

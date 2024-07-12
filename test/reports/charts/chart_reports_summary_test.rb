@@ -109,6 +109,25 @@ class ChartReportsSummaryTest < SeatsioTestClient
     end
   end
 
+  def test_summary_by_zone
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.summary_by_zone(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.summary_by_zone(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_zones
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+
+      assert_equal(6032, report['midtrack']['count'])
+      assert_equal(6032, report['midtrack']['byCategoryKey']['2'])
+      assert_equal(6032, report['midtrack']['byCategoryLabel']['Mid Track Stand'])
+      assert_equal(6032, report['midtrack']['byObjectType']['seat'])
+      assert_equal(2418, report['midtrack']['bySection']['MT1'])
+      assert_equal(3614, report['midtrack']['bySection']['MT3'])
+    end
+  end
+
   private def create_draft_version(chart_key)
     @seatsio.events.create chart_key: chart_key
     @seatsio.charts.update key: chart_key, new_name: 'foo'

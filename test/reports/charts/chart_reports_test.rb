@@ -219,6 +219,22 @@ class ChartReportsTest < SeatsioTestClient
     end
   end
 
+  def test_by_zone
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_zone(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.by_zone(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_zones
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+      assert_equal(3, report.items.length)
+      assert_equal(6032, report.items['midtrack'].length)
+      assert_equal(2865, report.items['finishline'].length)
+      assert_equal(0, report.items['NO_ZONE'].length)
+    end
+  end
+
   def test_with_extra_data
     chart_key = create_test_chart
     event1 = @seatsio.events.create chart_key: chart_key
