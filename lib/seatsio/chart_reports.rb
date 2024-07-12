@@ -47,6 +47,14 @@ module Seatsio
       fetch_summary_report('bySection', event_key, book_whole_tables, version)
     end
 
+    def by_zone(chart_key, book_whole_tables = nil, version = nil)
+      fetch_chart_report('byZone', chart_key, book_whole_tables, version)
+    end
+
+    def summary_by_zone(event_key, book_whole_tables = nil, version = nil)
+      fetch_summary_report('byZone', event_key, book_whole_tables, version)
+    end
+
     private
 
     def fetch_chart_report(report_type, chart_key, book_whole_tables, version)
