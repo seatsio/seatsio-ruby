@@ -67,6 +67,16 @@ class EventReportsDeepSummaryTest < SeatsioTestClient
     assert_equal(1, report['NO_SECTION']['byCategoryLabel']['Cat1']['byAvailability']['not_available'])
   end
 
+  def test_deep_summary_by_zone
+    chart_key = create_test_chart_with_zones
+    event = @seatsio.events.create chart_key: chart_key
+
+    report = @seatsio.event_reports.deep_summary_by_zone(event.key)
+
+    assert_equal(6032, report['midtrack']['count'])
+    assert_equal(6032, report['midtrack']['byCategoryLabel']['Mid Track Stand']['count'])
+  end
+
   def test_deep_summary_by_availability
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
