@@ -73,7 +73,7 @@ module Seatsio
       end
 
       def fetch_next_page
-        response = @http_client.get(@endpoint, @params)
+        response = @http_client.get(@endpoint, URI.encode_www_form(@params))
 
         if response.nil? || response['items'].empty?
           @last_response_empty = true
