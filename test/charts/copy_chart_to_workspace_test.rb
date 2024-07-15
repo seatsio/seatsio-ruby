@@ -3,7 +3,7 @@ require "util"
 
 class CopyChartToWorkspaceTest < SeatsioTestClient
   def test_copy_to_workspace
-    chart = @seatsio.charts.create name: 'my chart', venue_type: 'BOOTHS'
+    chart = @seatsio.charts.create name: 'my chart', venue_type: 'SIMPLE'
     workspace = @seatsio.workspaces.create name: 'my ws'
 
     copied_chart = @seatsio.charts.copy_to_workspace(chart.key, workspace.key)
@@ -15,7 +15,7 @@ class CopyChartToWorkspaceTest < SeatsioTestClient
     assert_equal("my chart", retrieved_chart.name)
 
     drawing = workspace_client.charts.retrieve_published_version(copied_chart.key)
-    assert_equal("BOOTHS", drawing['venueType'])
+    assert_equal("SIMPLE", drawing['venueType'])
 
   end
 

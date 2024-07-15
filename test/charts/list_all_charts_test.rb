@@ -52,30 +52,30 @@ class ListAllChartsTest < SeatsioTestClient
   end
 
   def test_expand_all
-    chart = @seatsio.charts.create
-    event1 = @seatsio.events.create chart_key: chart.key
-    event2 = @seatsio.events.create chart_key: chart.key
+    chart = create_test_chart_with_zones
+    event1 = @seatsio.events.create chart_key: chart
+    event2 = @seatsio.events.create chart_key: chart
 
-    retrieved_charts = @seatsio.charts.list(expand_events: true, expand_validation: true, expand_venue_type: true).to_a
+    retrieved_charts = @seatsio.charts.list(expand_events: true, expand_validation: true, expand_venue_type: true, expand_zones: true).to_a
 
     assert_instance_of(Seatsio::Event, retrieved_charts[0].events[0])
 
     event_ids = retrieved_charts[0].events.collect {|event| event.id}
     assert_equal([event2.id, event1.id], event_ids)
-    assert_equal('MIXED', retrieved_charts[0].venue_type)
+    assert_equal('WITH_ZONES', retrieved_charts[0].venue_type)
     assert_not_nil(retrieved_charts[0].validation)
+    assert_equal([Seatsio::Zone.new('finishline', 'Finish Line'), Seatsio::Zone.new('midtrack', 'Mid Track')], retrieved_charts[0].zones)
   end
 
   def test_expand_none
-    chart = @seatsio.charts.create
-    event1 = @seatsio.events.create chart_key: chart.key
-    event2 = @seatsio.events.create chart_key: chart.key
+    create_test_chart_with_zones
 
     retrieved_charts = @seatsio.charts.list.to_a
 
     assert_nil(retrieved_charts[0].events)
     assert_nil(retrieved_charts[0].validation)
     assert_nil(retrieved_charts[0].venue_type)
+    assert_nil(retrieved_charts[0].zones)
   end
 
   def test_without_charts

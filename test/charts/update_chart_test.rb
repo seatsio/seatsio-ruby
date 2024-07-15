@@ -7,7 +7,7 @@ class UpdateChartTest < SeatsioTestClient
       {'key' => 1, 'label' => 'Category 1', 'color' => '#aaaaaa', 'accessible' => false},
       {'key' => 2, 'label' => 'Category 2', 'color' => '#bbbbbb', 'accessible' => true}
     ]
-    chart = @seatsio.charts.create venue_type: 'BOOTHS', categories: categories
+    chart = @seatsio.charts.create venue_type: 'SIMPLE', categories: categories
 
     @seatsio.charts.update key: chart.key, new_name: 'aChart'
 
@@ -15,7 +15,7 @@ class UpdateChartTest < SeatsioTestClient
     assert_equal('aChart', retrieved_chart.name)
 
     drawing = @seatsio.charts.retrieve_published_version(retrieved_chart.key)
-    assert_equal('BOOTHS', drawing['venueType'])
+    assert_equal('SIMPLE', drawing['venueType'])
     assert_equal(categories, drawing['categories']['list'])
   end
 end

@@ -19,6 +19,15 @@ class RetrieveChartTest < SeatsioTestClient
     assert_nil(retrieved_chart.events)
     assert_equal(%w(tag1 tag2), retrieved_chart.tags.sort)
     assert_equal(false, retrieved_chart.archived)
+    assert_nil(retrieved_chart.zones)
+  end
+
+  def test_zones
+    chart = create_test_chart_with_zones
+
+    retrieved_chart = @seatsio.charts.retrieve(chart)
+
+    assert_equal([Seatsio::Zone.new('finishline', 'Finish Line'), Seatsio::Zone.new('midtrack', 'Mid Track')], retrieved_chart.zones)
   end
 
   def test_with_events
