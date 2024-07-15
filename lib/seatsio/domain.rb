@@ -8,7 +8,7 @@ module Seatsio
 
     attr_reader :id, :key, :status, :name, :published_version_thumbnail_url,
                 :draft_version_thumbnail_url, :events, :tags, :archived,
-                :categories, :validation, :venue_type
+                :categories, :validation, :venue_type, :zones
 
     def initialize(data)
       @id = data['id']
@@ -22,6 +22,38 @@ module Seatsio
       @archived = data['archived']
       @validation = data['validation']
       @venue_type = data['venueType']
+      @zones = Zone.create_list(data['zones']) if data['zones']
+    end
+  end
+
+  class Zone
+
+    attr_reader :key, :label
+
+    def initialize(key, label)
+      @key = key
+      @label = label
+    end
+
+    def self.from_json(data)
+      if data
+        Zone.new(data['key'], data['label'])
+      end
+    end
+
+    def == (other)
+      key == other.key &&
+        label == other.label
+    end
+
+    def self.create_list(list = [])
+      result = []
+
+      list.each do |item|
+        result << Zone.from_json(item)
+      end
+
+      result
     end
   end
 
