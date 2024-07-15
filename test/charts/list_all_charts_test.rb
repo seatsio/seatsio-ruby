@@ -62,7 +62,7 @@ class ListAllChartsTest < SeatsioTestClient
 
     event_ids = retrieved_charts[0].events.collect {|event| event.id}
     assert_equal([event2.id, event1.id], event_ids)
-    assert_equal('SIMPLE', retrieved_charts[0].venue_type)
+    assert_equal('WITH_ZONES', retrieved_charts[0].venue_type)
     assert_not_nil(retrieved_charts[0].validation)
     assert_equal([Seatsio::Zone.new('finishline', 'Finish Line'), Seatsio::Zone.new('midtrack', 'Mid Track')], retrieved_charts[0].zones)
   end
