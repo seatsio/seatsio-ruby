@@ -113,15 +113,32 @@ module Seatsio
       @http_client.post("charts/#{chart_key}/version/draft/actions/publish")
     end
 
-    def list(chart_filter: nil, tag: nil, expand_events: nil, with_validation: false)
+    def list(chart_filter: nil, tag: nil, expand_events: false, expand_validation: false, expand_venue_type: false)
       cursor = Pagination::Cursor.new(Chart, 'charts', @http_client)
       cursor.set_query_param('filter', chart_filter)
       cursor.set_query_param('tag', tag)
 
-      cursor.set_query_param('expand', 'events') if expand_events
-      cursor.set_query_param('validation', with_validation) if with_validation
-
+      expand_params = list_expand_params(expand_events, expand_validation, expand_venue_type)
+      cursor.set_query_param('expand', expand_params) unless expand_params.empty?
       cursor
+    end
+
+    def list_expand_params(expand_events, expand_validation, expand_venue_type)
+      result = []
+
+      if expand_events
+        result.push('events')
+      end
+
+      if expand_validation
+        result.push('validation')
+      end
+
+      if expand_venue_type
+        result.push('venueType')
+      end
+
+      result
     end
 
     def list_all_tags

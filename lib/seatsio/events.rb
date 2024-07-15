@@ -64,7 +64,7 @@ module Seatsio
 
     def retrieve_object_infos(key:, labels:)
       url = "events/#{key}/objects"
-      query_params = URI.encode_www_form(labels.map { |label| ['label', label] })
+      query_params = URI.encode_www_form({ label: labels })
       response = @http_client.get(url, query_params)
       response.each do |key, value|
         response[key] = EventObjectInfo.new(value)

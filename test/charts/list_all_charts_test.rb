@@ -51,40 +51,37 @@ class ListAllChartsTest < SeatsioTestClient
     assert_equal([chart1.key], keys)
   end
 
-  def test_expand
+  def test_expand_all
     chart = @seatsio.charts.create
     event1 = @seatsio.events.create chart_key: chart.key
     event2 = @seatsio.events.create chart_key: chart.key
 
-    retrieved_charts = @seatsio.charts.list(expand_events: true).to_a
+    retrieved_charts = @seatsio.charts.list(expand_events: true, expand_validation: true, expand_venue_type: true).to_a
 
     assert_instance_of(Seatsio::Event, retrieved_charts[0].events[0])
 
     event_ids = retrieved_charts[0].events.collect {|event| event.id}
     assert_equal([event2.id, event1.id], event_ids)
+    assert_equal('MIXED', retrieved_charts[0].venue_type)
+    assert_not_nil(retrieved_charts[0].validation)
   end
 
-  def test_with_validation
-    @seatsio.charts.create
+  def test_expand_none
+    chart = @seatsio.charts.create
+    event1 = @seatsio.events.create chart_key: chart.key
+    event2 = @seatsio.events.create chart_key: chart.key
 
-    retrieved_charts = @seatsio.charts.list(with_validation: true).to_a
+    retrieved_charts = @seatsio.charts.list.to_a
 
-    assert_equal({"errors" => [], "warnings" => []}, retrieved_charts[0].validation)
-  end
-
-  def test_without_validation
-    @seatsio.charts.create
-
-    retrieved_charts = @seatsio.charts.list().to_a
-
-    assert_equal(nil, retrieved_charts[0].validation)
+    assert_nil(retrieved_charts[0].events)
+    assert_nil(retrieved_charts[0].validation)
+    assert_nil(retrieved_charts[0].venue_type)
   end
 
   def test_without_charts
     charts = @seatsio.charts.list.to_a
 
     assert_equal([], charts)
-
   end
 
   def test_chart_amount
