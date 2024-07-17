@@ -43,6 +43,17 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal(%w(C-4 C-5 C-6), result.objects)
   end
 
+  def test_zone
+    chart_key = create_test_chart_with_zones
+    event = @seatsio.events.create chart_key: chart_key
+
+    result_midtrack = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', zone: 'midtrack')
+    assert_equal(%w(MT3-A-139), result_midtrack.objects)
+
+    result_finishline = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', zone: 'finishline')
+    assert_equal(['Goal Stand 4-A-1'], result_finishline.objects)
+  end
+
   def test_change_best_available_object_status_with_extra_data
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
