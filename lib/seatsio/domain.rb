@@ -426,7 +426,7 @@ module Seatsio
                 :left_neighbour, :right_neighbour, :is_available, :channel,
                 :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats, :variable_occupancy,
                 :min_occupancy, :max_occupancy, :season_status_overridden_quantity, :num_not_for_sale,
-                :zone
+                :zone, :floor
 
     def initialize(data)
       @status = data['status']
@@ -465,6 +465,7 @@ module Seatsio
       @season_status_overridden_quantity = data['seasonStatusOverriddenQuantity']
       @num_not_for_sale = data['numNotForSale']
       @zone = data['zone']
+      @floor = data['floor']
     end
   end
 
