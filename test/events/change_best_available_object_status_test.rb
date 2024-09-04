@@ -205,4 +205,12 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
 
     assert_equal(%w(A-5), result.objects)
   end
+
+  def test_accessible_seats
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    result = @seatsio.events.change_best_available_object_status(event.key, 3, 'myStatus', accessible_seats: 1)
+    assert_equal(true, result.next_to_each_other)
+    assert_equal(%w(A-6 A-7 A-8), result.objects)
+  end
 end
