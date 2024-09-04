@@ -42,7 +42,11 @@ end
 
 def create_test_chart_with_sections
   create_test_chart_from_file('sampleChartWithSections.json')
-  end
+end
+
+def create_test_chart_with_floors
+  create_test_chart_from_file('sampleChartWithFloors.json')
+end
 
 def create_test_chart_with_zones
   create_test_chart_from_file('sampleChartWithZones.json')

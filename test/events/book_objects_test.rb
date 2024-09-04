@@ -24,6 +24,19 @@ class BookObjectsTest < SeatsioTestClient
     assert_equal(res.objects.keys.sort, ['A-1', 'A-2'])
   end
 
+  def test_floors
+    chart_key = create_test_chart_with_floors
+    event = @seatsio.events.create chart_key: chart_key
+
+    res = @seatsio.events.book(event.key, ['S1-A-1'])
+
+    seat_a1 = res.objects['S1-A-1']
+    assert_equal(
+      { 'name' => '1', 'displayName' => 'Floor 1'},
+      seat_a1.floor
+    )
+  end
+
   def test_sections
     chart_key = create_test_chart_with_sections
     event = @seatsio.events.create chart_key: chart_key
@@ -41,6 +54,7 @@ class BookObjectsTest < SeatsioTestClient
     seat_a1 = res.objects['Section A-A-1']
     assert_equal("Section A", seat_a1.section)
     assert_equal("Entrance 1", seat_a1.entrance)
+    assert_nil(seat_a1.floor)
     assert_equal(
       { 'own' => { 'label' => '1', 'type' => 'seat' }, 'parent' => { 'label' => 'A', 'type' => 'row' }, 'section' => 'Section A', 'entrance' => { 'label' => 'Entrance 1' } },
       seat_a1.labels
