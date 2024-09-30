@@ -33,6 +33,7 @@ class ChartReportsTest < SeatsioTestClient
       assert_not_nil(report_item.is_accessible)
       assert_not_nil(report_item.is_companion_seat)
       assert_not_nil(report_item.has_restricted_view)
+      assert_nil(report_item.floor)
     end
   end
 
@@ -89,6 +90,24 @@ class ChartReportsTest < SeatsioTestClient
       assert_instance_of(Seatsio::ChartReport, report)
       assert_equal(1, report.items['A-1'].length)
       assert_equal(1, report.items['A-2'].length)
+    end
+  end
+
+  def test_by_label_with_floors
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_label(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.by_label(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_floors
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+
+      assert_instance_of(Seatsio::ChartReport, report)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['S1-A-1'][0].floor)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['S1-A-2'][0].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['S2-B-1'][0].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['S2-B-1'][0].floor)
     end
   end
 
@@ -169,6 +188,23 @@ class ChartReportsTest < SeatsioTestClient
     end
   end
 
+  def test_by_object_type_with_floors
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_object_type(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.by_object_type(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_floors
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['seat'][0].floor)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['seat'][1].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['seat'][2].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['seat'][3].floor)
+
+    end
+  end
+
   def test_by_category_key
     [
       [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_category_key(chart_key) }],
@@ -183,6 +219,22 @@ class ChartReportsTest < SeatsioTestClient
       assert_equal(17, report.items['10'].length)
       assert_equal(0, report.items['string11'].length)
       assert_equal(0, report.items['NO_CATEGORY'].length)
+    end
+  end
+
+  def test_by_category_key_with_floors
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_category_key(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.by_category_key(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_floors
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['1'][0].floor)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['1'][1].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['2'][0].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['2'][1].floor)
     end
   end
 
@@ -203,6 +255,22 @@ class ChartReportsTest < SeatsioTestClient
     end
   end
 
+  def test_by_category_label_with_floors
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_category_label(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.by_category_label(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_floors
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['CatA'][0].floor)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['CatA'][1].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['CatB'][0].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['CatB'][1].floor)
+    end
+  end
+
   def test_by_section
     [
       [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_section(chart_key) }],
@@ -216,6 +284,22 @@ class ChartReportsTest < SeatsioTestClient
       assert_equal(36, report.items['Section A'].length)
       assert_equal(35, report.items['Section B'].length)
       assert_equal(0, report.items['NO_SECTION'].length)
+    end
+  end
+
+  def test_by_section_with_floors
+    [
+      [-> (_) { }, -> (chart_key) { @seatsio.chart_reports.by_section(chart_key) }],
+      [-> (chart_key) { create_draft_version chart_key }, -> (chart_key) { @seatsio.chart_reports.by_section(chart_key, nil, 'draft') }]
+    ].each do |update_chart, get_report|
+      chart_key = create_test_chart_with_floors
+      update_chart.(chart_key)
+
+      report = get_report.(chart_key)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['S1'][0].floor)
+      assert_equal({'name' => '1', 'displayName' => 'Floor 1'}, report.items['S1'][1].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['S2'][0].floor)
+      assert_equal({'name' => '2', 'displayName' => 'Floor 2'}, report.items['S2'][1].floor)
     end
   end
 
