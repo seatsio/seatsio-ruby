@@ -348,7 +348,7 @@ module Seatsio
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
                 :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats, :is_accessible,
-                :is_companion_seat, :has_restricted_view, :zone
+                :is_companion_seat, :has_restricted_view, :zone, :floor
 
     def initialize(data)
       @label = data['label']
@@ -369,6 +369,7 @@ module Seatsio
       @is_companion_seat = data['isCompanionSeat']
       @has_restricted_view = data['hasRestrictedView']
       @zone = data['zone']
+      @floor = data['floor']
     end
   end
 
