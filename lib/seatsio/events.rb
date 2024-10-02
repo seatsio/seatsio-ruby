@@ -5,6 +5,7 @@ require "seatsio/domain"
 require "json"
 require "cgi"
 require "seatsio/events/change_object_status_request"
+require "seatsio/events/release_objects_request"
 require "seatsio/events/change_best_available_object_status_request"
 require 'seatsio/channels'
 
@@ -113,7 +114,12 @@ module Seatsio
     end
 
     def release(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      change_object_status(event_key_or_keys, object_or_objects, Seatsio::EventObjectInfo::FREE, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
+      request = create_release_objects_request(object_or_objects, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys)
+      request[:params] = {
+        :expand => 'objects'
+      }
+      response = @http_client.post("events/groups/actions/change-object-status", request)
+      ChangeObjectStatusResult.new(response)
     end
 
     def delete(key:)
