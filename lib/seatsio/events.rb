@@ -5,7 +5,6 @@ require "seatsio/domain"
 require "json"
 require "cgi"
 require "seatsio/events/change_object_status_request"
-require "seatsio/events/release_objects_request"
 require "seatsio/events/change_best_available_object_status_request"
 require 'seatsio/channels'
 
