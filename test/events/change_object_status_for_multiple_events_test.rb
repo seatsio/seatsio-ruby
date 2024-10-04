@@ -28,6 +28,18 @@ class ChangeObjectStatusForMultipleEventsTest < SeatsioTestClient
     assert_equal(Seatsio::EventObjectInfo::BOOKED, fetch_status(event2.key, 'A-2'))
   end
 
+  def test_put_up_for_resale
+    chart_key = create_test_chart
+    event1 = @seatsio.events.create chart_key: chart_key
+    event2 = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.put_up_for_resale([event1.key, event2.key], %w(A-1 A-2))
+    assert_equal(Seatsio::EventObjectInfo::RESALE, fetch_status(event1.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::RESALE, fetch_status(event2.key, 'A-1'))
+    assert_equal(Seatsio::EventObjectInfo::RESALE, fetch_status(event1.key, 'A-2'))
+    assert_equal(Seatsio::EventObjectInfo::RESALE, fetch_status(event2.key, 'A-2'))
+  end
+
   def test_hold
     chart_key = create_test_chart
     event1 = @seatsio.events.create chart_key: chart_key

@@ -419,6 +419,7 @@ module Seatsio
     FREE = 'free'
     BOOKED = 'booked'
     HELD = 'reservedByToken'
+    RESALE = 'resale'
 
     attr_reader :labels, :ids, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
