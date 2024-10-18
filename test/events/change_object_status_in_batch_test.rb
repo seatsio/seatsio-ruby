@@ -9,7 +9,11 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     chart_key2 = create_test_chart
     event2 = @seatsio.events.create chart_key: chart_key2
 
-    res = @seatsio.events.change_object_status_in_batch([{ :event => event1.key, :objects => ['A-1'], :status => 'foo' }, { :event => event2.key, :objects => ['A-2'], :status => 'fa' }])
+    res = @seatsio.events.change_object_status_in_batch(
+      [
+        { :type => Seatsio::StatusChangeType::CHANGE_STATUS_TO, :event => event1.key, :objects => ['A-1'], :status => 'foo' },
+        { :event => event2.key, :objects => ['A-2'], :status => 'fa' }
+      ])
 
     assert_equal('foo', res[0].objects['A-1'].status)
     assert_equal('foo', @seatsio.events.retrieve_object_info(key: event1.key, label: 'A-1').status)
@@ -85,7 +89,7 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     event = @seatsio.events.create chart_key: chart_key
     @seatsio.events.book(event.key, ['A-1'])
 
-    res = @seatsio.events.change_object_status_in_batch([{ :type => RELEASE, :event => event.key, :objects => ['A-1'] }])
+    res = @seatsio.events.change_object_status_in_batch([{ :type => Seatsio::StatusChangeType::RELEASE, :event => event.key, :objects => ['A-1'] }])
 
     assert_equal(Seatsio::EventObjectInfo::FREE, res[0].objects['A-1'].status)
     assert_equal(Seatsio::EventObjectInfo::FREE, @seatsio.events.retrieve_object_info(key: event.key, label: 'A-1').status)
