@@ -81,7 +81,7 @@ module Seatsio
     end
 
     def change_object_status(event_key_or_keys, object_or_objects, status, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, allowed_previous_statuses: nil, rejected_previous_statuses: nil)
-      request = create_change_object_status_request(object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, allowed_previous_statuses, rejected_previous_statuses)
+      request = create_change_object_status_request('CHANGE_STATUS_TO', object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, allowed_previous_statuses, rejected_previous_statuses)
       request[:params] = {
         :expand => 'objects'
       }
@@ -117,7 +117,7 @@ module Seatsio
     end
 
     def release(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)
-      request = create_release_objects_request(object_or_objects, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys)
+      request = create_change_object_status_request('RELEASE', object_or_objects, nil, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys)
       request[:params] = {
         :expand => 'objects'
       }

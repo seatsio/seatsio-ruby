@@ -1,7 +1,6 @@
 require 'test_helper'
 require 'util'
 require 'seatsio/domain'
-require 'seatsio/events/change_object_status_in_batch_request'
 
 class ChangeObjectStatusInBatchTest < SeatsioTestClient
   def test_change_object_status_in_batch
@@ -79,5 +78,16 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
       assert_match /ILLEGAL_STATUS_CHANGE/, e.message.body
       assert_match /free is in the list of rejected previous statuses/, e.message.body
     end
+  end
+
+  def release_in_batch
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    @seatsio.events.book(event.key, ['A-1'])
+
+    res = @seatsio.events.change_object_status_in_batch([{ :type => 'RELEASE', :event => event.key, :objects => ['A-1'] }])
+
+    assert_equal(Seatsio::EventObjectInfo::FREE, res[0].objects['A-1'].status)
+    assert_equal(Seatsio::EventObjectInfo::FREE, @seatsio.events.retrieve_object_info(key: event.key, label: 'A-1').status)
   end
 end
