@@ -3,7 +3,7 @@ def create_change_object_status_request(type, object_or_objects, status, hold_to
   result[:type] = type
   result[:objects] = normalize(object_or_objects)
   result[:type] = type
-  result[:status] = status if type != 'RELEASE'
+  result[:status] = status if type != RELEASE
   result[:holdToken] = hold_token if hold_token != nil
   result[:orderId] = order_id if order_id != nil
   if event_key_or_keys.is_a? Array

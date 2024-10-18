@@ -415,6 +415,11 @@ module Seatsio
     end
   end
 
+  class StatusChangeType
+    CHANGE_STATUS_TO = 'CHANGE_STATUS_TO'
+    RELEASE = 'RELEASE'
+  end
+
   class EventObjectInfo
     FREE = 'free'
     BOOKED = 'booked'
