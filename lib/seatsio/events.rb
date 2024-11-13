@@ -30,8 +30,8 @@ module Seatsio
       Events.new(response).events
     end
 
-    def update(key:, chart_key: nil, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, is_in_the_past: nil)
-      payload = build_event_request(chart_key, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: is_in_the_past)
+    def update(key:, event_key: nil, name: nil, date: nil, table_booking_config: nil, object_categories: nil, categories: nil, is_in_the_past: nil)
+      payload = build_event_request(nil, event_key, name, date, table_booking_config, object_categories, categories, channels: nil, is_in_the_past: is_in_the_past)
       @http_client.post("events/#{key}", payload)
     end
 

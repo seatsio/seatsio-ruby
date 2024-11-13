@@ -2,18 +2,6 @@ require 'test_helper'
 require 'util'
 
 class UpdateEventTest < SeatsioTestClient
-  def test_update_chart_key
-    chart1 = @seatsio.charts.create
-    event = @seatsio.events.create chart_key: chart1.key
-    chart2 = @seatsio.charts.create
-
-    @seatsio.events.update key: event.key, chart_key: chart2.key
-
-    retrieved_event = @seatsio.events.retrieve key: event.key
-    assert_equal(event.key, retrieved_event.key)
-    assert_equal(chart2.key, retrieved_event.chart_key)
-  end
-
   def test_update_event_key
     chart = @seatsio.charts.create
     event = @seatsio.events.create chart_key: chart.key
