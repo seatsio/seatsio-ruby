@@ -418,6 +418,8 @@ module Seatsio
   class StatusChangeType
     CHANGE_STATUS_TO = 'CHANGE_STATUS_TO'
     RELEASE = 'RELEASE'
+    OVERRIDE_SEASON_STATUS = 'OVERRIDE_SEASON_STATUS'
+    USE_SEASON_STATUS = 'USE_SEASON_STATUS'
   end
 
   class EventObjectInfo
