@@ -6,6 +6,9 @@ module Seatsio
     class RateLimitExceededException < SeatsioException
     end
 
+    class BestAvailableObjectsNotFoundException < SeatsioException
+    end
+
     class NoMorePagesException < SeatsioException
     end
 

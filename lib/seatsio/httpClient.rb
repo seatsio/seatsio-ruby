@@ -49,11 +49,7 @@ module Seatsio
       rescue RestClient::NotFound => e
         raise Exception::NotFoundException.new(e.response)
       rescue RestClient::ExceptionWithResponse => e
-        if e.response.code == 429
-          raise Exception::RateLimitExceededException.new(e.response)
-        else
-          raise Exception::SeatsioException.new(e.response)
-        end
+        handle_exception(e.response)
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")
       rescue SocketError
@@ -94,5 +90,28 @@ module Seatsio
     def delete(endpoint, payload = {})
       execute(:delete, endpoint, payload)
     end
+
+    private
+
+    def handle_exception(response)
+      content_type = response.headers[:content_type]
+      if content_type&.include?("application/json")
+        parsed_exception = JSON.parse(response.body, symbolize_names: true)
+        if response.code == 429
+          raise Exception::RateLimitExceededException.new(response)
+        elsif best_available_objects_not_found?(parsed_exception[:errors])
+          raise Exception::BestAvailableObjectsNotFoundException.new(response)
+        else
+          raise Exception::SeatsioException.new(response)
+        end
+      else
+        raise Exception::SeatsioException.new(response)
+      end
+    end
+
+    def best_available_objects_not_found?(errors)
+      errors.any? { |error| error[:code] == "BEST_AVAILABLE_OBJECTS_NOT_FOUND" }
+    end
+
   end
 end

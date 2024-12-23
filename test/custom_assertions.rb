@@ -30,4 +30,9 @@ module Minitest::Assertions
   def assert_empty(actual)
     assert_equal([], actual)
   end
+
+  def assert_not_instance_of(expected_class, actual)
+    refute_instance_of(expected_class, actual)
+  end
+
 end
