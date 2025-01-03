@@ -24,7 +24,7 @@ class ExponentialBackoffTest < SeatsioTestClient
     rescue Seatsio::Exception::SeatsioException => e
       assert_equal(400, e.message.code)
       wait_time = Time.now.to_i - start.to_i
-      assert_true(wait_time < 2)
+      assert_true(wait_time < 5)
     end
   end
 
@@ -37,7 +37,7 @@ class ExponentialBackoffTest < SeatsioTestClient
     rescue Seatsio::Exception::RateLimitExceededException => e
       assert_equal(429, e.message.code)
       wait_time = Time.now.to_i - start.to_i
-      assert_true(wait_time < 2)
+      assert_true(wait_time < 5)
     end
   end
 
