@@ -213,4 +213,25 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal(true, result.next_to_each_other)
     assert_equal(%w(A-6 A-7 A-8), result.objects)
   end
+
+  def test_specific_exception_type_when_best_available_result_not_found
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    begin
+      @seatsio.events.change_best_available_object_status(event.key, 3000, 'myStatus')
+      raise "Should have failed"
+    rescue Seatsio::Exception::BestAvailableObjectsNotFoundException => e
+      assert_equal("BEST_AVAILABLE_OBJECTS_NOT_FOUND", JSON.parse(e.message)['errors'].first['code'])
+    end
+  end
+
+  def test_general_exception_type_when_eg_event_not_found
+    begin
+      @seatsio.events.change_best_available_object_status("unexisting_event", 3000, 'myStatus')
+      raise "Should have failed"
+    rescue Seatsio::Exception::SeatsioException => e
+      assert_not_instance_of(Seatsio::Exception::BestAvailableObjectsNotFoundException, e)
+    end
+  end
 end
