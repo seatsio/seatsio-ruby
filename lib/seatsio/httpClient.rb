@@ -94,12 +94,14 @@ module Seatsio
     private
 
     def handle_exception(response)
+      if response.code == 429
+        raise Exception::RateLimitExceededException.new(response)
+      end
+
       content_type = response.headers[:content_type]
       if content_type&.include?("application/json")
         parsed_exception = JSON.parse(response.body, symbolize_names: true)
-        if response.code == 429
-          raise Exception::RateLimitExceededException.new(response)
-        elsif best_available_objects_not_found?(parsed_exception[:errors])
+        if best_available_objects_not_found?(parsed_exception[:errors])
           raise Exception::BestAvailableObjectsNotFoundException.new(response)
         else
           raise Exception::SeatsioException.new(response)
