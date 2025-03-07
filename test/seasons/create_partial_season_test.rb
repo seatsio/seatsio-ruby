@@ -15,6 +15,15 @@ class CreatePartialSeasonTest < SeatsioTestClient
     assert_equal(season.key, partial_season.top_level_season_key)
   end
 
+  def test_name_is_optional
+    chart = @seatsio.charts.create
+    season = @seatsio.seasons.create chart_key: chart.key
+
+    partial_season = @seatsio.seasons.create_partial_season top_level_season_key: season.key, name: 'aPartialSeason'
+
+    assert_equal('aPartialSeason', partial_season.name)
+  end
+
   def test_event_keys_is_optional
     chart = @seatsio.charts.create
     season = @seatsio.seasons.create chart_key: chart.key, event_keys: ['event1', 'event2']
