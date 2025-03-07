@@ -28,6 +28,14 @@ class CreateSeasonTest < SeatsioTestClient
     assert_equal('aSeason', season.key)
   end
 
+  def test_name_is_optional
+    chart = @seatsio.charts.create
+
+    season = @seatsio.seasons.create chart_key: chart.key, name: 'aSeason'
+
+    assert_equal('aSeason', season.name)
+  end
+
   def test_number_of_events_is_optional
     chart = @seatsio.charts.create
 

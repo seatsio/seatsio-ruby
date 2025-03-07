@@ -13,16 +13,17 @@ module Seatsio
       @seatsio_client = seatsio_client
     end
 
-    def create(chart_key:, key: nil, number_of_events: nil, event_keys: nil,
+    def create(chart_key:, key: nil, name: nil, number_of_events: nil, event_keys: nil,
                table_booking_config: nil, channels: nil, for_sale_config: nil)
-      request = build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
+      request = build_create_season_request(chart_key, key, name, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
       response = @http_client.post('seasons', request)
       Season.new(response)
     end
 
-    def create_partial_season(top_level_season_key:, partial_season_key: nil, event_keys: nil)
+    def create_partial_season(top_level_season_key:, partial_season_key: nil, name: nil, event_keys: nil)
       request = {}
       request['key'] = partial_season_key if partial_season_key
+      request['name'] = name if name
       request['eventKeys'] = event_keys if event_keys
       response = @http_client.post("seasons/#{top_level_season_key}/partial-seasons", request)
       Season.new(response)
@@ -54,10 +55,11 @@ module Seatsio
 
     private
 
-    def build_create_season_request(chart_key, key, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
+    def build_create_season_request(chart_key, key, name, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
       request = {}
       request['chartKey'] = chart_key if chart_key
       request['key'] = key if key
+      request['name'] = name if name
       request['numberOfEvents'] = number_of_events if number_of_events
       request['eventKeys'] = event_keys if event_keys
       request['tableBookingConfig'] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
