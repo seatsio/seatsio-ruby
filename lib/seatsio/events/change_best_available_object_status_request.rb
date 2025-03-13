@@ -1,9 +1,10 @@
-def create_change_best_available_object_status_request(number, status, categories, zone, extra_data, ticket_types, hold_token, order_id, keep_extra_data,
+def create_change_best_available_object_status_request(number, status, categories, zone, sections, extra_data, ticket_types, hold_token, order_id, keep_extra_data,
                                                        ignore_channels, channel_keys, try_to_prevent_orphan_seats, accessible_seats)
   result = {}
   best_available = {'number': number}
   best_available[:categories] = categories if categories != nil
   best_available[:zone] = zone if zone != nil
+  best_available[:sections] = sections if sections != nil
   best_available[:extraData] = extra_data if extra_data != nil
   best_available[:ticketTypes] = ticket_types if ticket_types != nil
   best_available[:tryToPreventOrphanSeats] = try_to_prevent_orphan_seats if try_to_prevent_orphan_seats != nil

@@ -102,18 +102,18 @@ module Seatsio
       change_object_status(event_key_or_keys, object_or_objects, Seatsio::EventObjectInfo::HELD, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, ignore_channels: ignore_channels, channel_keys: channel_keys)
     end
 
-    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, ticket_types: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil, zone: nil, accessible_seats: nil)
-      request = create_change_best_available_object_status_request(number, status, categories, zone, extra_data, ticket_types, hold_token, order_id, keep_extra_data, ignore_channels, channel_keys, try_to_prevent_orphan_seats, accessible_seats)
+    def change_best_available_object_status(key, number, status, categories: nil, hold_token: nil, extra_data: nil, ticket_types: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil, zone: nil, sections: nil, accessible_seats: nil)
+      request = create_change_best_available_object_status_request(number, status, categories, zone, sections, extra_data, ticket_types, hold_token, order_id, keep_extra_data, ignore_channels, channel_keys, try_to_prevent_orphan_seats, accessible_seats)
       response = @http_client.post("events/#{key}/actions/change-object-status", request)
       BestAvailableObjects.new(response)
     end
 
-    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ticket_types: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil, zone: nil)
-      change_best_available_object_status(key, number, Seatsio::EventObjectInfo::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ticket_types: ticket_types, ignore_channels: ignore_channels, channel_keys: channel_keys, try_to_prevent_orphan_seats: try_to_prevent_orphan_seats, zone: zone)
+    def book_best_available(key, number, categories: nil, hold_token: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ticket_types: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil, zone: nil, sections: nil)
+      change_best_available_object_status(key, number, Seatsio::EventObjectInfo::BOOKED, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ticket_types: ticket_types, ignore_channels: ignore_channels, channel_keys: channel_keys, try_to_prevent_orphan_seats: try_to_prevent_orphan_seats, zone: zone, sections: sections)
     end
 
-    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ticket_types: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil, zone: nil)
-      change_best_available_object_status(key, number, Seatsio::EventObjectInfo::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ticket_types: ticket_types, ignore_channels: ignore_channels, channel_keys: channel_keys, try_to_prevent_orphan_seats: try_to_prevent_orphan_seats, zone: zone)
+    def hold_best_available(key, number, hold_token, categories: nil, order_id: nil, keep_extra_data: nil, extra_data: nil, ticket_types: nil, ignore_channels: nil, channel_keys: nil, try_to_prevent_orphan_seats: nil, zone: nil, sections: nil)
+      change_best_available_object_status(key, number, Seatsio::EventObjectInfo::HELD, categories: categories, hold_token: hold_token, order_id: order_id, keep_extra_data: keep_extra_data, extra_data: extra_data, ticket_types: ticket_types, ignore_channels: ignore_channels, channel_keys: channel_keys, try_to_prevent_orphan_seats: try_to_prevent_orphan_seats, zone: zone, sections: sections)
     end
 
     def release(event_key_or_keys, object_or_objects, hold_token: nil, order_id: nil, keep_extra_data: nil, ignore_channels: nil, channel_keys: nil)

@@ -54,6 +54,17 @@ class ChangeBestAvailableObjectStatusTest < SeatsioTestClient
     assert_equal(['Goal Stand 4-A-1'], result_finishline.objects)
   end
 
+  def test_sections
+    chart_key = create_test_chart_with_sections
+    event = @seatsio.events.create chart_key: chart_key
+
+    result_section_a = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', sections: ['Section A'])
+    assert_equal(['Section A-A-1'], result_section_a.objects)
+
+    result_section_b = @seatsio.events.change_best_available_object_status(event.key, 1, 'myStatus', sections: ['Section B'])
+    assert_equal(['Section B-A-1'], result_section_b.objects)
+  end
+
   def test_change_best_available_object_status_with_extra_data
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
