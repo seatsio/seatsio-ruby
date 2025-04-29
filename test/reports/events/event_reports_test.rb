@@ -364,4 +364,16 @@ class EventReportsTest < SeatsioTestClient
 
     assert_equal(2, report.items.length)
   end
+
+  def test_resale_listing_id
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.put_up_for_resale(event.key, %w(A-1), resale_listing_id: 'listing1')
+
+    report = @seatsio.event_reports.by_label(event.key)
+
+    report_item = report.items['A-1'][0]
+    assert_equal('listing1', report_item.resale_listing_id)
+  end
 end
