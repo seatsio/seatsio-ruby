@@ -98,7 +98,7 @@ class EventReportsTest < SeatsioTestClient
     report = @seatsio.event_reports.by_label(event.key)
 
     report_item = report.items['GA1'][0]
-    assert_equal('free', report_item.status)
+    assert_equal(Seatsio::EventObjectInfo::HELD, report_item.status)
     assert_equal('GA1', report_item.label)
     assert_equal('generalAdmission', report_item.object_type)
     assert_equal('Cat1', report_item.category_label)
