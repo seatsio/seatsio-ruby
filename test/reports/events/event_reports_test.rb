@@ -98,7 +98,7 @@ class EventReportsTest < SeatsioTestClient
     report = @seatsio.event_reports.by_label(event.key)
 
     report_item = report.items['GA1'][0]
-    assert_equal('free', report_item.status)
+    assert_equal(Seatsio::EventObjectInfo::HELD, report_item.status)
     assert_equal('GA1', report_item.label)
     assert_equal('generalAdmission', report_item.object_type)
     assert_equal('Cat1', report_item.category_label)
@@ -363,5 +363,17 @@ class EventReportsTest < SeatsioTestClient
     report = @seatsio.event_reports.by_channel(event.key, 'channelKey1')
 
     assert_equal(2, report.items.length)
+  end
+
+  def test_resale_listing_id
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    @seatsio.events.put_up_for_resale(event.key, %w(A-1), resale_listing_id: 'listing1')
+
+    report = @seatsio.event_reports.by_label(event.key)
+
+    report_item = report.items['A-1'][0]
+    assert_equal('listing1', report_item.resale_listing_id)
   end
 end

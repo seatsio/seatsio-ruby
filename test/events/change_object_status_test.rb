@@ -47,7 +47,6 @@ class ChangeObjectStatusTest < SeatsioTestClient
     object_info2 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-2'
     assert_equal('status_foo', object_info2.status)
     assert_nil(object_info2.hold_token)
-
   end
 
   def test_order_id
@@ -187,5 +186,16 @@ class ChangeObjectStatusTest < SeatsioTestClient
       assert_match /ILLEGAL_STATUS_CHANGE/, e.message.body
       assert_match /free is in the list of rejected previous statuses/, e.message.body
     end
+  end
+
+  def test_resale_listing_id
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+    hold_token = @seatsio.hold_tokens.create
+
+    @seatsio.events.change_object_status(event.key, %w(A-1), Seatsio::EventObjectInfo::RESALE, resale_listing_id: 'listing1')
+
+    object_info1 = @seatsio.events.retrieve_object_info key: event.key, label: 'A-1'
+    assert_equal('listing1', object_info1.resale_listing_id)
   end
 end

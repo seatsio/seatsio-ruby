@@ -119,4 +119,19 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     a1_status = @seatsio.events.retrieve_object_info(key: "event1", label: 'A-1').status
     assert_equal(Seatsio::EventObjectInfo::BOOKED, a1_status)
   end
+
+  def test_resale_listing_id
+    chart_key1 = create_test_chart
+    event1 = @seatsio.events.create chart_key: chart_key1
+    chart_key2 = create_test_chart
+    event2 = @seatsio.events.create chart_key: chart_key2
+
+    res = @seatsio.events.change_object_status_in_batch(
+      [
+        { :type => Seatsio::StatusChangeType::CHANGE_STATUS_TO, :event => event1.key, :objects => ['A-1'], :status => Seatsio::EventObjectInfo::RESALE, :resaleListingId => 'listing1' },
+      ])
+
+    assert_equal('listing1', res[0].objects['A-1'].resale_listing_id)
+    assert_equal('listing1', @seatsio.events.retrieve_object_info(key: event1.key, label: 'A-1').resale_listing_id)
+  end
 end

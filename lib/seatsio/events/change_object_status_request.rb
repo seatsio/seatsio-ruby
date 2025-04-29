@@ -1,4 +1,4 @@
-def create_change_object_status_request(type, object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, allowed_previous_statuses, rejected_previous_statuses)
+def create_change_object_status_request(type, object_or_objects, status, hold_token, order_id, event_key_or_keys, keep_extra_data, ignore_channels, channel_keys, allowed_previous_statuses, rejected_previous_statuses, resale_listing_id)
   result = {}
   result[:type] = type
   result[:objects] = normalize(object_or_objects)
@@ -16,6 +16,7 @@ def create_change_object_status_request(type, object_or_objects, status, hold_to
   result[:channelKeys] = channel_keys if channel_keys != nil
   result[:allowedPreviousStatuses] = allowed_previous_statuses if allowed_previous_statuses != nil
   result[:rejectedPreviousStatuses] = rejected_previous_statuses if rejected_previous_statuses != nil
+  result[:resaleListingId] = resale_listing_id if resale_listing_id != nil
   result
 end
 
