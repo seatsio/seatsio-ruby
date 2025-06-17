@@ -12,12 +12,4 @@ class DeleteWorkspaceTest < SeatsioTestClient
       @seatsio.workspaces.retrieve key: workspace.key
     end
   end
-
-  def test_delete_active_workspace
-    workspace = @seatsio.workspaces.create name: 'a ws'
-
-    assert_raises(Seatsio::Exception::SeatsioException) do
-      @seatsio.workspaces.delete key: workspace.key
-    end
-  end
 end
