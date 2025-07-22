@@ -40,6 +40,10 @@ module Seatsio
       @http_client.post("workspaces/#{key}/actions/deactivate")
     end
 
+    def delete(key:)
+      @http_client.delete("workspaces/#{key}")
+    end
+
     def set_default(key:)
       @http_client.post("workspaces/actions/set-default/#{key}")
     end
