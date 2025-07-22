@@ -50,6 +50,7 @@ class EventReportsTest < SeatsioTestClient
     assert_false(report_item.is_companion_seat)
     assert_false(report_item.has_restricted_view)
     assert_nil(report_item.displayed_object_type)
+    assert_nil(report_item.parent_displayed_object_type)
     assert_nil(report_item.left_neighbour)
     assert_equal('A-2', report_item.right_neighbour)
     assert_false(report_item.is_available)

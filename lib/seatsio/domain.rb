@@ -431,7 +431,7 @@ module Seatsio
     attr_reader :labels, :ids, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
-                :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type,
+                :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type, :parent_displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_available, :channel,
                 :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats, :variable_occupancy,
                 :min_occupancy, :max_occupancy, :season_status_overridden_quantity, :num_not_for_sale,
@@ -460,6 +460,7 @@ module Seatsio
       @is_companion_seat = data['isCompanionSeat']
       @has_restricted_view = data['hasRestrictedView']
       @displayed_object_type = data['displayedObjectType']
+      @parent_displayed_object_type = data['parentDisplayedObjectType']
       @left_neighbour = data['leftNeighbour']
       @right_neighbour = data['rightNeighbour']
       @is_available = data['isAvailable']
