@@ -164,6 +164,11 @@ module Seatsio
       @http_client.post("events/#{key}/actions/mark-as-for-sale", request)
     end
 
+    def move_to_new_chart_copy(event_key)
+      response = @http_client.post("events/#{event_key}/actions/move-to-new-chart-copy")
+      Event.from_json(response)
+    end
+
     private
 
     def build_parameters_for_mark_as_sale(objects, area_places, categories)
