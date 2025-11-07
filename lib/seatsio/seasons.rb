@@ -14,10 +14,16 @@ module Seatsio
     end
 
     def create(chart_key:, key: nil, name: nil, number_of_events: nil, event_keys: nil,
-               table_booking_config: nil, channels: nil, for_sale_config: nil)
-      request = build_create_season_request(chart_key, key, name, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
+               table_booking_config: nil, object_categories: nil, categories: nil, channels: nil,
+               for_sale_config: nil, for_sale_propagated: nil)
+      request = build_create_season_request(chart_key, key, name, number_of_events, event_keys, table_booking_config, object_categories, categories, channels, for_sale_config, for_sale_propagated)
       response = @http_client.post('seasons', request)
       Season.new(response)
+    end
+
+    def update(key:, event_key: nil, name: nil, table_booking_config: nil, object_categories: nil, categories: nil, for_sale_propagated: nil)
+      payload = build_update_season_request(event_key, name, table_booking_config, object_categories, categories, for_sale_propagated)
+      @http_client.post("events/#{key}", payload)
     end
 
     def create_partial_season(top_level_season_key:, partial_season_key: nil, name: nil, event_keys: nil)
@@ -55,34 +61,31 @@ module Seatsio
 
     private
 
-    def build_create_season_request(chart_key, key, name, number_of_events, event_keys, table_booking_config, channels, for_sale_config)
+    def build_create_season_request(chart_key, key, name, number_of_events, event_keys, table_booking_config, object_categories, categories, channels, for_sale_config, for_sale_propagated)
       request = {}
       request['chartKey'] = chart_key if chart_key
       request['key'] = key if key
       request['name'] = name if name
       request['numberOfEvents'] = number_of_events if number_of_events
       request['eventKeys'] = event_keys if event_keys
-      request['tableBookingConfig'] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
+      request['tableBookingConfig'] = EventsClient::table_booking_config_to_request(table_booking_config) if table_booking_config != nil
+      request["objectCategories"] = object_categories if object_categories != nil
+      request["categories"] = EventsClient::categories_to_request(categories) if categories != nil
       request['channels'] = ChannelsClient::channels_to_request(channels) if channels != nil
-      request['forSaleConfig'] = for_sale_config_to_request(for_sale_config) if for_sale_config != nil
+      request['forSaleConfig'] = EventsClient::for_sale_config_to_request(for_sale_config) if for_sale_config != nil
+      request['forSalePropagated'] = for_sale_propagated if for_sale_propagated != nil
       request
     end
 
-    def table_booking_config_to_request(table_booking_config)
+    def build_update_season_request(key, name, table_booking_config, object_categories, categories, for_sale_propagated)
       request = {}
-      request['mode'] = table_booking_config.mode
-      request['tables'] = table_booking_config.tables if table_booking_config.tables != nil
+      request['eventKey'] = key if key
+      request['name'] = name if name
+      request['tableBookingConfig'] = EventsClient::table_booking_config_to_request(table_booking_config) if table_booking_config != nil
+      request["objectCategories"] = object_categories if object_categories != nil
+      request["categories"] = EventsClient::categories_to_request(categories) if categories != nil
+      request['forSalePropagated'] = for_sale_propagated if for_sale_propagated != nil
       request
     end
-
-    def for_sale_config_to_request(for_sale_config)
-      result = {}
-      result["forSale"] = for_sale_config.for_sale
-      result["objects"] = for_sale_config.objects if for_sale_config.objects != nil
-      result["areaPlaces"] = for_sale_config.area_places if for_sale_config.area_places != nil
-      result["categories"] = for_sale_config.categories if for_sale_config.categories != nil
-      result
-    end
-
   end
 end

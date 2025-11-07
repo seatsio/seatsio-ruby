@@ -150,23 +150,71 @@ module Seatsio
       Pagination::Cursor.new(StatusChange, "events/#{key}/objects/#{object_id}/status-changes", @http_client)
     end
 
-    def mark_as_not_for_sale(key:, objects: nil, area_places: nil, categories: nil)
+    def edit_for_sale_config(key:, for_sale: nil, not_for_sale: nil)
+      request = {}
+      request[:forSale] = for_sale if for_sale
+      request[:notForSale] = not_for_sale if not_for_sale
+      response = @http_client.post("events/#{key}/actions/edit-for-sale-config", request)
+      ForSaleConfig.from_json(response['forSaleConfig'])
+    end
+
+    def edit_for_sale_config_for_events(events)
+      request = build_parameters_for_edit_for_sale_config_for_events(events)
+      @http_client.post("events/actions/edit-for-sale-config", request)
+    end
+
+    def replace_for_sale_config(key:, for_sale:, objects: nil, area_places: nil, categories: nil)
+      action = for_sale ? "mark-as-for-sale" : "mark-as-not-for-sale"
       request = build_parameters_for_mark_as_sale objects, area_places, categories
-      @http_client.post("events/#{key}/actions/mark-as-not-for-sale", request)
+      @http_client.post("events/#{key}/actions/#{action}", request)
+    end
+
+    # @deprecated
+    def mark_as_not_for_sale(key:, objects: nil, area_places: nil, categories: nil)
+      replace_for_sale_config(key: key, for_sale: false, objects: objects, area_places: area_places, categories: categories)
+    end
+
+    # @deprecated
+    def mark_as_for_sale(key:, objects: nil, area_places: nil, categories: nil)
+      replace_for_sale_config(key: key, for_sale: true, objects: objects, area_places: area_places, categories: categories)
     end
 
     def mark_everything_as_for_sale(key: nil)
       @http_client.post("events/#{key}/actions/mark-everything-as-for-sale")
     end
 
-    def mark_as_for_sale(key:, objects: nil, area_places: nil, categories: nil)
-      request = build_parameters_for_mark_as_sale objects, area_places, categories
-      @http_client.post("events/#{key}/actions/mark-as-for-sale", request)
-    end
-
     def move_to_new_chart_copy(event_key)
       response = @http_client.post("events/#{event_key}/actions/move-to-new-chart-copy")
       Event.from_json(response)
+    end
+
+    def self.table_booking_config_to_request(table_booking_config)
+      result = {}
+      result["mode"] = table_booking_config.mode
+      result["tables"] = table_booking_config.tables if table_booking_config.tables != nil
+      result
+    end
+
+    def self.categories_to_request(categories)
+      result = []
+      categories.each do |category|
+        r = {}
+        r["key"] = category.key if category.key != nil
+        r["label"] = category.label if category.label != nil
+        r["color"] = category.color if category.color != nil
+        r["accessible"] = category.accessible if category.accessible != nil
+        result.push(r)
+      end
+      result
+    end
+
+    def self.for_sale_config_to_request(for_sale_config)
+      result = {}
+      result["forSale"] = for_sale_config.for_sale
+      result["objects"] = for_sale_config.objects if for_sale_config.objects != nil
+      result["areaPlaces"] = for_sale_config.area_places if for_sale_config.area_places != nil
+      result["categories"] = for_sale_config.categories if for_sale_config.categories != nil
+      result
     end
 
     private
@@ -176,6 +224,20 @@ module Seatsio
       request[:objects] = objects if objects
       request[:areaPlaces] = area_places if area_places
       request[:categories] = categories if categories
+      request
+    end
+
+    def build_parameters_for_edit_for_sale_config_for_events(events)
+      request = {}
+      request[:events] = {}
+
+      events.each do |event|
+        event_request = {}
+        event_request[:forSale] = event[1][:for_sale] if event[1][:for_sale]
+        event_request[:notForSale] = event[1][:not_for_sale] if event[1][:not_for_sale]
+        request[:events][event[0]] = event_request
+      end
+
       request
     end
 
@@ -191,12 +253,12 @@ module Seatsio
       result["eventKey"] = event_key if event_key
       result["name"] = name if name
       result["date"] = date.iso8601 if date
-      result["tableBookingConfig"] = table_booking_config_to_request(table_booking_config) if table_booking_config != nil
+      result["tableBookingConfig"] = EventsClient::table_booking_config_to_request(table_booking_config) if table_booking_config != nil
       result["objectCategories"] = object_categories if object_categories != nil
-      result["categories"] = categories_to_request(categories) if categories != nil
+      result["categories"] = EventsClient::categories_to_request(categories) if categories != nil
       result["channels"] = ChannelsClient::channels_to_request(channels) if channels != nil
       result["isInThePast"] = is_in_the_past if is_in_the_past != nil
-      result["forSaleConfig"] = for_sale_config_to_request(for_sale_config) if for_sale_config != nil
+      result["forSaleConfig"] = EventsClient::for_sale_config_to_request(for_sale_config) if for_sale_config != nil
       result
     end
 
@@ -214,42 +276,13 @@ module Seatsio
         r["eventKey"] = param[:event_key] if param[:event_key] != nil
         r["name"] = param[:name] if param[:name]
         r["date"] = param[:date].iso8601 if param[:date]
-        r["tableBookingConfig"] = table_booking_config_to_request(param[:table_booking_config]) if param[:table_booking_config] != nil
+        r["tableBookingConfig"] = EventsClient::table_booking_config_to_request(param[:table_booking_config]) if param[:table_booking_config] != nil
         r["objectCategories"] = param[:object_categories] if param[:object_categories] != nil
-        r["categories"] = categories_to_request(param[:categories]) if param[:categories] != nil
+        r["categories"] = EventsClient::categories_to_request(param[:categories]) if param[:categories] != nil
         r["channels"] = ChannelsClient::channels_to_request(param[:channels]) if param[:channels] != nil
-        r["forSaleConfig"] = for_sale_config_to_request(param[:for_sale_config]) if param[:for_sale_config] != nil
+        r["forSaleConfig"] = EventsClient::for_sale_config_to_request(param[:for_sale_config]) if param[:for_sale_config] != nil
         result.push(r)
       end
-      result
-    end
-
-    def table_booking_config_to_request(table_booking_config)
-      result = {}
-      result["mode"] = table_booking_config.mode
-      result["tables"] = table_booking_config.tables if table_booking_config.tables != nil
-      result
-    end
-
-    def categories_to_request(categories)
-      result = []
-      categories.each do |category|
-        r = {}
-        r["key"] = category.key if category.key != nil
-        r["label"] = category.label if category.label != nil
-        r["color"] = category.color if category.color != nil
-        r["accessible"] = category.accessible if category.accessible != nil
-        result.push(r)
-      end
-      result
-    end
-
-    def for_sale_config_to_request(for_sale_config)
-      result = {}
-      result["forSale"] = for_sale_config.for_sale
-      result["objects"] = for_sale_config.objects if for_sale_config.objects != nil
-      result["areaPlaces"] = for_sale_config.area_places if for_sale_config.area_places != nil
-      result["categories"] = for_sale_config.categories if for_sale_config.categories != nil
       result
     end
 

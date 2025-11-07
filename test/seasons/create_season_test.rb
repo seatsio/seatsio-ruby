@@ -82,4 +82,32 @@ class CreateSeasonTest < SeatsioTestClient
 
     assert_equal(for_sale_config, season.for_sale_config)
   end
+
+  def test_object_categories_can_be_passed_in
+    chart_key = create_test_chart
+
+    season = @seatsio.seasons.create chart_key: chart_key, object_categories: { 'A-1' => 10 }
+
+    assert_equal({ 'A-1' => 10 }, season.object_categories)
+  end
+
+  def test_categories_can_be_passed_in
+    chart_key = create_test_chart
+
+    season = @seatsio.seasons.create chart_key: chart_key, categories: [Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB')]
+
+    assert_equal(TEST_CHART_CATEGORIES.size + 1, season.categories.size)
+    assert_equal(TEST_CHART_CATEGORIES[0], season.categories[0])
+    assert_equal(TEST_CHART_CATEGORIES[1], season.categories[1])
+    assert_equal(TEST_CHART_CATEGORIES[2], season.categories[2])
+    assert_equal(Seatsio::Category.new('eventCat1', 'event level category', '#AAABBB'), season.categories[3])
+  end
+
+  def test_for_sale_propagated_can_be_passed_in
+    chart_key = create_test_chart
+
+    season = @seatsio.seasons.create chart_key: chart_key, for_sale_propagated: false
+
+    assert_false(season.for_sale_propagated)
+  end
 end

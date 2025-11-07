@@ -246,12 +246,13 @@ module Seatsio
 
   class Season < Event
 
-    attr_accessor :partial_season_keys, :events
+    attr_accessor :partial_season_keys, :events, :for_sale_propagated
 
     def initialize(data)
       super(data)
       @partial_season_keys = data['partialSeasonKeys']
       @events = data['events'] ? Event.create_list(data['events']) : nil
+      @for_sale_propagated = data['forSalePropagated']
     end
 
     def is_season
