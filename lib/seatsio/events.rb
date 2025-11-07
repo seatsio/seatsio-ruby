@@ -169,12 +169,12 @@ module Seatsio
       @http_client.post("events/#{key}/actions/#{action}", request)
     end
 
-    # @deprecated
+    # @deprecated Use {#replace_for_sale_config} instead
     def mark_as_not_for_sale(key:, objects: nil, area_places: nil, categories: nil)
       replace_for_sale_config(key: key, for_sale: false, objects: objects, area_places: area_places, categories: categories)
     end
 
-    # @deprecated
+    # @deprecated Use {#replace_for_sale_config} instead
     def mark_as_for_sale(key:, objects: nil, area_places: nil, categories: nil)
       replace_for_sale_config(key: key, for_sale: true, objects: objects, area_places: area_places, categories: categories)
     end
