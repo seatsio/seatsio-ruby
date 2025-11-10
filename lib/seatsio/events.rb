@@ -155,12 +155,16 @@ module Seatsio
       request[:forSale] = for_sale if for_sale
       request[:notForSale] = not_for_sale if not_for_sale
       response = @http_client.post("events/#{key}/actions/edit-for-sale-config", request)
-      ForSaleConfig.from_json(response['forSaleConfig'])
+      EditForSaleConfigResult.from_json(response)
     end
 
     def edit_for_sale_config_for_events(events)
       request = build_parameters_for_edit_for_sale_config_for_events(events)
-      @http_client.post("events/actions/edit-for-sale-config", request)
+      response = @http_client.post("events/actions/edit-for-sale-config", request)
+      response.each do |key, value|
+        response[key] = EditForSaleConfigResult.from_json(value)
+      end
+      response
     end
 
     def replace_for_sale_config(key:, for_sale:, objects: nil, area_places: nil, categories: nil)

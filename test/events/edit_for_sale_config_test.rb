@@ -14,6 +14,20 @@ class EditForSaleConfigTest < SeatsioTestClient
     assert_equal(%w(A-3), retrieved_event.for_sale_config.objects)
   end
 
+  def test_returns_result
+    chart_key = create_test_chart
+    for_sale_config = Seatsio::ForSaleConfig.new(false, %w[A-1 A-2 A-3])
+    event = @seatsio.events.create chart_key: chart_key, for_sale_config: for_sale_config
+
+    result = @seatsio.events.edit_for_sale_config key: event.key, for_sale: [{ object: "A-1"}, { object: "A-2"}]
+
+    assert_equal(false, result.for_sale_config.for_sale)
+    assert_equal(%w(A-3), result.for_sale_config.objects)
+
+    assert_equal(9, result.rate_limit_info.rate_limit_remaining_calls)
+    assert_not_nil(result.rate_limit_info.rate_limit_reset_date)
+  end
+
   def test_not_for_sale
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
