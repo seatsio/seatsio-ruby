@@ -8,9 +8,10 @@ class EditForSaleConfigForEventsTest < SeatsioTestClient
     event1 = @seatsio.events.create chart_key: chart_key, for_sale_config: for_sale_config
     event2 = @seatsio.events.create chart_key: chart_key, for_sale_config: for_sale_config
 
-    events = {}
-    events[event1.key] = { for_sale: [{ object: "A-1"}] }
-    events[event2.key] = { for_sale: [{ object: "A-2"}] }
+    events = {
+      event1.key => { for_sale: [{ object: "A-1"}] },
+      event2.key => { for_sale: [{ object: "A-2"}] }
+    }
 
     @seatsio.events.edit_for_sale_config_for_events events
 
@@ -29,9 +30,10 @@ class EditForSaleConfigForEventsTest < SeatsioTestClient
     event1 = @seatsio.events.create chart_key: chart_key, for_sale_config: for_sale_config
     event2 = @seatsio.events.create chart_key: chart_key, for_sale_config: for_sale_config
 
-    events = {}
-    events[event1.key] = { for_sale: [{ object: "A-1"}] }
-    events[event2.key] = { for_sale: [{ object: "A-2"}] }
+    events = {
+      event1.key => { for_sale: [{ object: "A-1"}] },
+      event2.key => { for_sale: [{ object: "A-2"}] }
+    }
 
     result = @seatsio.events.edit_for_sale_config_for_events events
 
@@ -47,9 +49,10 @@ class EditForSaleConfigForEventsTest < SeatsioTestClient
     event1 = @seatsio.events.create chart_key: chart_key
     event2 = @seatsio.events.create chart_key: chart_key
 
-    events = {}
-    events[event1.key] = { not_for_sale: [{ object: "A-1"}] }
-    events[event2.key] = { not_for_sale: [{ object: "A-2"}] }
+    events = {
+      event1.key => { not_for_sale: [{ object: "A-1"}] },
+      event2.key => { not_for_sale: [{ object: "A-2"}] }
+    }
 
     @seatsio.events.edit_for_sale_config_for_events events
 
