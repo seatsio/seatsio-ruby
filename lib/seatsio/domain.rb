@@ -101,6 +101,32 @@ module Seatsio
     end
   end
 
+  class EditForSaleConfigResult
+    attr_reader :for_sale_config, :rate_limit_info
+
+    def initialize(for_sale_config, rate_limit_info)
+      @for_sale_config = for_sale_config
+      @rate_limit_info = rate_limit_info
+    end
+
+    def self.from_json(data)
+      EditForSaleConfigResult.new(ForSaleConfig.from_json(data['forSaleConfig']), ForSaleRateLimitInfo.from_json(data['rateLimitInfo']))
+    end
+  end
+
+  class ForSaleRateLimitInfo
+    attr_reader :rate_limit_remaining_calls, :rate_limit_reset_date
+
+    def initialize(rate_limit_remaining_calls, rate_limit_reset_date)
+      @rate_limit_remaining_calls = rate_limit_remaining_calls
+      @rate_limit_reset_date = rate_limit_reset_date
+    end
+
+    def self.from_json(data)
+      ForSaleRateLimitInfo.new(data['rateLimitRemainingCalls'], parse_date(data['rateLimitResetDate']))
+    end
+  end
+
   class Category
 
     attr_reader :key, :label, :color, :accessible
@@ -246,12 +272,13 @@ module Seatsio
 
   class Season < Event
 
-    attr_accessor :partial_season_keys, :events
+    attr_accessor :partial_season_keys, :events, :for_sale_propagated
 
     def initialize(data)
       super(data)
       @partial_season_keys = data['partialSeasonKeys']
       @events = data['events'] ? Event.create_list(data['events']) : nil
+      @for_sale_propagated = data['forSalePropagated']
     end
 
     def is_season
