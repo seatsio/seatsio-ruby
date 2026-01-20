@@ -32,7 +32,7 @@ module Seatsio
           end
         end
 
-        request_options = { method: args[0], url: url, headers: headers }
+        request_options = { method: args[0], url: url, headers: headers, timeout: 10 }
 
         if args[0] == :post || args[0] == :delete
           args[2].delete :params
