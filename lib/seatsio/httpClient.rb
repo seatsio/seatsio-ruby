@@ -48,10 +48,10 @@ module Seatsio
         JSON.parse(response) unless response.empty?
       rescue RestClient::NotFound => e
         raise Exception::NotFoundException.new(e.response)
-      rescue RestClient::ExceptionWithResponse => e
-        handle_exception(e.response)
       rescue RestClient::Exceptions::Timeout
         raise Exception::SeatsioException.new("Timeout ERROR")
+      rescue RestClient::ExceptionWithResponse => e
+        handle_exception(e.response)
       rescue SocketError
         raise Exception::SeatsioException.new("Failed to connect to backend")
       end
@@ -62,8 +62,10 @@ module Seatsio
       while true
         begin
           return RestClient::Request.execute(request_options)
+        rescue RestClient::Exceptions::Timeout
+          raise
         rescue RestClient::ExceptionWithResponse => e
-          if e.response.code != 429 || retry_count >= @max_retries
+          if e.response&.code != 429 || retry_count >= @max_retries
             raise e
           else
             wait_time = (2 ** (retry_count + 2)) / 10.0
