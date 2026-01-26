@@ -16,11 +16,21 @@ end
 
 def create_test_user
   begin
-    post = RestClient.post(BASE_URL + "/system/public/users/actions/create-test-company", {})
+    post = RestClient::Request.execute(
+      method: :post,
+      url: "#{BASE_URL}/system/private/create-test-company",
+      user: system_api_secret
+    )
     JSON.parse(post)
   rescue Exception => e
     raise Seatsio::Exception::SeatsioException.new("Failed to create a test company because " + e.message)
   end
+end
+
+def system_api_secret
+  secret = ENV["CORE_V2_STAGING_EU_SYSTEM_API_SECRET"]
+  raise "Missing CORE_V2_STAGING_EU_SYSTEM_API_SECRET" if secret.nil? || secret.strip.empty?
+  secret
 end
 
 def create_test_chart_from_file(file)

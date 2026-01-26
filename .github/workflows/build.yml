@@ -26,3 +26,4 @@ jobs:
     - run: bundle exec parallel_test
       env:
         DEMO_COMPANY_SECRET_KEY: ${{ secrets.DEMO_COMPANY_SECRET_KEY }}
+        CORE_V2_STAGING_EU_SYSTEM_API_SECRET: ${{ secrets.CORE_V2_STAGING_EU_SYSTEM_API_SECRET }}
