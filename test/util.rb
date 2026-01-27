@@ -2,7 +2,7 @@ require "rest-client"
 require "json"
 require 'seatsio/exception'
 
-BASE_URL = "https://api-staging-eu.seatsio.net"
+BASE_URL = (ENV["API_URL"] || "http://localhost:9001")
 
 TEST_CHART_CATEGORIES = [
   Seatsio::Category.new(9, 'Cat1', '#87A9CD', false),
@@ -28,9 +28,7 @@ def create_test_user
 end
 
 def system_api_secret
-  secret = ENV["CORE_V2_STAGING_EU_SYSTEM_API_SECRET"]
-  raise "Missing CORE_V2_STAGING_EU_SYSTEM_API_SECRET" if secret.nil? || secret.strip.empty?
-  secret
+  ENV["CORE_V2_STAGING_EU_SYSTEM_API_SECRET"] || "superSecretSystemApi"
 end
 
 def create_test_chart_from_file(file)
