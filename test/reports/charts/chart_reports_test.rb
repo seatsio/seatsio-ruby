@@ -30,9 +30,14 @@ class ChartReportsTest < SeatsioTestClient
       assert_equal('A-2', report_item.right_neighbour)
       assert_nil(report_item.book_as_a_whole)
       assert_not_nil(report_item.distance_to_focal_point)
-      assert_not_nil(report_item.is_accessible)
-      assert_not_nil(report_item.is_companion_seat)
-      assert_not_nil(report_item.has_restricted_view)
+      assert_false(report_item.is_accessible)
+      assert_false(report_item.is_companion_seat)
+      assert_false(report_item.has_lift_up_armrests)
+      assert_false(report_item.is_hearing_impaired)
+      assert_false(report_item.is_semi_ambulatory_seat)
+      assert_false(report_item.has_sign_language_interpretation)
+      assert_false(report_item.is_plus_size)
+      assert_false(report_item.has_restricted_view)
       assert_nil(report_item.floor)
     end
   end
