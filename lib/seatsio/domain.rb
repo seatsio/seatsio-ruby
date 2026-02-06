@@ -375,7 +375,8 @@ module Seatsio
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
                 :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats, :is_accessible,
-                :is_companion_seat, :has_restricted_view, :zone, :floor
+                :is_companion_seat, :has_lift_up_armrests, :is_hearing_impaired, :is_semi_ambulatory_seat, :has_sign_language_interpretation,
+                :is_plus_size, :has_restricted_view, :zone, :floor
 
     def initialize(data)
       @label = data['label']
@@ -393,6 +394,11 @@ module Seatsio
       @distance_to_focal_point = data['distanceToFocalPoint']
       @num_seats = data['numSeats']
       @is_accessible = data['isAccessible']
+      @has_lift_up_armrests = data['hasLiftUpArmrests']
+      @is_hearing_impaired = data['isHearingImpaired']
+      @is_semi_ambulatory_seat = data['isSemiAmbulatorySeat']
+      @has_sign_language_interpretation = data['hasSignLanguageInterpretation']
+      @is_plus_size = data['isPlusSize']
       @is_companion_seat = data['isCompanionSeat']
       @has_restricted_view = data['hasRestrictedView']
       @zone = data['zone']
@@ -458,7 +464,8 @@ module Seatsio
     attr_reader :labels, :ids, :label, :order_id, :extra_data, :capacity, :status,
                 :category_key, :entrance, :object_type, :hold_token, :category_label,
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
-                :is_accessible, :is_companion_seat, :has_restricted_view, :displayed_object_type, :parent_displayed_object_type,
+                :is_accessible, :is_companion_seat, :has_lift_up_armrests, :is_hearing_impaired, :is_semi_ambulatory_seat,
+                :has_sign_language_interpretation, :is_plus_size, :has_restricted_view, :displayed_object_type, :parent_displayed_object_type,
                 :left_neighbour, :right_neighbour, :is_available, :channel,
                 :book_as_a_whole, :distance_to_focal_point, :holds, :num_seats, :variable_occupancy,
                 :min_occupancy, :max_occupancy, :season_status_overridden_quantity, :num_not_for_sale,
@@ -485,6 +492,11 @@ module Seatsio
       @extra_data = data['extraData']
       @is_accessible = data['isAccessible']
       @is_companion_seat = data['isCompanionSeat']
+      @has_lift_up_armrests = data['hasLiftUpArmrests']
+      @is_hearing_impaired = data['isHearingImpaired']
+      @is_semi_ambulatory_seat = data['isSemiAmbulatorySeat']
+      @has_sign_language_interpretation = data['hasSignLanguageInterpretation']
+      @is_plus_size = data['isPlusSize']
       @has_restricted_view = data['hasRestrictedView']
       @displayed_object_type = data['displayedObjectType']
       @parent_displayed_object_type = data['parentDisplayedObjectType']
