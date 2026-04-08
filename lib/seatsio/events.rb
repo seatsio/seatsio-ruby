@@ -35,15 +35,17 @@ module Seatsio
       @http_client.post("events/#{key}", payload)
     end
 
-    def override_season_object_status(key:, objects:)
+    def override_season_object_status(key:, objects:, season: nil)
       request = {}
       request[:objects] = objects
+      request[:season] = season if season != nil
       @http_client.post("events/#{key}/actions/override-season-status", request)
     end
 
-    def use_season_object_status(key:, objects:)
+    def use_season_object_status(key:, objects:, season: nil)
       request = {}
       request[:objects] = objects
+      request[:season] = season if season != nil
       @http_client.post("events/#{key}/actions/use-season-status", request)
     end
 
