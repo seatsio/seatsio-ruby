@@ -107,6 +107,18 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     assert_equal(Seatsio::EventObjectInfo::FREE, a1_status)
   end
 
+  def test_override_season_status_in_batch_with_season
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, event_keys: %w[event1]
+    @seatsio.events.book(season.key, ["A-1"])
+
+    res = @seatsio.events.change_object_status_in_batch([{ :type => Seatsio::StatusChangeType::OVERRIDE_SEASON_STATUS, :event => "event1", :objects => ['A-1'], :season => season.key }])
+
+    assert_equal(Seatsio::EventObjectInfo::FREE, res[0].objects['A-1'].status)
+    a1_status = @seatsio.events.retrieve_object_info(key: "event1", label: 'A-1').status
+    assert_equal(Seatsio::EventObjectInfo::FREE, a1_status)
+  end
+
   def test_use_season_status_in_batch
     chart_key = create_test_chart
     season = @seatsio.seasons.create chart_key: chart_key, event_keys: %w[event1]
@@ -114,6 +126,19 @@ class ChangeObjectStatusInBatchTest < SeatsioTestClient
     @seatsio.events.override_season_object_status(key: "event1", objects: %w(A-1))
 
     res = @seatsio.events.change_object_status_in_batch([{ :type => Seatsio::StatusChangeType::USE_SEASON_STATUS, :event => "event1", :objects => ['A-1'] }])
+
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, res[0].objects['A-1'].status)
+    a1_status = @seatsio.events.retrieve_object_info(key: "event1", label: 'A-1').status
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, a1_status)
+  end
+
+  def test_use_season_status_in_batch_with_season
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, event_keys: %w[event1]
+    @seatsio.events.book(season.key, ["A-1"])
+    @seatsio.events.override_season_object_status(key: "event1", objects: %w(A-1))
+
+    res = @seatsio.events.change_object_status_in_batch([{ :type => Seatsio::StatusChangeType::USE_SEASON_STATUS, :event => "event1", :objects => ['A-1'], :season => season.key }])
 
     assert_equal(Seatsio::EventObjectInfo::BOOKED, res[0].objects['A-1'].status)
     a1_status = @seatsio.events.retrieve_object_info(key: "event1", label: 'A-1').status
