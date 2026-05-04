@@ -28,5 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "minitest", "~> 6.0"
   spec.add_development_dependency 'webmock', '~> 3.4', '>= 3.4.2'
-  spec.add_development_dependency 'parallel_tests', '~> 5.6.0'
+  spec.add_development_dependency 'parallel_tests', '~> 5.7.0'
 end

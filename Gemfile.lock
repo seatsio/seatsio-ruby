@@ -26,16 +26,16 @@ GEM
       logger
       mime-types-data (~> 3.2015)
     mime-types-data (3.2025.0402)
-    minitest (6.0.3)
+    minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
     netrc (0.11.0)
-    parallel (1.27.0)
-    parallel_tests (5.6.0)
+    parallel (2.1.0)
+    parallel_tests (5.7.0)
       parallel
     prism (1.9.0)
     public_suffix (7.0.5)
-    rake (13.3.1)
+    rake (13.4.2)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
@@ -53,7 +53,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.2)
   minitest (~> 6.0)
-  parallel_tests (~> 5.6.0)
+  parallel_tests (~> 5.7.0)
   rake (~> 13.0)
   seatsio!
   webmock (~> 3.4, >= 3.4.2)
