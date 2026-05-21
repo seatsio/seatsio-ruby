@@ -195,14 +195,15 @@ module Seatsio
   end
 
   class Channel
-    attr_reader :key, :name, :color, :index, :objects
+    attr_reader :key, :name, :color, :index, :objects, :area_places
 
-    def initialize(key, name, color, index, objects)
+    def initialize(key, name, color, index, objects, area_places = nil)
       @key = key
       @name = name
       @color = color
       @index = index
       @objects = objects
+      @area_places = area_places
     end
 
     def == (other)
@@ -210,7 +211,8 @@ module Seatsio
         name == other.name &&
         color == other.color &&
         index == other.index &&
-        objects == other.objects
+        objects == other.objects &&
+        area_places == other.area_places
     end
 
   end
@@ -235,7 +237,7 @@ module Seatsio
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
       @channels = data['channels'].map {
-        |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'])
+        |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'], d['areaPlaces'])
       } if data['channels']
       @is_top_level_season = data['isTopLevelSeason']
       @is_partial_season = data['isPartialSeason']

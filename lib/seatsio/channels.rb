@@ -53,6 +53,7 @@ module Seatsio
         r["color"] = channel.color
         r["index"] = channel.index if channel.index != nil
         r["objects"] = channel.objects if channel.objects != nil
+        r["areaPlaces"] = channel.area_places if channel.area_places != nil
         result.push(r)
       end
       result

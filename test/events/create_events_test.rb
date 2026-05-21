@@ -116,8 +116,8 @@ class CreateEventsTest < SeatsioTestClient
   def test_channels_can_be_passed_in
     chart_key = create_test_chart
     channels = [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2]),
-      Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2], {"GA1" => 3}),
+      Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [], {"GA2" => 5})
     ]
     event_creation_params = [
       {:channels => channels}
