@@ -63,4 +63,24 @@ class UpdateChannelTest < SeatsioTestClient
     assert_equal(expected_channels, retrieved_event.channels)
   end
 
+  def test_update_area_places
+    event = @seatsio.events.create chart_key: create_test_chart
+    @seatsio.events.channels.add event_key: event.key,
+                                 channel_key: "channelKey1",
+                                 channel_name: 'channel 1',
+                                 channel_color: "#FFFF98",
+                                 index: 1,
+                                 area_places: { 'GA1' => 3 }
+
+    @seatsio.events.channels.update event_key: event.key,
+                                    channel_key: "channelKey1",
+                                    area_places: { 'GA1' => 5 }
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    expected_channels = [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FFFF98", 1, [], { 'GA1' => 5 }),
+    ]
+    assert_equal(expected_channels, retrieved_event.channels)
+  end
+
 end

@@ -30,4 +30,24 @@ class AddObjectsToChannelTest < SeatsioTestClient
     assert_equal(expected_channels, retrieved_event.channels)
   end
 
+  def test_add_area_places_to_channel
+    event = @seatsio.events.create chart_key: create_test_chart
+    @seatsio.events.channels.add event_key: event.key,
+                                 channel_key: "channelKey1",
+                                 channel_name: 'channel 1',
+                                 channel_color: "#FFFF98",
+                                 index: 1,
+                                 area_places: { 'GA1' => 3 }
+
+    @seatsio.events.channels.add_objects event_key: event.key,
+                                         channel_key: "channelKey1",
+                                         area_places: { 'GA1' => 2 }
+
+    retrieved_event = @seatsio.events.retrieve key: event.key
+    expected_channels = [
+      Seatsio::Channel.new("channelKey1", "channel 1", "#FFFF98", 1, [], { 'GA1' => 5 }),
+    ]
+    assert_equal(expected_channels, retrieved_event.channels)
+  end
+
 end
