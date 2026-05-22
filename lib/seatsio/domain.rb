@@ -195,15 +195,20 @@ module Seatsio
   end
 
   class Channel
-    attr_reader :key, :name, :color, :index, :objects, :area_places
+    attr_reader :id, :key, :name, :color, :index, :objects, :area_places
 
-    def initialize(key, name, color, index, objects = [], area_places = {})
+    def initialize(key, name, color, index, objects = [], area_places = {}, id = nil)
+      @id = id
       @key = key
       @name = name
       @color = color
       @index = index
       @objects = objects
       @area_places = area_places
+    end
+
+    def area_partition_label(area_label)
+      "#{area_label}###{@id}"
     end
 
     def == (other)
@@ -237,7 +242,7 @@ module Seatsio
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
       @channels = data['channels'].map {
-        |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'], d['areaPlaces'])
+        |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'], d['areaPlaces'], d['id'])
       } if data['channels']
       @is_top_level_season = data['isTopLevelSeason']
       @is_partial_season = data['isPartialSeason']
