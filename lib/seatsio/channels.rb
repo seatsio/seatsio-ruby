@@ -55,13 +55,14 @@ module Seatsio
     def self.channels_to_request(channels)
       result = []
       channels.each do |channel|
+        ch = channel.transform_keys(&:to_s)
         r = {}
-        r["key"] = channel.key
-        r["name"] = channel.name
-        r["color"] = channel.color
-        r["index"] = channel.index if channel.index != nil
-        r["objects"] = channel.objects if channel.objects != nil
-        r["areaPlaces"] = channel.area_places if channel.area_places != nil
+        r["key"] = ch["key"]
+        r["name"] = ch["name"]
+        r["color"] = ch["color"]
+        r["index"] = ch["index"] if ch["index"] != nil
+        r["objects"] = ch["objects"] if ch["objects"] != nil
+        r["areaPlaces"] = ch["areaPlaces"] || ch["area_places"] if (ch["areaPlaces"] || ch["area_places"]) != nil
         result.push(r)
       end
       result
