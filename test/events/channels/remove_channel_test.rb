@@ -22,7 +22,7 @@ class RemoveChannelTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     expected_channels = [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FFFF98", 1, ['A-1', 'A-2'])
+      Seatsio::Channel.new("channelKey1", retrieved_event.channels[0].id, "channel 1", "#FFFF98", 1, ['A-1', 'A-2'], {})
     ]
     assert_equal(expected_channels, retrieved_event.channels)
   end

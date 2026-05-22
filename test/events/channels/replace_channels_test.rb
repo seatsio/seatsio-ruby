@@ -6,15 +6,17 @@ class ReplaceChannelsTest < SeatsioTestClient
   def test_replace_channels
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
-    channels = [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2]),
-      Seatsio::Channel.new("channelKey2", "channel 2", "#0000FF", 2, [])
+    @seatsio.events.channels.replace key: event.key, channels: [
+      { key: "channelKey1", name: "channel 1", color: "#FF0000", index: 1, objects: %w[A-1 A-2] },
+      { key: "channelKey2", name: "channel 2", color: "#0000FF", index: 2, objects: [] }
     ]
 
-    @seatsio.events.channels.replace key: event.key, channels: channels
-
     retrieved_event = @seatsio.events.retrieve key: event.key
-    assert_equal(channels, retrieved_event.channels)
+    expected_channels = [
+      Seatsio::Channel.new("channelKey1", retrieved_event.channels[0].id, "channel 1", "#FF0000", 1, %w[A-1 A-2], {}),
+      Seatsio::Channel.new("channelKey2", retrieved_event.channels[1].id, "channel 2", "#0000FF", 2, [], {})
+    ]
+    assert_equal(expected_channels, retrieved_event.channels)
   end
 
 end

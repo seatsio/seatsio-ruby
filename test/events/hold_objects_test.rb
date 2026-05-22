@@ -50,7 +50,7 @@ class HoldObjectsTest < SeatsioTestClient
   def test_channel_keys
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key, channels: [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2])
+      { key: "channelKey1", name: "channel 1", color: "#FF0000", index: 1, objects: %w[A-1 A-2] }
     ]
     hold_token = @seatsio.hold_tokens.create
 
@@ -63,7 +63,7 @@ class HoldObjectsTest < SeatsioTestClient
   def test_ignore_channels
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key, channels: [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FF0000", 1, %w[A-1 A-2])
+      { key: "channelKey1", name: "channel 1", color: "#FF0000", index: 1, objects: %w[A-1 A-2] }
     ]
     hold_token = @seatsio.hold_tokens.create
 

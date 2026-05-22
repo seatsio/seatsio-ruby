@@ -197,7 +197,7 @@ module Seatsio
   class Channel
     attr_reader :id, :key, :name, :color, :index, :objects, :area_places
 
-    def initialize(key, name, color, index, objects = [], area_places = {}, id = nil)
+    def initialize(key, id, name, color, index, objects, area_places)
       @id = id
       @key = key
       @name = name
@@ -212,12 +212,13 @@ module Seatsio
     end
 
     def == (other)
+      id == other.id &&
       key == other.key &&
-        name == other.name &&
-        color == other.color &&
-        index == other.index &&
-        objects == other.objects &&
-        area_places == other.area_places
+      name == other.name &&
+      color == other.color &&
+      index == other.index &&
+      objects == other.objects &&
+      area_places == other.area_places
     end
 
   end
@@ -242,7 +243,7 @@ module Seatsio
       @created_on = parse_date(data['createdOn'])
       @updated_on = parse_date(data['updatedOn'])
       @channels = data['channels'].map {
-        |d| Channel.new(d['key'], d['name'], d['color'], d['index'], d['objects'], d['areaPlaces'], d['id'])
+        |d| Channel.new(d['key'], d['id'], d['name'], d['color'], d['index'], d['objects'], d['areaPlaces'])
       } if data['channels']
       @is_top_level_season = data['isTopLevelSeason']
       @is_partial_season = data['isPartialSeason']
@@ -535,7 +536,7 @@ module Seatsio
         usage << UsageSummaryForMonth.new(item)
       end
       @usage = usage
-      @usage_cutoff_date =  DateTime.iso8601(data['usageCutoffDate'])
+      @usage_cutoff_date = DateTime.iso8601(data['usageCutoffDate'])
     end
   end
 

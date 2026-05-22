@@ -24,8 +24,8 @@ class AddObjectsToChannelTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     expected_channels = [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FFFF98", 1, ['A-1', 'A-2', 'A-3', 'A-4']),
-      Seatsio::Channel.new("channelKey2", "channel 2", "#FFFF99", 2, [])
+      Seatsio::Channel.new("channelKey1", retrieved_event.channels[0].id, "channel 1", "#FFFF98", 1, ['A-1', 'A-2', 'A-3', 'A-4'], {}),
+      Seatsio::Channel.new("channelKey2", retrieved_event.channels[1].id, "channel 2", "#FFFF99", 2, [], {})
     ]
     assert_equal(expected_channels, retrieved_event.channels)
   end
@@ -45,7 +45,7 @@ class AddObjectsToChannelTest < SeatsioTestClient
 
     retrieved_event = @seatsio.events.retrieve key: event.key
     expected_channels = [
-      Seatsio::Channel.new("channelKey1", "channel 1", "#FFFF98", 1, [], { 'GA1' => 5 }),
+      Seatsio::Channel.new("channelKey1", retrieved_event.channels[0].id, "channel 1", "#FFFF98", 1, [], { 'GA1' => 5 }),
     ]
     assert_equal(expected_channels, retrieved_event.channels)
   end
