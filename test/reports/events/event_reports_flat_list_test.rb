@@ -30,7 +30,7 @@ class EventReportsFlatListTest < SeatsioTestClient
 
     csv = @seatsio.event_reports.flat_list_csv(event.key)
 
-    assert_instance_of(String, csv)
+    assert_kind_of(String, csv)
     assert(csv.include?('A-1'))
   end
 end
