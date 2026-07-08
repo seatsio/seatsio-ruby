@@ -127,6 +127,17 @@ module Seatsio
       fetch_report('byOrderId', event_key, order_id)
     end
 
+    def flat_list(event_key)
+      url = "reports/events/#{event_key}"
+      body = @http_client.get(url)
+      body.map { |item| EventObjectInfo.new(item) }
+    end
+
+    def flat_list_csv(event_key)
+      url = "reports/events/#{event_key}.csv"
+      @http_client.get_raw(url)
+    end
+
     private
 
     def fetch_summary_report(report_type, event_key)
