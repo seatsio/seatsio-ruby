@@ -28,8 +28,18 @@ module Seatsio
     end
 
     def regenerate_secret_key(key:)
+      warn "[DEPRECATION] `regenerate_secret_key` is deprecated. Use `add_secret_key` and `remove_secret_key` instead."
       response = @http_client.post("workspaces/#{key}/actions/regenerate-secret-key")
       response['secretKey']
+    end
+
+    def add_secret_key(key:)
+      response = @http_client.post("workspaces/#{key}/actions/add-secret-key")
+      response['secretKey']
+    end
+
+    def remove_secret_key(key:, secret_key_to_remove:)
+      @http_client.post("workspaces/#{key}/actions/remove-secret-key", {secretKey: secret_key_to_remove})
     end
 
     def activate(key:)

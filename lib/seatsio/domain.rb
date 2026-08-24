@@ -314,7 +314,7 @@ module Seatsio
   end
 
   class Workspace
-    attr_reader :id, :name, :key, :secret_key, :is_test, :is_active, :is_default
+    attr_reader :id, :name, :key, :secret_key, :is_test, :is_active, :is_default, :secret_keys
 
     def initialize(data)
       @id = data['id']
@@ -324,6 +324,7 @@ module Seatsio
       @is_test = data['isTest']
       @is_active = data['isActive']
       @is_default = data['isDefault']
+      @secret_keys = data['secretKeys']
     end
   end
 
