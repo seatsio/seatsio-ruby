@@ -4,6 +4,31 @@ require 'seatsio/domain'
 require 'seatsio/exception'
 
 class EventReportsSummaryTest < SeatsioTestClient
+  def test_with_season_bookings_not_propagated_can_be_used_to_fetch_a_report_for_an_event_in_a_season
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, number_of_events: 1
+    event = season.events[0]
+    @seatsio.events.book(season.key, %w(A-1 A-2))
+
+    report = @seatsio.event_reports.with_season_bookings_not_propagated.summary_by_status(event.key)
+
+    assert_equal(232, report['free']['count'])
+  end
+
+  def test_summary_by_status_with_season_bookings_not_propagated
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, number_of_events: 1
+    event = season.events[0]
+    @seatsio.events.book(season.key, %w(A-1 A-2))
+    @seatsio.events.book(event.key, ['A-3'])
+
+    report_with_propagation = @seatsio.event_reports.summary_by_status(season.key)
+    report_without_propagation = @seatsio.event_reports.with_season_bookings_not_propagated.summary_by_status(season.key)
+
+    assert_equal(3, report_with_propagation['booked']['count'])
+    assert_equal(2, report_without_propagation['booked']['count'])
+  end
+
   def test_summary_by_status
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
