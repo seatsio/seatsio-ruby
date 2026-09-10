@@ -77,7 +77,8 @@ module Seatsio
     end
 
     def get_raw(endpoint, params = {})
-      execute(:get, endpoint, params, true)
+      payload = { :params => params }
+      execute(:get, endpoint, payload, true)
     end
 
     def get(endpoint, params = {})

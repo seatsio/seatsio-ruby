@@ -4,6 +4,45 @@ require 'seatsio/domain'
 require 'seatsio/exception'
 
 class EventReportsTest < SeatsioTestClient
+  def test_with_season_bookings_not_propagated_returns_a_new_instance_rather_than_mutating_the_original
+    without_propagation = @seatsio.event_reports.with_season_bookings_not_propagated
+
+    refute_same(@seatsio.event_reports, without_propagation)
+
+    chart_key = create_test_chart
+    event = @seatsio.events.create chart_key: chart_key
+
+    report_from_original = @seatsio.event_reports.by_label(event.key)
+    assert_equal(1, report_from_original.items['A-1'].length)
+  end
+
+  def test_with_season_bookings_not_propagated_can_be_used_to_fetch_a_report_for_an_event_in_a_season
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, number_of_events: 1
+    event = season.events[0]
+    @seatsio.events.book(season.key, %w(A-1 A-2))
+    @seatsio.events.book(event.key, ['A-3'])
+
+    report = @seatsio.event_reports.with_season_bookings_not_propagated.by_label(event.key)
+
+    refute_equal(Seatsio::EventObjectInfo::BOOKED, report.items['A-1'][0].status)
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, report.items['A-3'][0].status)
+  end
+
+  def test_by_status_with_season_bookings_not_propagated
+    chart_key = create_test_chart
+    season = @seatsio.seasons.create chart_key: chart_key, number_of_events: 1
+    event = season.events[0]
+    @seatsio.events.book(season.key, %w(A-1 A-2))
+    @seatsio.events.book(event.key, ['A-3'])
+
+    report_with_propagation = @seatsio.event_reports.by_status(season.key)
+    report_without_propagation = @seatsio.event_reports.with_season_bookings_not_propagated.by_status(season.key)
+
+    assert_equal(Seatsio::EventObjectInfo::BOOKED, find_by_label(report_with_propagation, 'A-3').status)
+    refute_equal(Seatsio::EventObjectInfo::BOOKED, find_by_label(report_without_propagation, 'A-3').status)
+  end
+
   def test_report_instances
     chart_key = create_test_chart
     event = @seatsio.events.create chart_key: chart_key
@@ -386,5 +425,11 @@ class EventReportsTest < SeatsioTestClient
 
     report_item = report.items['A-1'][0]
     assert_equal('listing1', report_item.resale_listing_id)
+  end
+
+  private
+
+  def find_by_label(report, label)
+    report.items.values.flatten.find { |item| item.label == label }
   end
 end

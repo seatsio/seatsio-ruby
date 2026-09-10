@@ -7,8 +7,13 @@ require 'cgi'
 module Seatsio
   # Client for fetching event reports
   class EventReportsClient
-    def initialize(http_client)
+    def initialize(http_client, season_bookings_propagated: true)
       @http_client = http_client
+      @season_bookings_propagated = season_bookings_propagated
+    end
+
+    def with_season_bookings_not_propagated
+      EventReportsClient.new(@http_client, season_bookings_propagated: false)
     end
 
     def by_status(event_key, status = nil)
@@ -129,37 +134,43 @@ module Seatsio
 
     def flat_list(event_key)
       url = "reports/events/#{event_key}"
-      body = @http_client.get(url)
+      body = @http_client.get(url, query_params)
       body.map { |item| EventObjectInfo.new(item) }
     end
 
     def flat_list_csv(event_key)
       url = "reports/events/#{event_key}.csv"
-      @http_client.get_raw(url)
+      @http_client.get_raw(url, query_params)
     end
 
     private
 
     def fetch_summary_report(report_type, event_key)
       url = "reports/events/#{event_key}/#{report_type}/summary"
-      @http_client.get(url)
+      @http_client.get(url, query_params)
     end
 
     def fetch_deep_summary_report(report_type, event_key)
       url = "reports/events/#{event_key}/#{report_type}/summary/deep"
-      @http_client.get(url)
+      @http_client.get(url, query_params)
     end
 
     def fetch_report(report_type, event_key, report_filter = nil)
       if report_filter
         url = "reports/events/#{event_key}/#{report_type}/#{report_filter}"
-        body = @http_client.get(url)
+        body = @http_client.get(url, query_params)
         EventReport.new(body[report_filter])
       else
         url = "reports/events/#{event_key}/#{report_type}"
-        body = @http_client.get(url)
+        body = @http_client.get(url, query_params)
         EventReport.new(body)
       end
+    end
+
+    def query_params
+      return {} if @season_bookings_propagated
+
+      { 'seasonBookingsPropagated' => 'false' }
     end
   end
 end
