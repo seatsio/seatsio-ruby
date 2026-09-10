@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    seatsio (53.0.0)
+    seatsio (53.1.0)
       base64 (>= 0.2, < 0.4)
       rest-client (~> 2.0, >= 2.0.2)
 
