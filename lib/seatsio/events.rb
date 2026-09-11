@@ -189,6 +189,10 @@ module Seatsio
       @http_client.post("events/#{key}/actions/mark-everything-as-for-sale")
     end
 
+    def mark_everything_as_not_for_sale(key: nil)
+      @http_client.post("events/#{key}/actions/mark-everything-as-not-for-sale")
+    end
+
     def move_to_new_chart_copy(event_key)
       response = @http_client.post("events/#{event_key}/actions/move-to-new-chart-copy")
       Event.from_json(response)
