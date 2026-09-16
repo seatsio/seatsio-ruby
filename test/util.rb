@@ -3,6 +3,7 @@ require "json"
 require 'seatsio/exception'
 
 BASE_URL = (ENV["API_URL"] || "http://localhost:9001")
+HTTPBIN_URL = (ENV["HTTPBIN_URL"] || "https://httpbingo.org")
 
 TEST_CHART_CATEGORIES = [
   Seatsio::Category.new(9, 'Cat1', '#87A9CD', false),
