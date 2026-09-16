@@ -78,6 +78,7 @@ class EventReportsTest < SeatsioTestClient
     assert_equal('tt1', report_item.ticket_type)
     assert_equal('order1', report_item.order_id)
     assert_equal('seat', report_item.object_type)
+    assert_nil(report_item.area_type)
     assert_equal(true, report_item.for_sale)
     assert_nil(report_item.section)
     assert_nil(report_item.entrance)
@@ -103,6 +104,7 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(0, report_item.season_status_overridden_quantity)
 
     ga_item = report.items['GA1'][0]
+    assert_equal('generalAdmission', ga_item.area_type)
     assert_true(ga_item.variable_occupancy)
     assert_equal(1, ga_item.min_occupancy)
     assert_equal(100, ga_item.max_occupancy)
@@ -146,6 +148,7 @@ class EventReportsTest < SeatsioTestClient
     assert_equal(Seatsio::EventObjectInfo::HELD, report_item.status)
     assert_equal('GA1', report_item.label)
     assert_equal('generalAdmission', report_item.object_type)
+    assert_equal('generalAdmission', report_item.area_type)
     assert_equal('Cat1', report_item.category_label)
     assert_equal('9', report_item.category_key)
     assert_nil(report_item.ticket_type)
@@ -167,6 +170,9 @@ class EventReportsTest < SeatsioTestClient
     assert_nil(report_item.is_plus_size)
     assert_nil(report_item.has_restricted_view)
     assert_nil(report_item.displayed_object_type)
+
+    fixed_occupancy_item = report.items['GA2'][0]
+    assert_equal('generalAdmission', fixed_occupancy_item.area_type)
   end
 
   def test_report_item_properties_for_table

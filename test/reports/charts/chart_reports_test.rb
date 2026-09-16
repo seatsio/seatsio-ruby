@@ -23,6 +23,7 @@ class ChartReportsTest < SeatsioTestClient
       assert_equal('Cat1', report_item.category_label)
       assert_equal('9', report_item.category_key)
       assert_equal('seat', report_item.object_type)
+      assert_nil(report_item.area_type)
       assert_nil(report_item.section)
       assert_nil(report_item.entrance)
       assert_nil(report_item.capacity)
@@ -57,12 +58,16 @@ class ChartReportsTest < SeatsioTestClient
       assert_instance_of(Seatsio::ChartObjectInfo, report_item)
       assert_equal('GA1', report_item.label)
       assert_equal('generalAdmission', report_item.object_type)
+      assert_equal('generalAdmission', report_item.area_type)
       assert_equal('Cat1', report_item.category_label)
       assert_equal('9', report_item.category_key)
       assert_nil(report_item.section)
       assert_nil(report_item.entrance)
       assert_equal(100, report_item.capacity)
       assert_false(report_item.book_as_a_whole)
+
+      fixed_occupancy_item = report.items['GA2'][0]
+      assert_equal('generalAdmission', fixed_occupancy_item.area_type)
     end
   end
 
