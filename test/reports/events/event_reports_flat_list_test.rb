@@ -12,6 +12,11 @@ class EventReportsFlatListTest < SeatsioTestClient
     assert_equal(34, report.length)
     assert_instance_of(Seatsio::EventObjectInfo, report[0])
     assert_equal('A-1', report[0].label)
+
+    ga1 = report.find { |item| item.label == 'GA1' }
+    ga2 = report.find { |item| item.label == 'GA2' }
+    assert_equal('generalAdmission', ga1.area_type)
+    assert_equal('generalAdmission', ga2.area_type)
   end
 
   def test_flat_list_is_sorted_by_label
