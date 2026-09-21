@@ -4,6 +4,8 @@ require 'seatsio/exception'
 
 BASE_URL = (ENV["API_URL"] || "http://localhost:9001")
 HTTPBIN_URL = (ENV["HTTPBIN_URL"] || "https://httpbingo.org")
+USAGE_REPORTING_TESTS_API_URL = ENV["USAGE_REPORTING_TESTS_API_URL"]
+USAGE_REPORTING_TESTS_SECRET_KEY = ENV["USAGE_REPORTING_TESTS_SECRET_KEY"]
 
 TEST_CHART_CATEGORIES = [
   Seatsio::Category.new(9, 'Cat1', '#87A9CD', false),
@@ -13,6 +15,18 @@ TEST_CHART_CATEGORIES = [
 
 def test_client(secretKey, workspaceKey)
   Seatsio::Client.new(Seatsio::Region.new(BASE_URL), secretKey, workspaceKey)
+end
+
+def usage_reporting_client
+  Seatsio::Client.new(Seatsio::Region.new(USAGE_REPORTING_TESTS_API_URL), USAGE_REPORTING_TESTS_SECRET_KEY, nil)
+end
+
+def usage_reporting_tests_configured?
+  !blank?(USAGE_REPORTING_TESTS_API_URL) && !blank?(USAGE_REPORTING_TESTS_SECRET_KEY)
+end
+
+def blank?(value)
+  value.nil? || value.strip.empty?
 end
 
 def create_test_user
@@ -29,7 +43,7 @@ def create_test_user
 end
 
 def system_api_secret
-  ENV["CORE_V2_STAGING_EU_SYSTEM_API_SECRET"] || "superSecretSystemApi"
+  ENV["CORE_V2_API_SECRET"] || "superSecretSystemApi"
 end
 
 def create_test_chart_from_file(file)
