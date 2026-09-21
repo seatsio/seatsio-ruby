@@ -3,10 +3,10 @@ require 'util'
 require 'seatsio/domain'
 require 'seatsio/exception'
 
-class UsageReportsTest < SeatsioTestClient
+class UsageReportsTest < Minitest::Test
   def test_usage_report_for_all_months
-    assert_demo_company_secret_key_set
-    client = test_client(demo_company_secret_key, nil)
+    skip_unless_usage_reporting_tests_configured
+    client = usage_reporting_client
 
     report = client.usage_reports.summary_for_all_months
 
@@ -17,8 +17,8 @@ class UsageReportsTest < SeatsioTestClient
   end
 
   def test_usage_report_month
-    assert_demo_company_secret_key_set
-    client = test_client(demo_company_secret_key, nil)
+    skip_unless_usage_reporting_tests_configured
+    client = usage_reporting_client
 
     report = client.usage_reports.details_for_month(Seatsio::Month.new(2021, 11))
 
@@ -28,12 +28,20 @@ class UsageReportsTest < SeatsioTestClient
   end
 
   def test_usage_report_event_in_month
-    assert_demo_company_secret_key_set
-    client = test_client(demo_company_secret_key, nil)
+    skip_unless_usage_reporting_tests_configured
+    client = usage_reporting_client
 
     report = client.usage_reports.details_for_event_in_month(580293, Seatsio::Month.new(2021, 11))
 
     assert_true(report.length > 0)
     assert_equal(1, report[0].num_first_selections)
+  end
+
+  private
+
+  def skip_unless_usage_reporting_tests_configured
+    unless usage_reporting_tests_configured?
+      skip "USAGE_REPORTING_TESTS_API_URL and/or USAGE_REPORTING_TESTS_SECRET_KEY environment variables not set, skipping test"
+    end
   end
 end
