@@ -29,7 +29,7 @@ jobs:
     - uses: zcong1993/setup-timezone@master
       with:
         timezone: Europe/Brussels
-    - run: bundle exec parallel_test
+    - run: bundle exec parallel_test -n 8
       env:
         API_URL: https://api-staging-eu.seatsio.net
         HTTPBIN_URL: http://127.0.0.1:${{ job.services.httpbin.ports[8080] }}
