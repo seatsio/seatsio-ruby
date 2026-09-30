@@ -383,7 +383,7 @@ module Seatsio
   class ChartObjectInfo
 
     attr_reader :label, :labels, :ids, :category_key, :category_label, :section, :entrance, :capacity, :object_type,
-                :area_type, :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats, :is_accessible,
+                :area_type, :table_type, :left_neighbour, :right_neighbour, :book_as_a_whole, :distance_to_focal_point, :num_seats, :is_accessible,
                 :is_companion_seat, :has_lift_up_armrests, :is_hearing_impaired, :is_semi_ambulatory_seat, :has_sign_language_interpretation,
                 :is_plus_size, :has_restricted_view, :zone, :floor
 
@@ -398,6 +398,7 @@ module Seatsio
       @capacity = data['capacity']
       @object_type = data['objectType']
       @area_type = data['areaType']
+      @table_type = data['tableType']
       @left_neighbour = data['leftNeighbour']
       @right_neighbour = data['rightNeighbour']
       @book_as_a_whole = data['bookAsAWhole']
@@ -472,7 +473,7 @@ module Seatsio
     RESALE = 'resale'
 
     attr_reader :labels, :ids, :label, :order_id, :extra_data, :capacity, :status,
-                :category_key, :entrance, :object_type, :area_type, :hold_token, :category_label,
+                :category_key, :entrance, :object_type, :area_type, :table_type, :hold_token, :category_label,
                 :ticket_type, :num_booked, :num_free, :num_held, :for_sale, :section,
                 :is_accessible, :is_companion_seat, :has_lift_up_armrests, :is_hearing_impaired, :is_semi_ambulatory_seat,
                 :has_sign_language_interpretation, :is_plus_size, :has_restricted_view, :displayed_object_type, :parent_displayed_object_type,
@@ -500,6 +501,7 @@ module Seatsio
       @capacity = data['capacity']
       @object_type = data['objectType']
       @area_type = data['areaType']
+      @table_type = data['tableType']
       @extra_data = data['extraData']
       @is_accessible = data['isAccessible']
       @is_companion_seat = data['isCompanionSeat']
