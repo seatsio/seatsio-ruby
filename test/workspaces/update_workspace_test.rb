@@ -16,4 +16,13 @@ class UpdateWorkspaceTest < SeatsioTestClient
     assert_operator(retrieved_workspace.secret_key, :!=, nil)
     assert_false(retrieved_workspace.is_test)
   end
+
+  def test_update_for_sale_mode
+    workspace = @seatsio.workspaces.create name: 'my workspace'
+
+    @seatsio.workspaces.update key: workspace.key, name: 'my ws', for_sale_mode: Seatsio::ForSaleMode::UNLIMITED_BILLABLE
+
+    retrieved_workspace = @seatsio.workspaces.retrieve key: workspace.key
+    assert_equal('my ws', retrieved_workspace.name)
+  end
 end

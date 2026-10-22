@@ -25,4 +25,12 @@ class CreateWorkspaceTest < SeatsioTestClient
     assert_true(workspace.is_test)
     assert_true(workspace.is_active)
   end
+
+  def test_create_workspace_with_for_sale_mode
+    workspace = @seatsio.workspaces.create name: 'my workspace', for_sale_mode: Seatsio::ForSaleMode::UNLIMITED_BILLABLE
+
+    assert_equal('my workspace', workspace.name)
+    assert_operator(workspace.key, :!=, nil)
+    assert_true(workspace.is_active)
+  end
 end

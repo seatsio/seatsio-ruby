@@ -12,18 +12,20 @@ module Seatsio
       @http_client = http_client
     end
 
-    def create(name:, is_test: nil)
+    def create(name:, is_test: nil, for_sale_mode: nil)
       body = {}
       body['name'] = name
       body['isTest'] = is_test if is_test
+      body['forSaleMode'] = for_sale_mode if for_sale_mode
 
       response = @http_client.post("workspaces", body)
       Workspace.new(response)
     end
 
-    def update(key:, name:)
+    def update(key:, name:, for_sale_mode: nil)
       body = {}
       body['name'] = name
+      body['forSaleMode'] = for_sale_mode if for_sale_mode
       @http_client.post("workspaces/#{key}", body)
     end
 

@@ -459,6 +459,11 @@ module Seatsio
     end
   end
 
+  class ForSaleMode
+    RATE_LIMITED = 'RATE_LIMITED'
+    UNLIMITED_BILLABLE = 'UNLIMITED_BILLABLE'
+  end
+
   class StatusChangeType
     CHANGE_STATUS_TO = 'CHANGE_STATUS_TO'
     RELEASE = 'RELEASE'
