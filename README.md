@@ -214,3 +214,17 @@ client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key", ma
 ```
 
 Passing in 0 disables exponential backoff completely. In that case, the client will never retry a failed request.
+
+
+## Timeouts
+
+By default, the client waits 10 seconds to establish a connection and 30 seconds to read the response.
+
+To change these timeouts (in seconds), create the client as follows:
+
+```ruby
+require('seatsio')
+client = Seatsio::Client.new(Seatsio::Region.EU(), "my-workspace-secret-key", nil, 5, 10, 60)
+```
+
+The last two arguments are the open timeout and the read timeout. A `SeatsioException` is thrown when a request times out. Timed-out requests are not retried.

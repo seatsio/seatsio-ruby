@@ -16,9 +16,9 @@ module Seatsio
                 :hold_tokens, :chart_reports, :event_reports, :usage_reports, :event_log,
                 :ticket_buyers
 
-    def initialize(region, secret_key, workspace_key = nil, max_retries = 5)
+    def initialize(region, secret_key, workspace_key = nil, max_retries = 5, open_timeout = 10, read_timeout = 30)
       base_url = region.url
-      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url, max_retries)
+      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url, max_retries, open_timeout, read_timeout)
       @charts = ChartsClient.new(@http_client)
       @workspaces = WorkspacesClient.new(@http_client)
       @events = EventsClient.new(@http_client)

@@ -6,11 +6,13 @@ require "uri"
 
 module Seatsio
   class HttpClient
-    def initialize(secret_key, workspace_key, base_url, max_retries)
+    def initialize(secret_key, workspace_key, base_url, max_retries, open_timeout = 10, read_timeout = 30)
       @secret_key = Base64.encode64(secret_key)
       @workspace_key = workspace_key
       @base_url = base_url
       @max_retries = max_retries
+      @open_timeout = open_timeout
+      @read_timeout = read_timeout
     end
 
     def execute(*args)
@@ -32,7 +34,7 @@ module Seatsio
           end
         end
 
-        request_options = { method: args[0], url: url, headers: headers, timeout: 10 }
+        request_options = { method: args[0], url: url, headers: headers, open_timeout: @open_timeout, read_timeout: @read_timeout }
 
         if args[0] == :post || args[0] == :delete
           args[2].delete :params
