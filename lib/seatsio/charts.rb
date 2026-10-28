@@ -145,6 +145,10 @@ module Seatsio
       result
     end
 
+    def events(chart_key)
+      Pagination::Cursor.new(Event, "charts/#{chart_key}/events", @http_client)
+    end
+
     def list_all_tags
       response = @http_client.get('charts/tags')
       response['tags']
