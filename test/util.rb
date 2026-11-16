@@ -29,12 +29,14 @@ def blank?(value)
   value.nil? || value.strip.empty?
 end
 
-def create_test_user
+def create_test_user(params = {})
   begin
     post = RestClient::Request.execute(
       method: :post,
       url: "#{BASE_URL}/system/private/create-test-company",
-      user: system_api_secret
+      user: system_api_secret,
+      payload: params.to_json,
+      headers: { content_type: :json }
     )
     JSON.parse(post)
   rescue Exception => e

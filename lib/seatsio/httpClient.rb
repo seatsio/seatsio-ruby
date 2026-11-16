@@ -3,22 +3,91 @@ require "seatsio/exception"
 require "base64"
 require "cgi"
 require "uri"
+require "securerandom"
 
 module Seatsio
   class HttpClient
+    IDEMPOTENCY_KEY_HEADER = :'Idempotency-Key'
+    UUID_V4 = /\A\h{8}-\h{4}-4\h{3}-[89ab]\h{3}-\h{12}\z/i
+    SAFE_METHODS = [:get, :head, :options, :trace].freeze
+    CONNECTION_ERRORS = [
+      RestClient::Exceptions::Timeout,
+      RestClient::ServerBrokeConnection,
+      SystemCallError,
+      OpenSSL::SSL::SSLError,
+      SocketError
+    ].freeze
+
+    attr_writer :retry_non_idempotent_requests
+
     def initialize(secret_key, workspace_key, base_url, max_retries)
       @secret_key = Base64.encode64(secret_key)
       @workspace_key = workspace_key
       @base_url = base_url
       @max_retries = max_retries
+      @idempotency_key = nil
+      @retry_non_idempotent_requests = false
+    end
+
+    def with_idempotency_key(idempotency_key)
+      unless idempotency_key.is_a?(String) && UUID_V4.match?(idempotency_key)
+        raise ArgumentError.new("idempotency key #{idempotency_key.inspect} is not a v4 UUID")
+      end
+      copy = dup
+      copy.idempotency_key = idempotency_key
+      copy
     end
 
     def execute(*args)
+      method = args[0]
+      return do_execute(args, nil) if safe_method?(method)
+
+      idempotency_key = @idempotency_key || SecureRandom.uuid
+      begin
+        do_execute(args, idempotency_key)
+      rescue Exception::SeatsioException => e
+        e.idempotency_key = idempotency_key
+        raise
+      rescue StandardError => e
+        error = Exception::SeatsioException.new("Error while executing #{method.to_s.upcase} #{args[1]}: #{e.message}")
+        error.idempotency_key = idempotency_key
+        raise error
+      end
+    end
+
+    def get_raw(endpoint, params = {})
+      payload = { :params => params }
+      execute(:get, endpoint, payload, true)
+    end
+
+    def get(endpoint, params = {})
+      payload = { :params => params }
+      execute(:get, endpoint, payload)
+    end
+
+    def post(endpoint, payload = {})
+      execute(:post, endpoint, payload)
+    end
+
+    def delete(endpoint, payload = {})
+      execute(:delete, endpoint, payload)
+    end
+
+    protected
+
+    attr_writer :idempotency_key
+
+    private
+
+    def do_execute(args, idempotency_key)
       begin
         headers = { :Authorization => "Basic #{@secret_key}" }
         headers[:'X-Client-Lib'] = "ruby"
         unless @workspace_key.nil?
           headers[:'X-Workspace-Key'] = @workspace_key
+        end
+        unless idempotency_key.nil?
+          headers[IDEMPOTENCY_KEY_HEADER] = idempotency_key
         end
 
         url = "#{@base_url}/#{args[1]}"
@@ -62,39 +131,29 @@ module Seatsio
       while true
         begin
           return RestClient::Request.execute(request_options)
-        rescue RestClient::Exceptions::Timeout
-          raise
+        rescue *CONNECTION_ERRORS
+          raise unless retry_count < @max_retries && retry_on_connection_error?(request_options[:method])
         rescue RestClient::ExceptionWithResponse => e
-          if e.response&.code != 429 || retry_count >= @max_retries
-            raise e
-          else
-            wait_time = (2 ** (retry_count + 2)) / 10.0
-            sleep(wait_time)
-            retry_count += 1
-          end
+          raise unless retry_count < @max_retries && retryable_response?(e.response)
         end
+        wait_time = (2 ** (retry_count + 2)) / 10.0
+        sleep(wait_time)
+        retry_count += 1
       end
     end
 
-    def get_raw(endpoint, params = {})
-      payload = { :params => params }
-      execute(:get, endpoint, payload, true)
+    def safe_method?(method)
+      SAFE_METHODS.include?(method)
     end
 
-    def get(endpoint, params = {})
-      payload = { :params => params }
-      execute(:get, endpoint, payload)
+    def retry_on_connection_error?(method)
+      @retry_non_idempotent_requests && !safe_method?(method)
     end
 
-    def post(endpoint, payload = {})
-      execute(:post, endpoint, payload)
+    def retryable_response?(response)
+      return false if response.nil?
+      response.code == 429 || (response.code == 409 && api_error_codes(response).first == "IDEMPOTENCY_KEY_IN_USE")
     end
-
-    def delete(endpoint, payload = {})
-      execute(:delete, endpoint, payload)
-    end
-
-    private
 
     def handle_exception(response)
       if response.code == 429
@@ -102,20 +161,19 @@ module Seatsio
       end
 
       content_type = response.headers[:content_type]
-      if content_type&.include?("application/json")
-        parsed_exception = JSON.parse(response.body, symbolize_names: true)
-        if best_available_objects_not_found?(parsed_exception[:errors])
-          raise Exception::BestAvailableObjectsNotFoundException.new(response)
-        else
-          raise Exception::SeatsioException.new(response)
-        end
-      else
-        raise Exception::SeatsioException.new(response)
+      if content_type&.include?("application/json") && api_error_codes(response).include?("BEST_AVAILABLE_OBJECTS_NOT_FOUND")
+        raise Exception::BestAvailableObjectsNotFoundException.new(response)
       end
+      raise Exception::SeatsioException.new(response)
     end
 
-    def best_available_objects_not_found?(errors)
-      errors.any? { |error| error[:code] == "BEST_AVAILABLE_OBJECTS_NOT_FOUND" }
+    def api_error_codes(response)
+      parsed = JSON.parse(response.body.to_s)
+      errors = parsed.is_a?(Hash) ? parsed["errors"] : nil
+      return [] unless errors.is_a?(Array)
+      errors.filter_map { |error| error["code"] if error.is_a?(Hash) }
+    rescue JSON::ParserError
+      []
     end
 
   end

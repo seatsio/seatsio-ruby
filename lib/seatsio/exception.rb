@@ -1,6 +1,7 @@
 module Seatsio
   module Exception
     class SeatsioException < StandardError
+      attr_accessor :idempotency_key
     end
 
     class RateLimitExceededException < SeatsioException
