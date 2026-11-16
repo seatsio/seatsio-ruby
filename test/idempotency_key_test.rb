@@ -136,6 +136,43 @@ class IdempotencyKeyTest < Minitest::Test
     assert_requested(:get, URL, times: 1)
   end
 
+  def test_retries_timed_out_writes_with_the_same_key_when_enabled
+    keys = []
+    stub_recording_keys(keys, :post, URL).to_timeout.then.to_return(status: 204)
+    client = http_client(max_retries: 5)
+    client.retry_non_idempotent_requests = true
+
+    client.post("test-endpoint")
+
+    assert_equal(2, keys.length)
+    assert_equal(keys.first, keys.last)
+  end
+
+  def test_does_not_retry_timed_out_gets
+    stub_request(:get, URL).to_timeout
+    client = http_client(max_retries: 5)
+    client.retry_non_idempotent_requests = true
+
+    error = assert_raises(Seatsio::Exception::SeatsioException) { client.get("test-endpoint") }
+
+    assert_equal("Timeout ERROR", error.message)
+    assert_requested(:get, URL, times: 1)
+  end
+
+  def test_connection_error_is_raised_when_retries_of_writes_run_out
+    keys = []
+    stub_recording_keys(keys, :post, URL).to_raise(EOFError)
+    client = http_client(max_retries: 2)
+    client.retry_non_idempotent_requests = true
+
+    error = assert_raises(Seatsio::Exception::SeatsioException) { client.post("test-endpoint") }
+
+    assert_equal(3, keys.length)
+    assert_equal(1, keys.uniq.length)
+    assert_equal(keys.first, error.idempotency_key)
+    assert_instance_of(RestClient::ServerBrokeConnection, error.cause)
+  end
+
   def test_connection_errors_of_writes_carry_the_key_and_the_original_error
     {
       EOFError => RestClient::ServerBrokeConnection,
