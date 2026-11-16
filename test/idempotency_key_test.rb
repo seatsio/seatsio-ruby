@@ -173,6 +173,89 @@ class IdempotencyKeyTest < Minitest::Test
     assert_instance_of(RestClient::ServerBrokeConnection, error.cause)
   end
 
+  def test_retries_read_timeouts_of_writes_only_once
+    keys = []
+    stub_recording_keys(keys, :post, URL).to_raise(Net::ReadTimeout)
+    client = http_client(max_retries: 5)
+    client.retry_non_idempotent_requests = true
+
+    error = assert_raises(Seatsio::Exception::SeatsioException) { client.post("test-endpoint") }
+
+    assert_equal(2, keys.length)
+    assert_equal(keys.first, keys.last)
+    assert_equal(keys.first, error.idempotency_key)
+    assert_instance_of(RestClient::Exceptions::ReadTimeout, error.cause)
+  end
+
+  def test_a_read_timeout_does_not_use_up_the_retries_of_other_connection_errors
+    keys = []
+    stub_recording_keys(keys, :post, URL).to_raise(EOFError).then.to_raise(Net::ReadTimeout).then.to_raise(EOFError).then.to_return(status: 204)
+    client = http_client(max_retries: 5)
+    client.retry_non_idempotent_requests = true
+
+    client.post("test-endpoint")
+
+    assert_equal(4, keys.length)
+  end
+
+  def test_retries_of_writes_after_connection_errors_wait_with_jitter
+    stub_request(:post, URL).to_raise(EOFError)
+    waits = []
+    client = record_sleeps(http_client(max_retries: 5), waits)
+    client.retry_non_idempotent_requests = true
+
+    assert_raises(Seatsio::Exception::SeatsioException) { client.post("test-endpoint") }
+
+    assert_equal(5, waits.length)
+    [0.4, 0.8, 1.6, 3.2, 6.4].zip(waits).each do |backoff, wait|
+      assert_operator(wait, :>=, backoff / 2)
+      assert_operator(wait, :<=, backoff)
+    end
+  end
+
+  def test_retries_after_429_wait_without_jitter
+    stub_request(:post, URL).to_return(status: 429)
+    waits = []
+    client = record_sleeps(http_client(max_retries: 2), waits)
+
+    assert_raises(Seatsio::Exception::RateLimitExceededException) { client.post("test-endpoint") }
+
+    assert_equal([0.4, 0.8], waits)
+  end
+
+  def test_enabling_retries_of_writes_applies_to_copies_with_a_key
+    stub_request(:post, URL).to_raise(EOFError).then.to_return(status: 204)
+    client = http_client(max_retries: 5)
+    keyed = record_sleeps(client.with_idempotency_key(SecureRandom.uuid), [])
+
+    client.retry_non_idempotent_requests = true
+    keyed.post("test-endpoint")
+
+    assert_requested(:post, URL, times: 2)
+  end
+
+  def test_enabling_retries_of_writes_on_a_copy_with_a_key_applies_to_the_original_client
+    stub_request(:post, URL).to_raise(EOFError).then.to_return(status: 204)
+    client = http_client(max_retries: 5)
+
+    client.with_idempotency_key(SecureRandom.uuid).retry_non_idempotent_requests = true
+    client.post("test-endpoint")
+
+    assert_requested(:post, URL, times: 2)
+  end
+
+  def test_seatsio_client_shares_retries_of_writes_with_copies_with_a_key
+    keys = []
+    stub_recording_keys(keys, :post, "#{BASE}/hold-tokens").to_raise(EOFError).then.to_return(hold_token_response)
+    client = seatsio_client
+    keyed = client.with_idempotency_key(SecureRandom.uuid)
+
+    client.retry_non_idempotent_requests = true
+    keyed.hold_tokens.create
+
+    assert_equal(2, keys.length)
+  end
+
   def test_connection_errors_of_writes_carry_the_key_and_the_original_error
     {
       EOFError => RestClient::ServerBrokeConnection,
@@ -282,7 +365,7 @@ class IdempotencyKeyTest < Minitest::Test
   def test_seatsio_client_with_idempotency_key_sends_the_key_from_every_sub_client
     key = SecureRandom.uuid
     hold_token_keys = []
-    stub_recording_keys(hold_token_keys, :post, "#{BASE}/hold-tokens").to_return(json_response({ holdToken: "abc", expiresAt: "2026-01-01T00:00:00Z", expiresInSeconds: 900 }))
+    stub_recording_keys(hold_token_keys, :post, "#{BASE}/hold-tokens").to_return(hold_token_response)
     season_keys = []
     stub_recording_keys(season_keys, :post, "#{BASE}/seasons").to_return(json_response({ key: "aSeason" }))
     client = seatsio_client.with_idempotency_key(key)
@@ -297,7 +380,7 @@ class IdempotencyKeyTest < Minitest::Test
   def test_seatsio_client_with_idempotency_key_does_not_affect_the_original_client
     key = SecureRandom.uuid
     keys = []
-    stub_recording_keys(keys, :post, "#{BASE}/hold-tokens").to_return(json_response({ holdToken: "abc", expiresAt: "2026-01-01T00:00:00Z", expiresInSeconds: 900 }))
+    stub_recording_keys(keys, :post, "#{BASE}/hold-tokens").to_return(hold_token_response)
     client = seatsio_client
     client.with_idempotency_key(key)
 
@@ -308,7 +391,7 @@ class IdempotencyKeyTest < Minitest::Test
 
   def test_seatsio_client_can_enable_retries_of_writes
     keys = []
-    stub_recording_keys(keys, :post, "#{BASE}/hold-tokens").to_raise(EOFError).then.to_return(json_response({ holdToken: "abc", expiresAt: "2026-01-01T00:00:00Z", expiresInSeconds: 900 }))
+    stub_recording_keys(keys, :post, "#{BASE}/hold-tokens").to_raise(EOFError).then.to_return(hold_token_response)
     client = seatsio_client
     client.retry_non_idempotent_requests = true
 
@@ -321,7 +404,7 @@ class IdempotencyKeyTest < Minitest::Test
   private
 
   def http_client(max_retries: 0)
-    Seatsio::HttpClient.new("aSecretKey", nil, BASE, max_retries)
+    record_sleeps(Seatsio::HttpClient.new("aSecretKey", nil, BASE, max_retries), [])
   end
 
   def seatsio_client
@@ -334,6 +417,15 @@ class IdempotencyKeyTest < Minitest::Test
 
   def api_error(status, code)
     { status: status, headers: { 'Content-Type' => 'application/json' }, body: { errors: [{ code: code, message: "an error" }] }.to_json }
+  end
+
+  def hold_token_response
+    json_response({ holdToken: "abc", expiresAt: "2026-01-01T00:00:00Z", expiresInSeconds: 900 })
+  end
+
+  def record_sleeps(client, waits)
+    client.define_singleton_method(:sleep) { |seconds| waits << seconds }
+    client
   end
 
   def json_response(body)

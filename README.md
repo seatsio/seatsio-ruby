@@ -228,6 +228,10 @@ By default, the client doesn't retry requests when the connection fails. To retr
 client.retry_non_idempotent_requests = true
 ```
 
+The setting applies to the client and to every client returned by its `with_idempotency_key`, whether they were created before or after it was set.
+
+Retries after a connection failure wait with some randomness (jitter), so that many clients don't retry at the same moment. A request that timed out while waiting for the response (10 seconds) is retried only once, to avoid adding load to a server that is already slow. Every attempt can take up to 10 seconds, so in the worst case (e.g. when the server can't be reached) a request only fails after `max_retries + 1` attempts plus the waits in between: about 70 seconds with the default `max_retries` of 5. Lower `max_retries` to shorten that.
+
 ## Rate limiting - exponential backoff
 
 This library supports [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff).

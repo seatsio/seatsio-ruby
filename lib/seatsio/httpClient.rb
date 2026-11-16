@@ -17,8 +17,9 @@ module Seatsio
       OpenSSL::SSL::SSLError,
       SocketError
     ].freeze
+    MAX_READ_TIMEOUT_RETRIES = 1
 
-    attr_writer :retry_non_idempotent_requests
+    Settings = Struct.new(:retry_non_idempotent_requests)
 
     def initialize(secret_key, workspace_key, base_url, max_retries)
       @secret_key = Base64.encode64(secret_key)
@@ -26,7 +27,11 @@ module Seatsio
       @base_url = base_url
       @max_retries = max_retries
       @idempotency_key = nil
-      @retry_non_idempotent_requests = false
+      @settings = Settings.new(false)
+    end
+
+    def retry_non_idempotent_requests=(enabled)
+      @settings.retry_non_idempotent_requests = enabled
     end
 
     def with_idempotency_key(idempotency_key)
@@ -128,18 +133,31 @@ module Seatsio
 
     def execute_with_retries(request_options)
       retry_count = 0
+      read_timeout_retries = 0
       while true
         begin
           return RestClient::Request.execute(request_options)
-        rescue *CONNECTION_ERRORS
+        rescue *CONNECTION_ERRORS => e
           raise unless retry_count < @max_retries && retry_on_connection_error?(request_options[:method])
+          if e.is_a?(RestClient::Exceptions::ReadTimeout)
+            raise unless read_timeout_retries < MAX_READ_TIMEOUT_RETRIES
+            read_timeout_retries += 1
+          end
+          sleep(with_jitter(backoff(retry_count)))
         rescue RestClient::ExceptionWithResponse => e
           raise unless retry_count < @max_retries && retryable_response?(e.response)
+          sleep(backoff(retry_count))
         end
-        wait_time = (2 ** (retry_count + 2)) / 10.0
-        sleep(wait_time)
         retry_count += 1
       end
+    end
+
+    def backoff(retry_count)
+      (2 ** (retry_count + 2)) / 10.0
+    end
+
+    def with_jitter(wait_time)
+      wait_time / 2 + rand * wait_time / 2
     end
 
     def safe_method?(method)
@@ -147,7 +165,7 @@ module Seatsio
     end
 
     def retry_on_connection_error?(method)
-      @retry_non_idempotent_requests && !safe_method?(method)
+      @settings.retry_non_idempotent_requests && !safe_method?(method)
     end
 
     def retryable_response?(response)

@@ -5,7 +5,7 @@ require 'net/http'
 
 class IdempotencyTest < SeatsioTestClient
   def test_same_idempotency_key_replays_the_response
-    client = client_of(create_test_user(idempotencyEnabled: true))
+    client = use_company(create_test_user(idempotencyEnabled: true))
     chart_key = create_test_chart
     keyed_client = client.with_idempotency_key(SecureRandom.uuid)
 
@@ -17,7 +17,7 @@ class IdempotencyTest < SeatsioTestClient
   end
 
   def test_same_idempotency_key_with_a_different_request_is_rejected
-    client = client_of(create_test_user(idempotencyEnabled: true))
+    client = use_company(create_test_user(idempotencyEnabled: true))
     chart_key = create_test_chart
     keyed_client = client.with_idempotency_key(SecureRandom.uuid)
     keyed_client.events.create(chart_key: chart_key)
@@ -40,7 +40,7 @@ class IdempotencyTest < SeatsioTestClient
   end
 
   def test_supplied_idempotency_key_is_available_on_a_failed_request
-    client = client_of(create_test_user(idempotencyEnabled: true))
+    client = use_company(create_test_user(idempotencyEnabled: true))
     key = SecureRandom.uuid
 
     error = assert_raises(Seatsio::Exception::SeatsioException) do
@@ -51,18 +51,17 @@ class IdempotencyTest < SeatsioTestClient
   end
 
   def test_generated_idempotency_key_is_available_on_a_failed_request
-    client = client_of(create_test_user(idempotencyEnabled: true))
+    client = use_company(create_test_user(idempotencyEnabled: true))
 
     error = assert_raises(Seatsio::Exception::SeatsioException) do
       client.events.create(chart_key: "unknownChart")
     end
 
-    refute_nil(error.idempotency_key)
+    assert_match(/\A\h{8}-\h{4}-4\h{3}-[89ab]\h{3}-\h{12}\z/, error.idempotency_key)
   end
 
   def test_retry_after_a_lost_response_creates_one_event
-    company = create_test_user(idempotencyEnabled: true)
-    @user = company['admin']
+    use_company(create_test_user(idempotencyEnabled: true))
     chart_key = create_test_chart
     proxy = ProxyThatForwardsButDropsTheFirstResponse.new(BASE_URL)
     client = Seatsio::Client.new(Seatsio::Region.new(proxy.url), @user['secretKey'])
@@ -70,18 +69,11 @@ class IdempotencyTest < SeatsioTestClient
 
     event = client.events.create(chart_key: chart_key)
 
-    all = client_of(company).events.list.to_a
+    all = @seatsio.events.list.to_a
     assert_equal(1, all.length)
     assert_equal(event.id, all.first.id)
   ensure
     proxy&.close
-  end
-
-  private
-
-  def client_of(company)
-    @user = company['admin']
-    test_client(@user['secretKey'], nil)
   end
 
   class ProxyThatForwardsButDropsTheFirstResponse
