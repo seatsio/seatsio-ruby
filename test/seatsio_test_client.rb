@@ -3,7 +3,10 @@ require "securerandom"
 class SeatsioTestClient < Minitest::Test
 
   def setup
-    company = create_test_user
+    use_company(create_test_user)
+  end
+
+  def use_company(company)
     @user = company['admin']
     @workspace = Seatsio::Workspace.new(company['workspace'])
     @seatsio = test_client(@user['secretKey'], nil)

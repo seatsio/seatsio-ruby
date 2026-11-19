@@ -18,7 +18,23 @@ module Seatsio
 
     def initialize(region, secret_key, workspace_key = nil, max_retries = 5)
       base_url = region.url
-      @http_client = Seatsio::HttpClient.new(secret_key, workspace_key, base_url, max_retries)
+      use_http_client(Seatsio::HttpClient.new(secret_key, workspace_key, base_url, max_retries))
+    end
+
+    def with_idempotency_key(idempotency_key)
+      client = dup
+      client.use_http_client(@http_client.with_idempotency_key(idempotency_key))
+      client
+    end
+
+    def retry_non_idempotent_requests=(enabled)
+      @http_client.retry_non_idempotent_requests = enabled
+    end
+
+    protected
+
+    def use_http_client(http_client)
+      @http_client = http_client
       @charts = ChartsClient.new(@http_client)
       @workspaces = WorkspacesClient.new(@http_client)
       @events = EventsClient.new(@http_client)
