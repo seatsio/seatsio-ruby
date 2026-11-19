@@ -43,20 +43,40 @@ module Seatsio
       copy
     end
 
-    def execute(*args)
-      method = args[0]
-      return do_execute(args, nil) if safe_method?(method)
+    def execute(method, endpoint, payload = {}, raw = false)
+      return do_execute(method, endpoint, payload, raw, nil) if safe_method?(method)
 
       idempotency_key = @idempotency_key || SecureRandom.uuid
       begin
-        do_execute(args, idempotency_key)
+        do_execute(method, endpoint, payload, raw, idempotency_key)
       rescue Exception::SeatsioException => e
         e.idempotency_key = idempotency_key
         raise
       rescue StandardError => e
-        error = Exception::SeatsioException.new("Error while executing #{method.to_s.upcase} #{args[1]}: #{e.message}")
+        error = Exception::SeatsioException.new("Error while executing #{method.to_s.upcase} #{endpoint}: #{e.message}")
         error.idempotency_key = idempotency_key
         raise error
+      end
+    end
+
+    def execute_with_retries(request_options)
+      retry_count = 0
+      read_timeout_retries = 0
+      while true
+        begin
+          return RestClient::Request.execute(request_options)
+        rescue *CONNECTION_ERRORS => e
+          raise unless retry_count < @max_retries && retry_on_connection_error?(request_options[:method])
+          if e.is_a?(RestClient::Exceptions::ReadTimeout)
+            raise unless read_timeout_retries < MAX_READ_TIMEOUT_RETRIES
+            read_timeout_retries += 1
+          end
+          sleep(with_jitter(backoff(retry_count)))
+        rescue RestClient::ExceptionWithResponse => e
+          raise unless retry_count < @max_retries && retryable_response?(e.response)
+          sleep(backoff(retry_count))
+        end
+        retry_count += 1
       end
     end
 
@@ -84,7 +104,7 @@ module Seatsio
 
     private
 
-    def do_execute(args, idempotency_key)
+    def do_execute(method, endpoint, payload, raw, idempotency_key)
       begin
         headers = { :Authorization => "Basic #{@secret_key}" }
         headers[:'X-Client-Lib'] = "ruby"
@@ -95,10 +115,10 @@ module Seatsio
           headers[IDEMPOTENCY_KEY_HEADER] = idempotency_key
         end
 
-        url = "#{@base_url}/#{args[1]}"
+        url = "#{@base_url}/#{endpoint}"
 
-        if args[2].include? :params
-          params = args[2][:params]
+        if payload.include? :params
+          params = payload[:params]
           if params.is_a? Hash
             headers[:params] = params
           else
@@ -106,17 +126,17 @@ module Seatsio
           end
         end
 
-        request_options = { method: args[0], url: url, headers: headers, timeout: 10 }
+        request_options = { method: method, url: url, headers: headers, timeout: 10 }
 
-        if args[0] == :post || args[0] == :delete
-          args[2].delete :params
-          request_options[:payload] = args[2].to_json
+        if method == :post || method == :delete
+          payload.delete :params
+          request_options[:payload] = payload.to_json
         end
 
         response = execute_with_retries(request_options)
 
         # If RAW
-        if args[3]
+        if raw
           return response
         end
         JSON.parse(response) unless response.empty?
@@ -128,27 +148,6 @@ module Seatsio
         handle_exception(e.response)
       rescue SocketError
         raise Exception::SeatsioException.new("Failed to connect to backend")
-      end
-    end
-
-    def execute_with_retries(request_options)
-      retry_count = 0
-      read_timeout_retries = 0
-      while true
-        begin
-          return RestClient::Request.execute(request_options)
-        rescue *CONNECTION_ERRORS => e
-          raise unless retry_count < @max_retries && retry_on_connection_error?(request_options[:method])
-          if e.is_a?(RestClient::Exceptions::ReadTimeout)
-            raise unless read_timeout_retries < MAX_READ_TIMEOUT_RETRIES
-            read_timeout_retries += 1
-          end
-          sleep(with_jitter(backoff(retry_count)))
-        rescue RestClient::ExceptionWithResponse => e
-          raise unless retry_count < @max_retries && retryable_response?(e.response)
-          sleep(backoff(retry_count))
-        end
-        retry_count += 1
       end
     end
 
@@ -178,14 +177,14 @@ module Seatsio
         raise Exception::RateLimitExceededException.new(response)
       end
 
-      content_type = response.headers[:content_type]
-      if content_type&.include?("application/json") && api_error_codes(response).include?("BEST_AVAILABLE_OBJECTS_NOT_FOUND")
+      if api_error_codes(response).include?("BEST_AVAILABLE_OBJECTS_NOT_FOUND")
         raise Exception::BestAvailableObjectsNotFoundException.new(response)
       end
       raise Exception::SeatsioException.new(response)
     end
 
     def api_error_codes(response)
+      return [] unless response.headers[:content_type]&.include?("application/json")
       parsed = JSON.parse(response.body.to_s)
       errors = parsed.is_a?(Hash) ? parsed["errors"] : nil
       return [] unless errors.is_a?(Array)
