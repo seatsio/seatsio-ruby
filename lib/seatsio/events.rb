@@ -198,6 +198,11 @@ module Seatsio
       Event.from_json(response)
     end
 
+    def move_events_to_new_chart_copy(event_keys)
+      response = @http_client.post("events/actions/move-to-new-chart-copy", { events: event_keys })
+      Events.new(response).events
+    end
+
     def self.table_booking_config_to_request(table_booking_config)
       result = {}
       result["mode"] = table_booking_config.mode
